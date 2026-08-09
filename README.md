@@ -6,7 +6,7 @@ The approved product and technical decisions live in [SPEC.md](./SPEC.md).
 
 ## Requirements
 
-- Node.js 22.12 or newer
+- Node.js 24.18.1 or newer
 - npm 10.9 or newer
 
 ## Local development

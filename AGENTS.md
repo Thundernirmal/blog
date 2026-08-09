@@ -6,7 +6,7 @@ This is a static Astro 7 blog. Application code lives in `src/`: Astro routes ar
 
 ## Build, Test, and Development Commands
 
-Use Node.js 22.12+ and npm 10.9+.
+Use Node.js 24.18.1+ and npm 10.9+.
 
 - `npm install` installs dependencies; use `npm ci` in CI or for a clean lockfile-based install.
 - `npm run dev` starts Astro at `http://localhost:4321` and prepares the local Pagefind index.
