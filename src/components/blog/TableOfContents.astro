@@ -93,7 +93,7 @@ const visible = headings.filter((heading) => heading.depth === 2 || heading.dept
     const updateActiveHeading = () => {
       animationFrame = 0;
       const headerHeight = document.querySelector<HTMLElement>('body > div > header')?.offsetHeight ?? 0;
-      const activationLine = Math.max(headerHeight + 24, Math.min(window.innerHeight * 0.28, 240));
+      const activationLine = Math.max(headerHeight + 24, Math.min(window.innerHeight * 0.3, 240));
       let activeHeading = headings[0];
 
       for (const heading of headings) {
