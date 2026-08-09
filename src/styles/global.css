@@ -182,6 +182,88 @@
     transform: translateY(calc(-100% - env(safe-area-inset-top)));
   }
 
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes content-reveal {
+      from {
+        opacity: 0;
+        transform: translateY(0.75rem);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    [data-page-enter] > *,
+    [data-reveal-list] > *,
+    .pagefind-ui .pf-result {
+      animation: content-reveal 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    [data-page-enter] > :nth-child(1) {
+      animation-delay: 40ms;
+    }
+
+    [data-page-enter] > :nth-child(2) {
+      animation-delay: 120ms;
+    }
+
+    [data-page-enter] > :nth-child(3) {
+      animation-delay: 200ms;
+    }
+
+    [data-reveal-list] > :nth-child(1),
+    .pagefind-ui .pf-result:nth-child(1) {
+      animation-delay: 180ms;
+    }
+
+    [data-reveal-list] > :nth-child(2),
+    .pagefind-ui .pf-result:nth-child(2) {
+      animation-delay: 240ms;
+    }
+
+    [data-reveal-list] > :nth-child(3),
+    .pagefind-ui .pf-result:nth-child(3) {
+      animation-delay: 300ms;
+    }
+
+    [data-reveal-list] > :nth-child(4),
+    .pagefind-ui .pf-result:nth-child(4) {
+      animation-delay: 360ms;
+    }
+
+    [data-reveal-list] > :nth-child(5),
+    .pagefind-ui .pf-result:nth-child(5) {
+      animation-delay: 420ms;
+    }
+
+    [data-reveal-list] > :nth-child(6),
+    .pagefind-ui .pf-result:nth-child(6) {
+      animation-delay: 480ms;
+    }
+
+    [data-reveal-list] > :nth-child(7),
+    .pagefind-ui .pf-result:nth-child(7) {
+      animation-delay: 540ms;
+    }
+
+    [data-reveal-list] > :nth-child(8),
+    .pagefind-ui .pf-result:nth-child(8) {
+      animation-delay: 600ms;
+    }
+
+    [data-reveal-list] > :nth-child(9),
+    .pagefind-ui .pf-result:nth-child(9) {
+      animation-delay: 660ms;
+    }
+
+    [data-reveal-list] > :nth-child(n + 10),
+    .pagefind-ui .pf-result:nth-child(n + 10) {
+      animation-delay: 720ms;
+    }
+  }
+
   footer {
     padding-block-end: calc(1.5rem + env(safe-area-inset-bottom));
   }
