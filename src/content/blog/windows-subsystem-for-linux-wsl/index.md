@@ -6,6 +6,8 @@ publishedAt: "2020-06-02T09:50:48.000Z"
 updatedAt: "2020-06-02T09:50:48.994Z"
 draft: false
 tags: ["windows","android","windows-10","ubuntu","wsl"]
+heroImage: "./image-03.png"
+heroAlt: "Microsoft Store page listing Linux distributions available for WSL"
 originalUrl: "https://medium.com/@katariya_nirmal/windows-subsystem-for-linux-wsl-c578f4f02f76"
 mediumId: "c578f4f02f76"
 archived: true

@@ -47,7 +47,10 @@ const Icon = tagIcons[tag] ?? TagIcon;
 ---
 
 <a
-  class={buttonVariants({ variant: 'secondary', size: prominent ? 'default' : 'sm' })}
+  class:list={[
+    buttonVariants({ variant: 'secondary', size: prominent ? 'default' : 'sm' }),
+    !prominent && 'min-h-11 sm:min-h-7',
+  ]}
   href={`/tags/${encodeURIComponent(tag)}/`}
 >
   <Icon data-icon="inline-start" aria-hidden="true" />

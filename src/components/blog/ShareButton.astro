@@ -1,0 +1,107 @@
+---
+import { CheckIcon, Share2Icon } from 'lucide-react';
+import { buttonVariants } from '@/components/ui/button';
+
+interface Props {
+  title: string;
+  text: string;
+}
+
+const { title, text } = Astro.props;
+---
+
+<div class="inline-flex items-center gap-2" data-share-control>
+  <button
+    type="button"
+    class={buttonVariants({ variant: 'outline' })}
+    data-share-button
+    data-share-title={title}
+    data-share-text={text}
+  >
+    <Share2Icon data-icon="inline-start" aria-hidden="true" data-share-icon />
+    <CheckIcon data-icon="inline-start" className="hidden" aria-hidden="true" data-copied-icon />
+    <span data-share-label>Share Article</span>
+  </button>
+  <span class="sr-only" aria-live="polite" data-share-status></span>
+</div>
+
+<script>
+  let cleanUpShareButtons: (() => void) | undefined;
+
+  const copyText = async (value: string) => {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(value);
+      return;
+    }
+
+    const input = document.createElement('textarea');
+    input.value = value;
+    input.setAttribute('readonly', '');
+    input.className = 'fixed opacity-0 pointer-events-none';
+    document.body.append(input);
+    input.select();
+    (document as unknown as { execCommand: (command: string) => boolean }).execCommand('copy');
+    input.remove();
+  };
+
+  const initializeShareButtons = () => {
+    cleanUpShareButtons?.();
+
+    const controls = Array.from(document.querySelectorAll<HTMLElement>('[data-share-control]'));
+    const cleanups: Array<() => void> = [];
+
+    for (const control of controls) {
+      const button = control.querySelector<HTMLButtonElement>('[data-share-button]');
+      const label = control.querySelector<HTMLElement>('[data-share-label]');
+      const status = control.querySelector<HTMLElement>('[data-share-status]');
+      const shareIcon = control.querySelector<HTMLElement>('[data-share-icon]');
+      const copiedIcon = control.querySelector<HTMLElement>('[data-copied-icon]');
+      if (!button || !label || !status) continue;
+
+      let resetTimer = 0;
+      const reset = () => {
+        label.textContent = 'Share Article';
+        status.textContent = '';
+        shareIcon?.classList.remove('hidden');
+        copiedIcon?.classList.add('hidden');
+      };
+
+      const handleShare = async () => {
+        const shareData = {
+          title: button.dataset.shareTitle ?? document.title,
+          text: button.dataset.shareText ?? '',
+          url: window.location.href,
+        };
+
+        try {
+          if (navigator.share) {
+            await navigator.share(shareData);
+            return;
+          }
+
+          await copyText(shareData.url);
+          window.clearTimeout(resetTimer);
+          label.textContent = 'Link Copied';
+          status.textContent = 'Article link copied to clipboard.';
+          shareIcon?.classList.add('hidden');
+          copiedIcon?.classList.remove('hidden');
+          resetTimer = window.setTimeout(reset, 2500);
+        } catch (error) {
+          if (error instanceof DOMException && error.name === 'AbortError') return;
+          status.textContent = 'Could not share this article. Copy the address from your browser instead.';
+        }
+      };
+
+      button.addEventListener('click', handleShare);
+      cleanups.push(() => {
+        button.removeEventListener('click', handleShare);
+        window.clearTimeout(resetTimer);
+      });
+    }
+
+    cleanUpShareButtons = () => cleanups.forEach((cleanup) => cleanup());
+  };
+
+  document.addEventListener('astro:page-load', initializeShareButtons);
+  initializeShareButtons();
+</script>

@@ -19,6 +19,7 @@ export default defineConfig({
     { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
     ...(includeWebKit ? [{ name: 'webkit', use: { ...devices['Desktop Safari'] } }] : []),
     { name: 'mobile-chrome', use: { ...devices['Pixel 7'], viewport: { width: 320, height: 800 } } },
+    ...(includeWebKit ? [{ name: 'mobile-webkit', use: { ...devices['iPhone 15 Pro'] } }] : []),
   ],
   webServer: {
     command: 'node scripts/serve-dist.mjs',

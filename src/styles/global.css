@@ -121,6 +121,7 @@
     @apply scroll-smooth font-sans;
     color-scheme: dark;
     scrollbar-gutter: stable;
+    scroll-padding-top: calc(var(--site-header-height, 5rem) + 1rem);
     -webkit-tap-highlight-color: color-mix(in srgb, var(--primary) 24%, transparent);
   }
 
@@ -146,6 +147,7 @@
 
   a {
     @apply transition-colors;
+    touch-action: manipulation;
   }
 
   button:not(:disabled),
@@ -168,6 +170,20 @@
 
   .content-shell {
     @apply mx-auto w-full max-w-[1000px] px-4 sm:px-6 lg:px-8;
+    padding-inline-start: max(1rem, env(safe-area-inset-left));
+    padding-inline-end: max(1rem, env(safe-area-inset-right));
+  }
+
+  .site-header {
+    padding-block-start: env(safe-area-inset-top);
+  }
+
+  .site-header[data-scroll-state="hidden"] {
+    transform: translateY(calc(-100% - env(safe-area-inset-top)));
+  }
+
+  footer {
+    padding-block-end: calc(1.5rem + env(safe-area-inset-bottom));
   }
 
   .article-prose {
@@ -179,7 +195,8 @@
   }
 
   .article-prose :is(h2, h3, h4) {
-    @apply scroll-mt-24 text-balance font-semibold tracking-tight text-foreground;
+    @apply text-balance font-semibold tracking-tight text-foreground;
+    scroll-margin-top: calc(var(--site-header-height, 5rem) + 1rem);
   }
 
   .article-prose h2 {
@@ -237,6 +254,15 @@
 
   .article-prose .table-scroll {
     @apply w-full overflow-x-auto rounded-lg focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none;
+    overscroll-behavior-inline: contain;
+    background:
+      linear-gradient(to right, var(--background) 30%, transparent) left center,
+      linear-gradient(to left, var(--background) 30%, transparent) right center,
+      radial-gradient(farthest-side at 0 50%, color-mix(in srgb, var(--foreground) 18%, transparent), transparent) left center,
+      radial-gradient(farthest-side at 100% 50%, color-mix(in srgb, var(--foreground) 18%, transparent), transparent) right center;
+    background-attachment: local, local, scroll, scroll;
+    background-repeat: no-repeat;
+    background-size: 2rem 100%, 2rem 100%, 0.75rem 100%, 0.75rem 100%;
   }
 
   .article-prose table {
@@ -362,6 +388,24 @@
   pagefind-summary,
   pagefind-results {
     display: block;
+  }
+}
+
+@media (min-width: 40rem) {
+  .content-shell {
+    padding-inline-start: max(1.5rem, env(safe-area-inset-left));
+    padding-inline-end: max(1.5rem, env(safe-area-inset-right));
+  }
+
+  .site-header[data-scroll-state="hidden"] {
+    transform: none;
+  }
+}
+
+@media (min-width: 64rem) {
+  .content-shell {
+    padding-inline-start: max(2rem, env(safe-area-inset-left));
+    padding-inline-end: max(2rem, env(safe-area-inset-right));
   }
 }
 
