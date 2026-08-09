@@ -7,12 +7,17 @@ interface Props {
 }
 
 const { id, title, eyebrow, hero = false } = Astro.props;
+const titleParts = title.trim().split(/\s+/);
+const titleAccent = titleParts.pop() ?? title;
+const titleLead = titleParts.join(' ');
 ---
 
 <header id={id} class="grid max-w-3xl gap-3 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2">
   {eyebrow && <p class="font-mono text-sm font-medium text-primary">{eyebrow}</p>}
   <h1 class:list={['text-balance font-semibold tracking-tight', hero ? 'text-[2.5rem] leading-[1.1] sm:text-6xl' : 'text-4xl sm:text-5xl']}>
-    {title}
+    {hero && titleLead ? (
+      <><span class="text-primary">{titleLead}</span>{' '}<span class="text-foreground">{titleAccent}</span></>
+    ) : title}
   </h1>
   <div class="text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
     <slot />
