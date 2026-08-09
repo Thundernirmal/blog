@@ -360,7 +360,7 @@ The exact component split may be consolidated during implementation when a file 
 
 ### 12.1 Runtime and dependencies
 
-- Node.js `>=22.12.0`, matching `zsh-web` and pinned for Cloudflare builds.
+- Node.js `>=24.18.1`, matching `zsh-web` and pinned for Cloudflare builds.
 - npm with a committed lockfile and `npm ci` in CI.
 - Astro 7 static output.
 - Tailwind CSS 4 through `@tailwindcss/vite`.
@@ -472,7 +472,7 @@ Deployment model: Git-connected Cloudflare Pages project.
 | Install | `npm ci` (managed by Pages) |
 | Build command | `npm run build` |
 | Build output | `dist` |
-| Node | `22.12.0` or the approved later Node 22 release |
+| Node | `24.18.1` or the approved later Node 24 release |
 | Adapter | None; static output |
 
 Additional rules:
