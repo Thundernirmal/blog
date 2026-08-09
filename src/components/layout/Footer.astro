@@ -1,0 +1,21 @@
+---
+import { Separator } from '@/components/ui/separator';
+import { SITE } from '@/config';
+---
+
+<footer class="w-full pb-6">
+  <Separator />
+  <div class="content-shell py-5 text-sm leading-6 text-muted-foreground">
+    <p class="flex flex-wrap items-center gap-x-2 gap-y-1">
+      Built by <a class="rounded-sm underline-offset-4 hover:text-primary hover:underline focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none" href={SITE.authorUrl}>{SITE.author}</a>
+      <span aria-hidden="true">·</span>
+      <a class="rounded-sm underline-offset-4 hover:text-primary hover:underline focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none" href={SITE.githubUrl}>Source</a>
+      <span aria-hidden="true">·</span>
+      <a class="rounded-sm underline-offset-4 hover:text-primary hover:underline focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none" href={SITE.mediumUrl}>Medium</a>
+      <span aria-hidden="true">·</span>
+      <a class="rounded-sm underline-offset-4 hover:text-primary hover:underline focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none" href="/rss.xml">RSS</a>
+      <span aria-hidden="true">·</span>
+      <span>Powered by Astro & Catppuccin Mocha</span>
+    </p>
+  </div>
+</footer>

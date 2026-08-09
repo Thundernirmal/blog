@@ -1,0 +1,36 @@
+---
+import { TagsIcon } from 'lucide-react';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/layout/PageHeader.astro';
+import { badgeVariants } from '@/components/ui/badge';
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { getPublishedPosts, getTagCounts } from '@/lib/content';
+
+const posts = await getPublishedPosts();
+const tags = getTagCounts(posts);
+---
+
+<BaseLayout title="Tags" description="Browse articles by topic." canonicalPath="/tags/">
+  <PageHeader title="Tags" eyebrow={`${tags.length} ${tags.length === 1 ? 'topic' : 'topics'}`}>
+    <p>Browse the archive by subject.</p>
+  </PageHeader>
+  {tags.length > 0 ? (
+    <ul class="flex flex-wrap gap-3">
+      {tags.map(({ tag, count }) => (
+        <li>
+          <a class:list={[badgeVariants({ variant: 'outline' }), 'h-8 px-3 text-sm']} href={`/tags/${encodeURIComponent(tag)}/`}>
+            {tag} <span class="text-muted-foreground">{count}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <Empty className="border">
+      <EmptyHeader>
+        <EmptyMedia variant="icon"><TagsIcon aria-hidden="true" /></EmptyMedia>
+        <EmptyTitle>No Tags Yet</EmptyTitle>
+        <EmptyDescription>Tags will appear when articles are published.</EmptyDescription>
+      </EmptyHeader>
+    </Empty>
+  )}
+</BaseLayout>

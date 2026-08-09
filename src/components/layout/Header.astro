@@ -1,0 +1,77 @@
+---
+import { ExternalLinkIcon, SearchIcon, TerminalIcon } from 'lucide-react';
+import { buttonVariants } from '@/components/ui/button';
+import { Kbd } from '@/components/ui/kbd';
+import { SITE } from '@/config';
+import { cn } from '@/lib/utils';
+
+const path = Astro.url.pathname;
+const links = [
+  { href: '/', label: 'Home', active: path === '/' },
+  { href: '/blog/', label: 'Blog', active: path.startsWith('/blog') },
+  { href: '/tags/', label: 'Tags', active: path.startsWith('/tags') },
+  { href: '/about/', label: 'About', active: path.startsWith('/about') },
+];
+---
+
+<header class="sticky top-0 z-20 border-b bg-background/90 backdrop-blur-md">
+  <nav class="content-shell flex flex-wrap items-center gap-2.5 py-3" aria-label="Main navigation">
+    <a
+      href="/"
+      class="flex min-w-0 items-center gap-2 rounded-md font-heading text-base font-semibold tracking-tight text-foreground outline-none transition-[color,background-color,box-shadow] hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50"
+    >
+      <TerminalIcon className="size-5 text-primary" aria-hidden="true" />
+      <span>{SITE.name}</span>
+    </a>
+
+    <div class="grid w-full min-w-0 grid-cols-5 items-center gap-1 rounded-lg border bg-card/60 p-1 shadow-sm sm:ml-auto sm:flex sm:w-auto sm:flex-wrap sm:justify-end">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          aria-current={link.active ? 'page' : undefined}
+          class:list={[buttonVariants({ variant: link.active ? 'secondary' : 'ghost', size: 'sm' }), 'min-h-11 min-w-0 px-1 sm:min-h-7 sm:px-2.5']}
+          data-astro-prefetch="hover"
+        >
+          {link.label}
+        </a>
+      ))}
+      <a
+        href="/search/"
+        class={cn(buttonVariants({ variant: path.startsWith('/search') ? 'secondary' : 'ghost', size: 'sm' }), 'hidden sm:inline-flex')}
+        aria-current={path.startsWith('/search') ? 'page' : undefined}
+        data-search-link
+      >
+        <SearchIcon data-icon="inline-start" aria-hidden="true" />
+        Search
+        <Kbd className="ml-1">⌘&nbsp;K</Kbd>
+      </a>
+      <a
+        href="/search/"
+        class={cn(buttonVariants({ variant: path.startsWith('/search') ? 'secondary' : 'ghost', size: 'icon-sm' }), 'size-11 sm:hidden')}
+        aria-current={path.startsWith('/search') ? 'page' : undefined}
+      >
+        <SearchIcon aria-hidden="true" />
+        <span class="sr-only">Search articles</span>
+      </a>
+      <a
+        href={SITE.githubUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'hidden lg:inline-flex')}
+      >
+        <ExternalLinkIcon data-icon="inline-start" aria-hidden="true" />
+        GitHub <span class="sr-only">(opens in a new tab)</span>
+      </a>
+    </div>
+  </nav>
+</header>
+
+<script>
+  document.addEventListener('keydown', (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      sessionStorage.setItem('focus-search', 'true');
+      window.location.assign('/search/');
+    }
+  });
+</script>

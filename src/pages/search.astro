@@ -1,0 +1,65 @@
+---
+import '@pagefind/component-ui/css';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/layout/PageHeader.astro';
+
+const resultTemplate = `<li class="pf-result">
+  <div class="pf-result-card">
+    <div class="pf-result-content">
+      <p class="pf-result-title"><a class="pf-result-link" href="{{ meta.url | default(url) | safeUrl }}">{{ meta.title }}</a></p>
+      {{#if excerpt}}<p class="pf-result-excerpt">{{+ excerpt +}}</p>{{/if}}
+      <p class="pf-result-excerpt pf-result-meta">{{ meta.date }}{{#if meta.tags}} · Tags: {{ meta.tags }}{{/if}}</p>
+    </div>
+  </div>
+</li>`;
+---
+
+<BaseLayout title="Search" description="Search every article on Nirmal's Notes." canonicalPath="/search/">
+  <PageHeader title="Search" eyebrow="full-text index">
+    <p>Search article titles, descriptions, tags, and body text.</p>
+  </PageHeader>
+
+  <section id="article-search" class="pagefind-ui grid min-w-0 gap-4" aria-label="Article search" data-pf-theme="dark">
+    <pagefind-input placeholder="Search articles…" autocomplete="off"></pagefind-input>
+    <pagefind-summary></pagefind-summary>
+    <pagefind-results show-images="false" hide-sub-results="true">
+      <script type="text/pagefind-template" data-template="result" set:html={resultTemplate} is:inline />
+    </pagefind-results>
+  </section>
+
+  <script>
+    import '@pagefind/component-ui';
+
+    type SearchElement = HTMLElement & {
+      inputEl?: HTMLInputElement;
+      focus?: () => void;
+      instance?: { triggerSearch: (term: string) => void };
+    };
+
+    const element = document.querySelector<SearchElement>('pagefind-input');
+    if (element) {
+      customElements.whenDefined('pagefind-input').then(() => {
+        window.setTimeout(() => {
+          const input = element.inputEl;
+          const query = new URLSearchParams(window.location.search).get('q') ?? '';
+          if (input) input.name = 'q';
+          if (input && query) {
+            input.value = query;
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+          if (sessionStorage.getItem('focus-search') === 'true') {
+            sessionStorage.removeItem('focus-search');
+            element.focus?.();
+          }
+          input?.addEventListener('input', () => {
+            const url = new URL(window.location.href);
+            const value = input.value.trim();
+            if (value) url.searchParams.set('q', value);
+            else url.searchParams.delete('q');
+            window.history.replaceState({}, '', url);
+          });
+        });
+      });
+    }
+  </script>
+</BaseLayout>

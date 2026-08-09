@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#cba6f7" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#89b4fa" stop-opacity=".04"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#1e1e2e"/>
+  <circle cx="1020" cy="90" r="440" fill="url(#glow)"/>
+  <rect x="76" y="72" width="1048" height="486" rx="24" fill="#11111b" stroke="#45475a" stroke-width="3"/>
+  <rect x="76" y="72" width="1048" height="74" rx="24" fill="#181825"/>
+  <path d="M76 122h1048" stroke="#45475a" stroke-width="3"/>
+  <circle cx="118" cy="109" r="10" fill="#f38ba8"/>
+  <circle cx="152" cy="109" r="10" fill="#f9e2af"/>
+  <circle cx="186" cy="109" r="10" fill="#a6e3a1"/>
+  <text x="112" y="238" fill="#89b4fa" font-family="JetBrains Mono, monospace" font-size="34">nirmal@notes</text>
+  <text x="365" y="238" fill="#cdd6f4" font-family="JetBrains Mono, monospace" font-size="34">:</text>
+  <text x="390" y="238" fill="#f5c2e7" font-family="JetBrains Mono, monospace" font-size="34">~/blog</text>
+  <text x="530" y="238" fill="#cdd6f4" font-family="JetBrains Mono, monospace" font-size="34">$</text>
+  <text x="112" y="365" fill="#cdd6f4" font-family="Outfit, sans-serif" font-size="82" font-weight="700">Nirmal's Notes</text>
+  <text x="116" y="432" fill="#a6adc8" font-family="Plus Jakarta Sans, sans-serif" font-size="32">Software, hardware, Linux, and the tools in between.</text>
+  <rect x="112" y="480" width="190" height="6" rx="3" fill="#cba6f7"/>
+</svg>

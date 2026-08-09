@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Nirmal's Notes">
+  <rect width="64" height="64" rx="14" fill="#181825"/>
+  <rect x="8" y="10" width="48" height="44" rx="8" fill="#11111b" stroke="#45475a" stroke-width="2"/>
+  <circle cx="16" cy="18" r="2" fill="#f38ba8"/>
+  <circle cx="23" cy="18" r="2" fill="#f9e2af"/>
+  <circle cx="30" cy="18" r="2" fill="#a6e3a1"/>
+  <path d="m17 31 6 5-6 5" fill="none" stroke="#89b4fa" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M29 42h17" stroke="#cba6f7" stroke-width="4" stroke-linecap="round"/>
+</svg>

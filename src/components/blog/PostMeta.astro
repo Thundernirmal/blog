@@ -1,0 +1,30 @@
+---
+import { CalendarDaysIcon, Clock3Icon, RefreshCwIcon } from 'lucide-react';
+import { formatDate } from '@/lib/dates';
+
+interface Props {
+  publishedAt: Date;
+  updatedAt?: Date;
+  readingMinutes: number;
+}
+
+const { publishedAt, updatedAt, readingMinutes } = Astro.props;
+const hasMeaningfulUpdate = updatedAt && updatedAt.getTime() - publishedAt.getTime() >= 24 * 60 * 60 * 1000;
+---
+
+<div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
+  <span class="inline-flex items-center gap-1.5">
+    <CalendarDaysIcon className="size-4" aria-hidden="true" />
+    <time datetime={publishedAt.toISOString()} data-pagefind-meta="date">{formatDate(publishedAt)}</time>
+  </span>
+  <span class="inline-flex items-center gap-1.5">
+    <Clock3Icon className="size-4" aria-hidden="true" />
+    {readingMinutes} min read
+  </span>
+  {hasMeaningfulUpdate && updatedAt && (
+    <span class="inline-flex items-center gap-1.5">
+      <RefreshCwIcon className="size-4" aria-hidden="true" />
+      Updated <time datetime={updatedAt.toISOString()}>{formatDate(updatedAt)}</time>
+    </span>
+  )}
+</div>

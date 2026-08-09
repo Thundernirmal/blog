@@ -1,0 +1,45 @@
+---
+import { Code2Icon, ExternalLinkIcon, RssIcon } from 'lucide-react';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/layout/PageHeader.astro';
+import { buttonVariants } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { SITE } from '@/config';
+---
+
+<BaseLayout title="About" description={`About ${SITE.author} and ${SITE.name}.`} canonicalPath="/about/">
+  <PageHeader title="About" eyebrow="nirmal@Tiger">
+    <p>A home for notes that deserve more room than a terminal scrollback.</p>
+  </PageHeader>
+
+  <div class="grid gap-4 lg:grid-cols-2">
+    <Card>
+      <CardHeader>
+        <CardTitle><h2 class="text-xl font-semibold">Nirmal Katariya</h2></CardTitle>
+        <CardDescription>Software, systems, hardware, and practical computing.</CardDescription>
+      </CardHeader>
+      <CardContent className="grid flex-1 gap-4 text-base leading-7 text-muted-foreground">
+        <p>Find notes about useful tools, explored systems, and technical ideas worth remembering clearly.</p>
+        <p>This blog continues the same visual language as Nirmal’s Shell: Astro, Catppuccin Mocha, thoughtful defaults, and as little client JavaScript as possible.</p>
+      </CardContent>
+      <CardFooter className="flex-wrap gap-2">
+        <a class={buttonVariants()} href={SITE.authorUrl}>Personal Site <ExternalLinkIcon data-icon="inline-end" aria-hidden="true" /></a>
+      </CardFooter>
+    </Card>
+
+    <Card>
+      <CardHeader>
+        <CardTitle><h2 class="text-xl font-semibold">Follow the Writing</h2></CardTitle>
+        <CardDescription>Read here, subscribe by RSS, or browse the source.</CardDescription>
+      </CardHeader>
+      <CardContent className="grid flex-1 content-start gap-3 text-base leading-7 text-muted-foreground">
+        <p>Articles are stored as Markdown in the public repository and published as a static site.</p>
+      </CardContent>
+      <CardFooter className="flex-wrap gap-2">
+        <a class={buttonVariants({ variant: 'secondary' })} href="/rss.xml"><RssIcon data-icon="inline-start" aria-hidden="true" />RSS</a>
+        <a class={buttonVariants({ variant: 'outline' })} href={SITE.githubUrl}><Code2Icon data-icon="inline-start" aria-hidden="true" />GitHub</a>
+        <a class={buttonVariants({ variant: 'ghost' })} href={SITE.mediumUrl}>Medium <ExternalLinkIcon data-icon="inline-end" aria-hidden="true" /></a>
+      </CardFooter>
+    </Card>
+  </div>
+</BaseLayout>

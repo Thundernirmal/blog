@@ -1,0 +1,38 @@
+---
+import { ArrowRightIcon } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import PostMeta from '@/components/blog/PostMeta.astro';
+import TagList from '@/components/blog/TagList.astro';
+import type { BlogPost } from '@/lib/content';
+import { getPostReadingTime, getPostUrl } from '@/lib/content';
+
+interface Props {
+  post: BlogPost;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { post, headingLevel = 'h2' } = Astro.props;
+const url = getPostUrl(post);
+const Heading = headingLevel;
+---
+
+<Card className="h-full transition-[border-color,box-shadow,transform] motion-safe:hover:-translate-y-0.5">
+  <CardHeader className="gap-2">
+    <CardTitle>
+      <Heading class="text-balance text-xl font-semibold leading-snug">
+        <a class="rounded-sm outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50" href={url}>{post.data.title}</a>
+      </Heading>
+    </CardTitle>
+    <CardDescription className="text-pretty leading-6">{post.data.description}</CardDescription>
+  </CardHeader>
+  <CardContent className="grid flex-1 content-start gap-4">
+    <PostMeta publishedAt={post.data.publishedAt} updatedAt={post.data.updatedAt} readingMinutes={getPostReadingTime(post)} />
+    <TagList tags={post.data.tags} limit={3} />
+  </CardContent>
+  <CardFooter>
+    <a class="flex min-h-11 w-full items-center justify-between gap-3 rounded-sm text-sm text-muted-foreground outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50" href={url}>
+      Read article
+      <ArrowRightIcon className="size-4 text-primary" aria-hidden="true" />
+    </a>
+  </CardFooter>
+</Card>

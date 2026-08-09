@@ -1,0 +1,203 @@
+{
+  "generatedAt": "2026-08-09T04:34:05.891Z",
+  "source": "scripts/medium-import-report.json",
+  "counts": {
+    "restricted": 6,
+    "ok": 12,
+    "dead": 2
+  },
+  "results": [
+    {
+      "url": "https://browser.geekbench.com/v5/cpu/compare/2380105?baseline=2380066",
+      "finalUrl": "https://browser.geekbench.com/v5/cpu/compare/2380105?baseline=2380066",
+      "status": 403,
+      "classification": "restricted",
+      "redirects": []
+    },
+    {
+      "url": "https://devblogs.microsoft.com/commandline/the-windows-subsystem-for-linux-build-2020-summary/",
+      "finalUrl": "https://devblogs.microsoft.com/commandline/the-windows-subsystem-for-linux-build-2020-summary/",
+      "status": 200,
+      "classification": "ok",
+      "redirects": []
+    },
+    {
+      "url": "https://developers.google.com/ar/discover/supported-devices",
+      "finalUrl": "https://developers.google.com/ar/devices",
+      "status": 200,
+      "classification": "ok",
+      "redirects": [
+        {
+          "status": 301,
+          "from": "https://developers.google.com/ar/discover/supported-devices",
+          "to": "https://developers.google.com/ar/devices"
+        }
+      ]
+    },
+    {
+      "url": "https://docs.google.com/document/d/1jjbSyxgDUzlJwn9nXFaw8QRgbF5W_5jzAOcQxRhklHo/edit?usp=sharing",
+      "finalUrl": "https://docs.google.com/document/d/1jjbSyxgDUzlJwn9nXFaw8QRgbF5W_5jzAOcQxRhklHo/edit?usp=sharing",
+      "status": 410,
+      "classification": "dead",
+      "redirects": []
+    },
+    {
+      "url": "https://docs.microsoft.com/en-us/windows/wsl/about",
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/wsl/about",
+      "status": 206,
+      "classification": "ok",
+      "redirects": [
+        {
+          "status": 301,
+          "from": "https://docs.microsoft.com/en-us/windows/wsl/about",
+          "to": "https://learn.microsoft.com/en-us/windows/wsl/about"
+        }
+      ]
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/NVM_Express",
+      "finalUrl": "https://en.wikipedia.org/wiki/NVM_Express",
+      "status": 200,
+      "classification": "ok",
+      "redirects": []
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Serial_ATA",
+      "finalUrl": "https://en.wikipedia.org/wiki/Serial_ATA",
+      "status": 200,
+      "classification": "ok",
+      "redirects": []
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Serial_Attached_SCSI",
+      "finalUrl": "https://en.wikipedia.org/wiki/Serial_Attached_SCSI",
+      "status": 200,
+      "classification": "ok",
+      "redirects": []
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Windows_10_Mobile#Project_Astoria",
+      "finalUrl": "https://en.wikipedia.org/wiki/Windows_10_Mobile#Project_Astoria",
+      "status": 200,
+      "classification": "ok",
+      "redirects": []
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux",
+      "finalUrl": "https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux",
+      "status": 200,
+      "classification": "ok",
+      "redirects": []
+    },
+    {
+      "url": "https://nvmexpress.org/",
+      "finalUrl": "https://nvmexpress.org/",
+      "status": 206,
+      "classification": "ok",
+      "redirects": []
+    },
+    {
+      "url": "https://pcpartpicker.com/products/internal-hard-drive/#t=0",
+      "finalUrl": "https://pcpartpicker.com/products/internal-hard-drive/#t=0",
+      "status": 403,
+      "classification": "restricted",
+      "redirects": []
+    },
+    {
+      "url": "https://unsplash.com/",
+      "finalUrl": "https://unsplash.com/.within.website?redir=%2F",
+      "status": 401,
+      "classification": "restricted",
+      "redirects": [
+        {
+          "status": 307,
+          "from": "https://unsplash.com/",
+          "to": "https://unsplash.com/.within.website?redir=%2F"
+        }
+      ]
+    },
+    {
+      "url": "https://unsplash.com/@brett_jordan",
+      "finalUrl": "https://unsplash.com/.within.website?redir=%2F%40brett_jordan",
+      "status": 401,
+      "classification": "restricted",
+      "redirects": [
+        {
+          "status": 307,
+          "from": "https://unsplash.com/@brett_jordan",
+          "to": "https://unsplash.com/.within.website?redir=%2F%40brett_jordan"
+        }
+      ]
+    },
+    {
+      "url": "https://unsplash.com/@jievani",
+      "finalUrl": "https://unsplash.com/.within.website?redir=%2F%40jievani",
+      "status": 401,
+      "classification": "restricted",
+      "redirects": [
+        {
+          "status": 307,
+          "from": "https://unsplash.com/@jievani",
+          "to": "https://unsplash.com/.within.website?redir=%2F%40jievani"
+        }
+      ]
+    },
+    {
+      "url": "https://unsplash.com/@markusspiske",
+      "finalUrl": "https://unsplash.com/.within.website?redir=%2F%40markusspiske",
+      "status": 401,
+      "classification": "restricted",
+      "redirects": [
+        {
+          "status": 307,
+          "from": "https://unsplash.com/@markusspiske",
+          "to": "https://unsplash.com/.within.website?redir=%2F%40markusspiske"
+        }
+      ]
+    },
+    {
+      "url": "https://www.microsoft.com/en-in/p/ubuntu-2004-lts/9n6svws3rx71?rtc=1#activetab=pivot:overviewtab",
+      "finalUrl": "https://apps.microsoft.com/detail/9n6svws3rx71?hl=en-GB&gl=IN",
+      "status": 200,
+      "classification": "ok",
+      "redirects": [
+        {
+          "status": 302,
+          "from": "https://www.microsoft.com/en-in/p/ubuntu-2004-lts/9n6svws3rx71?rtc=1#activetab=pivot:overviewtab",
+          "to": "https://apps.microsoft.com/store/detail/9n6svws3rx71?hl=en-in&gl=in"
+        },
+        {
+          "status": 301,
+          "from": "https://apps.microsoft.com/store/detail/9n6svws3rx71?hl=en-in&gl=in",
+          "to": "https://apps.microsoft.com/store/detail/9n6svws3rx71?hl=en-IN&gl=IN"
+        },
+        {
+          "status": 301,
+          "from": "https://apps.microsoft.com/store/detail/9n6svws3rx71?hl=en-IN&gl=IN",
+          "to": "https://apps.microsoft.com/detail/9n6svws3rx71?hl=en-GB&gl=IN"
+        }
+      ]
+    },
+    {
+      "url": "https://www.stephendiehl.com/blog/crypto-absurd.html",
+      "finalUrl": "https://www.stephendiehl.com/blog/crypto-absurd.html",
+      "status": 404,
+      "classification": "dead",
+      "redirects": []
+    },
+    {
+      "url": "https://www.wired.com/story/squid-game-coin-crypto-scam/",
+      "finalUrl": "https://www.wired.com/story/squid-game-coin-crypto-scam/",
+      "status": 200,
+      "classification": "ok",
+      "redirects": []
+    },
+    {
+      "url": "https://www.xda-developers.com/mediatek-su-rootkit-exploit/",
+      "finalUrl": "https://www.xda-developers.com/mediatek-su-rootkit-exploit/",
+      "status": 200,
+      "classification": "ok",
+      "redirects": []
+    }
+  ]
+}

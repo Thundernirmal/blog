@@ -1,0 +1,44 @@
+---
+import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+interface Props {
+  currentPage: number;
+  totalPages: number;
+}
+
+const { currentPage, totalPages } = Astro.props;
+const pageUrl = (page: number) => (page === 1 ? '/blog/' : `/blog/page/${page}/`);
+---
+
+{totalPages > 1 && (
+  <nav class="flex flex-wrap items-center justify-between gap-3" aria-label="Blog pagination">
+    {currentPage > 1 ? (
+      <a class={buttonVariants({ variant: 'outline' })} href={pageUrl(currentPage - 1)}>
+        <ArrowLeftIcon data-icon="inline-start" aria-hidden="true" />
+        Previous
+      </a>
+    ) : <span />}
+    <ol class="flex items-center gap-1">
+      {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+        <li>
+          <a
+            href={pageUrl(page)}
+            aria-current={page === currentPage ? 'page' : undefined}
+            aria-label={`Page ${page}`}
+            class={cn(buttonVariants({ variant: page === currentPage ? 'secondary' : 'ghost', size: 'icon' }))}
+          >
+            {page}
+          </a>
+        </li>
+      ))}
+    </ol>
+    {currentPage < totalPages ? (
+      <a class={buttonVariants({ variant: 'outline' })} href={pageUrl(currentPage + 1)}>
+        Next
+        <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
+      </a>
+    ) : <span />}
+  </nav>
+)}

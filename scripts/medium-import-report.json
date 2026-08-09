@@ -1,0 +1,75 @@
+{
+  "generatedAt": "2026-08-09T04:46:06.570Z",
+  "source": "https://medium.com/feed/@katariya_nirmal",
+  "force": false,
+  "discovered": 4,
+  "imported": [],
+  "skipped": [
+    {
+      "slug": "noobs-point-of-view-on-cryptocurrency",
+      "output": "src/content/blog/noobs-point-of-view-on-cryptocurrency/index.md",
+      "localImages": 1,
+      "emptyAltText": 0,
+      "externalLinks": [
+        "https://www.wired.com/story/squid-game-coin-crypto-scam/",
+        "https://www.stephendiehl.com/blog/crypto-absurd.html",
+        "https://unsplash.com/@jievani",
+        "https://unsplash.com/"
+      ],
+      "reason": "index.md already exists; pass --force to replace it"
+    },
+    {
+      "slug": "windows-subsystem-for-linux-wsl",
+      "output": "src/content/blog/windows-subsystem-for-linux-wsl/index.md",
+      "localImages": 8,
+      "emptyAltText": 0,
+      "externalLinks": [
+        "https://en.wikipedia.org/wiki/Windows_10_Mobile#Project_Astoria",
+        "https://www.microsoft.com/en-in/p/ubuntu-2004-lts/9n6svws3rx71?rtc=1#activetab=pivot:overviewtab",
+        "https://browser.geekbench.com/v5/cpu/compare/2380105?baseline=2380066",
+        "https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux",
+        "https://docs.microsoft.com/en-us/windows/wsl/about",
+        "https://devblogs.microsoft.com/commandline/the-windows-subsystem-for-linux-build-2020-summary/"
+      ],
+      "reason": "index.md already exists; pass --force to replace it"
+    },
+    {
+      "slug": "features-that-are-nice-to-have-e1-mobile-madness",
+      "output": "src/content/blog/features-that-are-nice-to-have-e1-mobile-madness/index.md",
+      "localImages": 4,
+      "emptyAltText": 0,
+      "externalLinks": [
+        "https://developers.google.com/ar/discover/supported-devices",
+        "https://www.xda-developers.com/mediatek-su-rootkit-exploit/",
+        "https://docs.google.com/document/d/1jjbSyxgDUzlJwn9nXFaw8QRgbF5W_5jzAOcQxRhklHo/edit?usp=sharing",
+        "https://unsplash.com/@brett_jordan",
+        "https://unsplash.com/"
+      ],
+      "reason": "index.md already exists; pass --force to replace it"
+    },
+    {
+      "slug": "guide-to-computer-storage",
+      "output": "src/content/blog/guide-to-computer-storage/index.md",
+      "localImages": 5,
+      "emptyAltText": 0,
+      "externalLinks": [
+        "https://en.wikipedia.org/wiki/NVM_Express",
+        "https://nvmexpress.org/",
+        "https://en.wikipedia.org/wiki/Serial_ATA",
+        "https://en.wikipedia.org/wiki/Serial_Attached_SCSI",
+        "https://pcpartpicker.com/products/internal-hard-drive/#t=0",
+        "https://unsplash.com/@markusspiske",
+        "https://unsplash.com/"
+      ],
+      "reason": "index.md already exists; pass --force to replace it"
+    }
+  ],
+  "failedDownloads": [],
+  "warnings": [],
+  "summary": {
+    "localStories": 4,
+    "localImages": 18,
+    "emptyAltText": 0,
+    "failedDownloads": 0
+  }
+}

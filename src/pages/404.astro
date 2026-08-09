@@ -1,0 +1,21 @@
+---
+import { BookOpenIcon, HomeIcon, SearchIcon, TerminalIcon } from 'lucide-react';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { buttonVariants } from '@/components/ui/button';
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+---
+
+<BaseLayout title="Page Not Found" description="The requested page could not be found." canonicalPath="/404.html" noindex>
+  <Empty className="min-h-[50vh] border bg-card">
+    <EmptyHeader>
+      <EmptyMedia variant="icon"><TerminalIcon aria-hidden="true" /></EmptyMedia>
+      <EmptyTitle><h1>404: Path Not Found</h1></EmptyTitle>
+      <EmptyDescription>The page may have moved, or the address may be incomplete. Try the home page or search the archive.</EmptyDescription>
+    </EmptyHeader>
+    <EmptyContent className="flex-row flex-wrap justify-center">
+      <a class={buttonVariants()} href="/"><HomeIcon data-icon="inline-start" aria-hidden="true" />Home</a>
+      <a class={buttonVariants({ variant: 'secondary' })} href="/blog/"><BookOpenIcon data-icon="inline-start" aria-hidden="true" />Blog</a>
+      <a class={buttonVariants({ variant: 'outline' })} href="/search/"><SearchIcon data-icon="inline-start" aria-hidden="true" />Search</a>
+    </EmptyContent>
+  </Empty>
+</BaseLayout>

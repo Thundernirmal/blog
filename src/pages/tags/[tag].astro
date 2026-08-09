@@ -1,0 +1,30 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/layout/PageHeader.astro';
+import PostCard from '@/components/blog/PostCard.astro';
+import { getPublishedPosts, getTagCounts, type BlogPost } from '@/lib/content';
+
+interface Props {
+  tag: string;
+  posts: BlogPost[];
+}
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  return getTagCounts(posts).map(({ tag }) => ({
+    params: { tag },
+    props: { tag, posts: posts.filter((post) => post.data.tags.includes(tag)) },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout title={`Articles Tagged “${tag}”`} description={`Articles tagged ${tag}.`} canonicalPath={`/tags/${encodeURIComponent(tag)}/`}>
+  <PageHeader title={tag} eyebrow={`${posts.length} ${posts.length === 1 ? 'article' : 'articles'}`}>
+    <p>Writing filed under <span class="font-medium text-primary">{tag}</span>.</p>
+  </PageHeader>
+  <div class="grid gap-4 md:grid-cols-2">
+    {posts.map((post) => <PostCard post={post} />)}
+  </div>
+</BaseLayout>

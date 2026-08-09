@@ -1,0 +1,65 @@
+---
+import { ArrowRightIcon, BookOpenIcon, RssIcon } from 'lucide-react';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/layout/PageHeader.astro';
+import TerminalHero from '@/components/layout/TerminalHero.astro';
+import PostCard from '@/components/blog/PostCard.astro';
+import { buttonVariants } from '@/components/ui/button';
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { SITE } from '@/config';
+import { getPublishedPosts } from '@/lib/content';
+
+const posts = await getPublishedPosts();
+const latestPosts = posts.slice(0, 3);
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: SITE.name,
+  description: SITE.description,
+  url: SITE.url,
+  author: { '@type': 'Person', name: SITE.author, url: SITE.authorUrl },
+};
+---
+
+<BaseLayout title={SITE.name} canonicalPath="/" structuredData={structuredData}>
+  <PageHeader title={SITE.name} eyebrow="~/notes" hero>
+    <p>{SITE.description}</p>
+  </PageHeader>
+
+  <TerminalHero latest={posts[0]} />
+
+  <section class="grid gap-5" aria-labelledby="latest-writing">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div class="grid gap-1.5">
+        <h2 id="latest-writing" class="text-3xl font-semibold tracking-tight">Latest Writing</h2>
+        <p class="text-muted-foreground">Long-form notes, practical guides, and ideas worth keeping.</p>
+      </div>
+      <a class={buttonVariants({ variant: 'outline' })} href="/rss.xml">
+        <RssIcon data-icon="inline-start" aria-hidden="true" />
+        RSS
+      </a>
+    </div>
+
+    {latestPosts.length > 0 ? (
+      <div class="grid gap-4 lg:grid-cols-3">
+        {latestPosts.map((post) => <PostCard post={post} />)}
+      </div>
+    ) : (
+      <Empty className="border">
+        <EmptyHeader>
+          <EmptyMedia variant="icon"><BookOpenIcon aria-hidden="true" /></EmptyMedia>
+          <EmptyTitle>No Articles Yet</EmptyTitle>
+          <EmptyDescription>New writing is on the way.</EmptyDescription>
+        </EmptyHeader>
+      </Empty>
+    )}
+
+    <div>
+      <a class={buttonVariants({ size: 'lg' })} href="/blog/">
+        <BookOpenIcon data-icon="inline-start" aria-hidden="true" />
+        View All Articles
+        <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
+      </a>
+    </div>
+  </section>
+</BaseLayout>
