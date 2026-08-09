@@ -67,20 +67,6 @@ npm run import:medium -- --force
 
 Review `scripts/medium-import-report.json` after each run, then check descriptions, heading hierarchy, code fences, image alt text, and outbound links before publishing.
 
-## Cloudflare Pages
-
-Create a Pages project connected to this repository with:
-
-- Framework preset: Astro
-- Production branch: `main`
-- Build command: `npm run build`
-- Build output directory: `dist`
-- Node version: `22.12.0` (from `.node-version`)
-
-No Cloudflare adapter is needed because the site is fully static. The committed `public/_headers` file supplies security and cache headers. Add `blog.nirmalkatariya.com` as the custom domain after the first successful deployment and confirm the DNS record offered by Pages.
-
-Before production, update `SITE.githubUrl` in `src/config.ts` if the repository location differs, and verify `SITE.url` matches the final canonical domain.
-
 ## Structure
 
 ```text
