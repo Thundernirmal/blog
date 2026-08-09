@@ -28,6 +28,20 @@ test('navigation exposes the current section', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Blog', exact: true })).toHaveAttribute('aria-current', 'page');
 });
 
+test('navigation keeps its position between long and short routes', async ({ page }) => {
+  await page.goto('/blog/');
+  const blogNavigation = await page.getByRole('navigation', { name: 'Main navigation' }).boundingBox();
+
+  await page.locator('header a[href="/tags/"]').click();
+  await expect(page).toHaveURL(/\/tags\/$/);
+  const navigation = page.getByRole('navigation', { name: 'Main navigation' });
+  await expect(navigation).toBeVisible();
+  const tagsNavigation = await navigation.boundingBox();
+
+  expect(await page.locator('html').evaluate((element) => getComputedStyle(element).scrollbarGutter)).toBe('stable');
+  expect(tagsNavigation?.x).toBe(blogNavigation?.x);
+});
+
 test('the home header reveals its brand after the hero title scrolls away', async ({ page }) => {
   await page.goto('/');
   const brand = page.locator('[data-scroll-brand]');
