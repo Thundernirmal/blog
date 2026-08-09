@@ -1,6 +1,9 @@
+@layer properties, theme, base, pagefind-vendor, components, utilities;
+
 @import "@fontsource-variable/outfit/wght.css";
 @import "@fontsource-variable/plus-jakarta-sans/wght.css";
 @import "@fontsource-variable/jetbrains-mono/wght.css";
+@import "@pagefind/component-ui/css" layer(pagefind-vendor);
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -264,25 +267,90 @@
     --pf-text-secondary: var(--ctp-subtext1);
     --pf-text-muted: var(--muted-foreground);
     --pf-background: var(--card);
-    --pf-border: var(--border);
-    --pf-border-focus: var(--ctp-surface2);
+    --pf-border: color-mix(in srgb, var(--foreground) 10%, transparent);
+    --pf-border-focus: var(--primary);
     --pf-skeleton: var(--muted);
     --pf-skeleton-shine: var(--accent);
-    --pf-hover: var(--muted);
+    --pf-hover: color-mix(in srgb, var(--primary) 8%, var(--card));
     --pf-mark: var(--primary);
-    --pf-outline-focus: var(--ring);
+    --pf-outline-focus: color-mix(in srgb, var(--ring) 55%, transparent);
+    --pf-outline-width: 3px;
+    --pf-shadow-sm: 0 0 0 1px color-mix(in srgb, var(--primary) 38%, transparent);
+    --pf-error-bg: color-mix(in srgb, var(--destructive) 10%, var(--card));
+    --pf-error-border: color-mix(in srgb, var(--destructive) 45%, transparent);
+    --pf-error-text: var(--destructive);
+    --pf-error-text-secondary: var(--ctp-maroon);
     --pf-font: var(--font-body);
-    --pf-input-height: 3rem;
+    --pf-input-height: 2.75rem;
     --pf-input-font-size: 1rem;
     --pf-summary-font-size: 0.875rem;
-    --pf-result-title-font-size: 1rem;
+    --pf-result-title-font-size: 1.125rem;
     --pf-result-excerpt-font-size: 0.875rem;
     --pf-results-gap: 0.75rem;
-    --pf-border-radius: var(--radius);
+    --pf-border-radius: calc(var(--radius) * 1.4);
+  }
+
+  .pagefind-ui .pf-input {
+    @apply font-medium;
+    padding-inline-start: 2.75rem;
+    padding-inline-end: 4rem;
+  }
+
+  .pagefind-ui .pf-input-wrapper::before {
+    width: 1rem;
+    height: 1rem;
+    inset-inline-start: 0.875rem;
+    top: calc((var(--pf-input-height) - 1rem) / 2);
+  }
+
+  .pagefind-ui .pf-input-clear {
+    @apply text-sm font-medium;
+    min-width: 3.5rem;
+    inset-inline-end: 0.25rem;
+    border-radius: var(--radius);
+  }
+
+  .pagefind-ui .pf-summary {
+    @apply leading-6;
+  }
+
+  .pagefind-ui .pf-result-card {
+    @apply p-4;
+    border: 0;
+    box-shadow: 0 0 0 1px var(--pf-border);
+    transition:
+      background-color 150ms,
+      box-shadow 150ms;
+  }
+
+  .pagefind-ui .pf-result-card:hover {
+    background: var(--pf-hover);
+    box-shadow: var(--pf-shadow-sm);
+  }
+
+  .pagefind-ui .pf-result-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.5rem;
+  }
+
+  .pagefind-ui .pf-result-link:hover {
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  .pagefind-ui .pf-result-excerpt {
+    display: -webkit-box;
+    overflow: hidden;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 1.5rem;
   }
 
   .pagefind-ui .pf-result-meta {
-    @apply mt-2 text-sm leading-6 text-muted-foreground;
+    @apply mt-2 block text-sm leading-6 text-muted-foreground;
+    -webkit-line-clamp: unset;
   }
 
   .pagefind-ui :is(.pf-result-card, .pf-result-content, .pf-result-excerpt, .pf-result-meta),

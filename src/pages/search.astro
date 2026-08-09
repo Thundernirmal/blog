@@ -1,5 +1,4 @@
 ---
-import '@pagefind/component-ui/css';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/layout/PageHeader.astro';
 
@@ -7,7 +6,7 @@ const resultTemplate = `<li class="pf-result">
   <div class="pf-result-card">
     <div class="pf-result-content">
       <p class="pf-result-title"><a class="pf-result-link" href="{{ meta.url | default(url) | safeUrl }}">{{ meta.title }}</a></p>
-      {{#if excerpt}}<p class="pf-result-excerpt">{{+ excerpt +}}</p>{{/if}}
+      {{#if meta.description}}<p class="pf-result-excerpt">{{ meta.description }}</p>{{/if}}
       <p class="pf-result-excerpt pf-result-meta">{{ meta.date }}{{#if meta.tags}} · Tags: {{ meta.tags }}{{/if}}</p>
     </div>
   </div>
@@ -19,7 +18,7 @@ const resultTemplate = `<li class="pf-result">
     <p>Search article titles, descriptions, tags, and body text.</p>
   </PageHeader>
 
-  <section id="article-search" class="pagefind-ui grid min-w-0 gap-4" aria-label="Article search" data-pf-theme="dark">
+  <section id="article-search" class="pagefind-ui grid min-w-0 gap-4" aria-label="Article search">
     <pagefind-input placeholder="Search articles…" autocomplete="off"></pagefind-input>
     <pagefind-summary></pagefind-summary>
     <pagefind-results show-images="false" hide-sub-results="true">

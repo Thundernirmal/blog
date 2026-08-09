@@ -63,7 +63,7 @@ const editUrl = `${SITE.githubUrl}/edit/main/src/content/blog/${slug}/index.md`;
         </ol>
       </nav>
       <h1 class="text-balance text-4xl font-semibold leading-tight tracking-tight sm:text-5xl" data-pagefind-meta="title">{post.data.title}</h1>
-      <p class="text-pretty text-lg leading-8 text-muted-foreground">{post.data.description}</p>
+      <p class="text-pretty text-lg leading-8 text-muted-foreground" data-pagefind-meta="description">{post.data.description}</p>
       <PostMeta publishedAt={post.data.publishedAt} updatedAt={post.data.updatedAt} readingMinutes={getPostReadingTime(post)} />
       <div data-pagefind-meta={`tags:${post.data.tags.join(', ')}`}>
         <TagList tags={post.data.tags} />

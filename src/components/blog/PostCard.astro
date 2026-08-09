@@ -29,8 +29,8 @@ const Heading = headingLevel;
     <PostMeta publishedAt={post.data.publishedAt} updatedAt={post.data.updatedAt} readingMinutes={getPostReadingTime(post)} />
     <TagList tags={post.data.tags} limit={3} />
   </CardContent>
-  <CardFooter>
-    <a class="flex min-h-11 w-full items-center justify-between gap-3 rounded-sm text-sm text-muted-foreground outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50" href={url}>
+  <CardFooter className="px-(--card-spacing) py-1">
+    <a class="flex min-h-8 w-full items-center justify-between gap-3 rounded-sm text-sm text-muted-foreground outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50" href={url}>
       Read article
       <ArrowRightIcon className="size-4 text-primary" aria-hidden="true" />
     </a>

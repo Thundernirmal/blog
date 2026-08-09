@@ -1,5 +1,6 @@
 node_modules/
 dist/
+public/pagefind/
 .astro/
 .DS_Store
 .env
@@ -8,4 +9,3 @@ dist/
 playwright-report/
 test-results/
 blob-report/
-

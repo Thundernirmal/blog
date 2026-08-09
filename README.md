@@ -27,9 +27,11 @@ npm run test:e2e
 npm test
 ```
 
+`npm run dev` builds and copies a local Pagefind index before Astro starts, so search works in development as well as in production. After adding or substantially editing an article during a running development session, refresh the index with `npm run search:sync`.
+
 CI also runs WebKit. To include it locally, install Playwright’s WebKit system dependencies and run `PLAYWRIGHT_ALL_BROWSERS=1 npm test`.
 
-The production build is written to `dist/`. Pagefind runs after Astro and adds its static search index to `dist/pagefind/`.
+The production build is written to `dist/`. Pagefind runs after Astro and adds its static search index to `dist/pagefind/`. The development copy under `public/pagefind/` is generated, ignored by Git, and removed automatically before every production build to prevent stale files from being deployed.
 
 ## Writing an article
 
