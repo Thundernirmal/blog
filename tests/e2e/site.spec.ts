@@ -27,6 +27,23 @@ test('navigation exposes the current section', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Blog', exact: true })).toHaveAttribute('aria-current', 'page');
 });
 
+test('internal links use Astro client-side routing', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    (window as Window & { clientRouterMarker?: boolean }).clientRouterMarker = true;
+  });
+
+  await page.getByRole('link', { name: 'Blog', exact: true }).click();
+  await expect(page).toHaveURL(/\/blog\/$/);
+  await expect(page.getByRole('link', { name: 'Blog', exact: true })).toHaveAttribute('aria-current', 'page');
+  await expect.poll(() => page.evaluate(() => (window as Window & { clientRouterMarker?: boolean }).clientRouterMarker)).toBe(true);
+
+  await page.getByRole('link', { name: 'Read article' }).first().click();
+  await expect(page).toHaveURL(/\/blog\/[^/]+\/$/);
+  await expect(page.locator('article h1')).toBeVisible();
+  await expect.poll(() => page.evaluate(() => (window as Window & { clientRouterMarker?: boolean }).clientRouterMarker)).toBe(true);
+});
+
 test('the search index returns imported articles', async ({ page }) => {
   await page.goto('/search/');
   const search = page.locator('pagefind-input input');
@@ -41,6 +58,11 @@ test('the search index returns imported articles', async ({ page }) => {
 
 test('the search shortcut navigates and hands off focus', async ({ page }) => {
   await page.goto('/');
+  await page.keyboard.press('Control+K');
+  await expect(page).toHaveURL(/\/search\/$/);
+  await expect(page.locator('pagefind-input input')).toBeFocused();
+
+  await page.getByRole('link', { name: 'Blog', exact: true }).click();
   await page.keyboard.press('Control+K');
   await expect(page).toHaveURL(/\/search\/$/);
   await expect(page.locator('pagefind-input input')).toBeFocused();

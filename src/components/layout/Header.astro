@@ -14,10 +14,11 @@ const links = [
 ];
 ---
 
-<header class="sticky top-0 z-20 border-b bg-background/90 backdrop-blur-md">
+<header class="sticky top-0 z-20 border-b bg-background/90 backdrop-blur-md" transition:name="site-header" transition:animate="none">
   <nav class="content-shell flex flex-wrap items-center gap-2.5 py-3" aria-label="Main navigation">
     <a
       href="/"
+      data-astro-prefetch="hover"
       class="flex min-w-0 items-center gap-2 rounded-md font-heading text-base font-semibold tracking-tight text-foreground outline-none transition-[color,background-color,box-shadow] hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50"
     >
       <TerminalIcon className="size-5 text-primary" aria-hidden="true" />
@@ -40,6 +41,7 @@ const links = [
         class={cn(buttonVariants({ variant: path.startsWith('/search') ? 'secondary' : 'ghost', size: 'sm' }), 'hidden sm:inline-flex')}
         aria-current={path.startsWith('/search') ? 'page' : undefined}
         data-search-link
+        data-astro-prefetch="hover"
       >
         <SearchIcon data-icon="inline-start" aria-hidden="true" />
         Search
@@ -49,6 +51,7 @@ const links = [
         href="/search/"
         class={cn(buttonVariants({ variant: path.startsWith('/search') ? 'secondary' : 'ghost', size: 'icon-sm' }), 'size-11 sm:hidden')}
         aria-current={path.startsWith('/search') ? 'page' : undefined}
+        data-astro-prefetch="hover"
       >
         <SearchIcon aria-hidden="true" />
         <span class="sr-only">Search articles</span>
@@ -67,11 +70,13 @@ const links = [
 </header>
 
 <script>
+  import { navigate } from 'astro:transitions/client';
+
   document.addEventListener('keydown', (event) => {
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
       event.preventDefault();
       sessionStorage.setItem('focus-search', 'true');
-      window.location.assign('/search/');
+      navigate('/search/');
     }
   });
 </script>

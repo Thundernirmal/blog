@@ -35,8 +35,10 @@ const resultTemplate = `<li class="pf-result">
       instance?: { triggerSearch: (term: string) => void };
     };
 
-    const element = document.querySelector<SearchElement>('pagefind-input');
-    if (element) {
+    const setupSearch = () => {
+      const element = document.querySelector<SearchElement>('pagefind-input');
+      if (!element) return;
+
       customElements.whenDefined('pagefind-input').then(() => {
         window.setTimeout(() => {
           const input = element.inputEl;
@@ -59,6 +61,8 @@ const resultTemplate = `<li class="pf-result">
           });
         });
       });
-    }
+    };
+
+    document.addEventListener('astro:page-load', setupSearch);
   </script>
 </BaseLayout>

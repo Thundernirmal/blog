@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const includeWebKit = Boolean(process.env.CI) || process.env.PLAYWRIGHT_ALL_BROWSERS === '1';
+const port = Number(process.env.PORT ?? 4321);
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -10,7 +11,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI ? [['html', { open: 'never' }], ['github']] : 'list',
   use: {
-    baseURL: 'http://127.0.0.1:4321',
+    baseURL: `http://127.0.0.1:${port}`,
     trace: 'on-first-retry',
   },
   projects: [
@@ -21,7 +22,7 @@ export default defineConfig({
   ],
   webServer: {
     command: 'node scripts/serve-dist.mjs',
-    url: 'http://127.0.0.1:4321',
+    url: `http://127.0.0.1:${port}`,
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,
   },
