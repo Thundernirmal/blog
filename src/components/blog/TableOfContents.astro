@@ -21,7 +21,7 @@ const visible = headings.filter((heading) => heading.depth === 2 || heading.dept
         {visible.map((heading) => (
           <li class:list={[heading.depth === 3 && 'pl-4']}>
             <a
-              class="block rounded-sm border-l-2 border-transparent px-2 py-1 transition-[color,background-color,border-color,font-weight] hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none aria-[current=location]:border-primary aria-[current=location]:bg-primary/10 aria-[current=location]:font-semibold aria-[current=location]:text-primary"
+              class="block rounded-sm py-1 transition-colors hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none aria-[current=location]:text-primary"
               href={`#${heading.slug}`}
               data-toc-link
             >
@@ -31,13 +31,13 @@ const visible = headings.filter((heading) => heading.depth === 2 || heading.dept
         ))}
       </ol>
     </details>
-    <nav class="sticky top-24 hidden max-h-[calc(100vh-7rem)] overflow-y-auto lg:block" aria-label="On this page" data-pagefind-ignore data-table-of-contents>
+    <nav class="sticky top-24 hidden max-h-[calc(100vh-7rem)] overflow-x-hidden overflow-y-auto lg:block" aria-label="On this page" data-pagefind-ignore data-table-of-contents>
       <p class="mb-3 font-heading text-sm font-semibold text-foreground">On This Page</p>
       <ol class="grid gap-2 border-l pl-4 text-sm leading-5 text-muted-foreground">
         {visible.map((heading) => (
           <li class:list={[heading.depth === 3 && 'pl-3']}>
             <a
-              class="-mx-2 block rounded-sm border-l-2 border-transparent px-2 py-1 transition-[color,background-color,border-color,font-weight] hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none aria-[current=location]:border-primary aria-[current=location]:bg-primary/10 aria-[current=location]:font-semibold aria-[current=location]:text-primary"
+              class="block rounded-sm py-1 transition-colors hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none aria-[current=location]:text-primary"
               href={`#${heading.slug}`}
               data-toc-link
             >

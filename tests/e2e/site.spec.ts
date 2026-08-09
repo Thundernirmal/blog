@@ -155,6 +155,16 @@ test('the table of contents highlights the section in view', async ({ page }) =>
   await expect(tableOfContents.locator('a[href="#references"]')).toHaveAttribute('aria-current', 'location');
 });
 
+test('the desktop table of contents does not scroll horizontally', async ({ page }) => {
+  test.skip((page.viewportSize()?.width ?? 0) < 1024);
+  await page.goto('/blog/noobs-point-of-view-on-cryptocurrency/');
+  const tableOfContents = page.locator('nav[data-table-of-contents]');
+
+  await expect(tableOfContents).toBeVisible();
+  const dimensions = await tableOfContents.evaluate(({ clientWidth, scrollWidth }) => ({ clientWidth, scrollWidth }));
+  expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
+});
+
 test('core routes have no browser console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {
