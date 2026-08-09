@@ -13,6 +13,7 @@ const coreRoutes = [
 
 for (const route of coreRoutes) {
   test(`${route} has no serious accessibility violations`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto(route);
     await expect(page.locator('main')).toBeVisible();
     const results = await new AxeBuilder({ page })
