@@ -4,15 +4,21 @@
       <stop offset="0" stop-color="#cba6f7" stop-opacity=".2"/>
       <stop offset="1" stop-color="#89b4fa" stop-opacity=".04"/>
     </linearGradient>
+    <clipPath id="terminal-window">
+      <rect x="76" y="72" width="1048" height="486" rx="24"/>
+    </clipPath>
   </defs>
   <rect width="1200" height="630" fill="#1e1e2e"/>
   <circle cx="1020" cy="90" r="440" fill="url(#glow)"/>
-  <rect x="76" y="72" width="1048" height="486" rx="24" fill="#11111b" stroke="#45475a" stroke-width="3"/>
-  <rect x="76" y="72" width="1048" height="74" rx="24" fill="#181825"/>
-  <path d="M76 122h1048" stroke="#45475a" stroke-width="3"/>
-  <circle cx="118" cy="109" r="10" fill="#f38ba8"/>
-  <circle cx="152" cy="109" r="10" fill="#f9e2af"/>
-  <circle cx="186" cy="109" r="10" fill="#a6e3a1"/>
+  <rect x="76" y="72" width="1048" height="486" rx="24" fill="#11111b"/>
+  <g clip-path="url(#terminal-window)">
+    <rect x="76" y="72" width="1048" height="50" fill="#181825"/>
+    <path d="M76 122h1048" stroke="#45475a" stroke-width="3"/>
+  </g>
+  <rect x="76" y="72" width="1048" height="486" rx="24" fill="none" stroke="#45475a" stroke-width="3"/>
+  <circle cx="118" cy="97" r="10" fill="#f38ba8"/>
+  <circle cx="152" cy="97" r="10" fill="#f9e2af"/>
+  <circle cx="186" cy="97" r="10" fill="#a6e3a1"/>
   <text x="112" y="238" fill="#89b4fa" font-family="JetBrains Mono, monospace" font-size="34">nirmal@notes</text>
   <text x="365" y="238" fill="#cdd6f4" font-family="JetBrains Mono, monospace" font-size="34">:</text>
   <text x="390" y="238" fill="#f5c2e7" font-family="JetBrains Mono, monospace" font-size="34">~/blog</text>
