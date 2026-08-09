@@ -13,6 +13,7 @@ const coreRoutes = [
 
 for (const route of coreRoutes) {
   test(`${route} has no serious accessibility violations`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto(route);
     await expect(page.locator('main')).toBeVisible();
     const results = await new AxeBuilder({ page })
@@ -138,6 +139,31 @@ test('the table of contents uses the right responsive control', async ({ page })
   } else {
     await expect(page.getByRole('navigation', { name: 'On this page' })).toBeVisible();
   }
+});
+
+test('the table of contents highlights the section in view', async ({ page }) => {
+  await page.goto('/blog/windows-subsystem-for-linux-wsl/');
+  const tableOfContents = (page.viewportSize()?.width ?? 0) < 1024
+    ? page.locator('details[data-table-of-contents]')
+    : page.locator('nav[data-table-of-contents]');
+
+  await expect(tableOfContents.locator('a[href="#timeline"]')).toHaveAttribute('aria-current', 'location');
+
+  await page.locator('#wsl-1-vs-wsl-2').evaluate((heading) => heading.scrollIntoView({ block: 'start' }));
+  await expect(tableOfContents.locator('a[href="#wsl-1-vs-wsl-2"]')).toHaveAttribute('aria-current', 'location');
+
+  await page.locator('#references').evaluate((heading) => heading.scrollIntoView({ block: 'start' }));
+  await expect(tableOfContents.locator('a[href="#references"]')).toHaveAttribute('aria-current', 'location');
+});
+
+test('the desktop table of contents does not scroll horizontally', async ({ page }) => {
+  test.skip((page.viewportSize()?.width ?? 0) < 1024);
+  await page.goto('/blog/noobs-point-of-view-on-cryptocurrency/');
+  const tableOfContents = page.locator('nav[data-table-of-contents]');
+
+  await expect(tableOfContents).toBeVisible();
+  const dimensions = await tableOfContents.evaluate(({ clientWidth, scrollWidth }) => ({ clientWidth, scrollWidth }));
+  expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
 });
 
 test('core routes have no browser console errors', async ({ page }) => {
