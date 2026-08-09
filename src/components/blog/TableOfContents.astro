@@ -15,25 +15,110 @@ const visible = headings.filter((heading) => heading.depth === 2 || heading.dept
 
 {visible.length >= 3 && (
   <>
-    <details class="-order-1 min-w-0 rounded-lg border bg-card p-4 lg:hidden" data-pagefind-ignore>
+    <details class="-order-1 min-w-0 rounded-lg border bg-card p-4 lg:hidden" data-pagefind-ignore data-table-of-contents>
       <summary class="cursor-pointer font-heading font-semibold">On This Page</summary>
       <ol class="mt-3 grid gap-2 text-sm text-muted-foreground">
         {visible.map((heading) => (
           <li class:list={[heading.depth === 3 && 'pl-4']}>
-            <a class="rounded-sm hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none" href={`#${heading.slug}`}>{heading.text}</a>
+            <a
+              class="block rounded-sm border-l-2 border-transparent px-2 py-1 transition-[color,background-color,border-color,font-weight] hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none aria-[current=location]:border-primary aria-[current=location]:bg-primary/10 aria-[current=location]:font-semibold aria-[current=location]:text-primary"
+              href={`#${heading.slug}`}
+              data-toc-link
+            >
+              {heading.text}
+            </a>
           </li>
         ))}
       </ol>
     </details>
-    <nav class="sticky top-24 hidden max-h-[calc(100vh-7rem)] overflow-y-auto lg:block" aria-label="On this page" data-pagefind-ignore>
+    <nav class="sticky top-24 hidden max-h-[calc(100vh-7rem)] overflow-y-auto lg:block" aria-label="On this page" data-pagefind-ignore data-table-of-contents>
       <p class="mb-3 font-heading text-sm font-semibold text-foreground">On This Page</p>
       <ol class="grid gap-2 border-l pl-4 text-sm leading-5 text-muted-foreground">
         {visible.map((heading) => (
           <li class:list={[heading.depth === 3 && 'pl-3']}>
-            <a class="block rounded-sm py-1 hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none" href={`#${heading.slug}`}>{heading.text}</a>
+            <a
+              class="-mx-2 block rounded-sm border-l-2 border-transparent px-2 py-1 transition-[color,background-color,border-color,font-weight] hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none aria-[current=location]:border-primary aria-[current=location]:bg-primary/10 aria-[current=location]:font-semibold aria-[current=location]:text-primary"
+              href={`#${heading.slug}`}
+              data-toc-link
+            >
+              {heading.text}
+            </a>
           </li>
         ))}
       </ol>
     </nav>
   </>
 )}
+
+<script>
+  let cleanUpScrollSpy: (() => void) | undefined;
+
+  function initializeScrollSpy() {
+    cleanUpScrollSpy?.();
+
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
+    const slugs = [...new Set(links.map((link) => decodeURIComponent(link.hash.slice(1))))];
+    const headings = slugs
+      .map((slug) => document.getElementById(slug))
+      .filter((heading): heading is HTMLElement => heading !== null);
+
+    if (links.length === 0 || headings.length === 0) {
+      cleanUpScrollSpy = undefined;
+      return;
+    }
+
+    let animationFrame = 0;
+
+    const setActiveHeading = (slug: string) => {
+      for (const link of links) {
+        const isActive = decodeURIComponent(link.hash.slice(1)) === slug;
+        if (isActive) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      }
+    };
+
+    const updateActiveHeading = () => {
+      animationFrame = 0;
+      const headerHeight = document.querySelector<HTMLElement>('body > div > header')?.offsetHeight ?? 0;
+      const activationLine = Math.max(headerHeight + 24, Math.min(window.innerHeight * 0.28, 240));
+      let activeHeading = headings[0];
+
+      for (const heading of headings) {
+        if (heading.getBoundingClientRect().top > activationLine) break;
+        activeHeading = heading;
+      }
+
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+        activeHeading = headings.at(-1) ?? activeHeading;
+      }
+
+      setActiveHeading(activeHeading.id);
+    };
+
+    const requestUpdate = () => {
+      if (animationFrame === 0) animationFrame = window.requestAnimationFrame(updateActiveHeading);
+    };
+
+    const updateFromLinkClick = (event: Event) => {
+      const link = event.currentTarget as HTMLAnchorElement;
+      setActiveHeading(decodeURIComponent(link.hash.slice(1)));
+    };
+
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate);
+    for (const link of links) {
+      link.addEventListener('click', updateFromLinkClick);
+    }
+    requestUpdate();
+
+    cleanUpScrollSpy = () => {
+      window.removeEventListener('scroll', requestUpdate);
+      window.removeEventListener('resize', requestUpdate);
+      for (const link of links) link.removeEventListener('click', updateFromLinkClick);
+      if (animationFrame !== 0) window.cancelAnimationFrame(animationFrame);
+    };
+  }
+
+  document.addEventListener('astro:page-load', initializeScrollSpy);
+  initializeScrollSpy();
+</script>

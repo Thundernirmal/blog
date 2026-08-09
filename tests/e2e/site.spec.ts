@@ -140,6 +140,21 @@ test('the table of contents uses the right responsive control', async ({ page })
   }
 });
 
+test('the table of contents highlights the section in view', async ({ page }) => {
+  await page.goto('/blog/windows-subsystem-for-linux-wsl/');
+  const tableOfContents = (page.viewportSize()?.width ?? 0) < 1024
+    ? page.locator('details[data-table-of-contents]')
+    : page.locator('nav[data-table-of-contents]');
+
+  await expect(tableOfContents.locator('a[href="#timeline"]')).toHaveAttribute('aria-current', 'location');
+
+  await page.locator('#wsl-1-vs-wsl-2').evaluate((heading) => heading.scrollIntoView({ block: 'start' }));
+  await expect(tableOfContents.locator('a[href="#wsl-1-vs-wsl-2"]')).toHaveAttribute('aria-current', 'location');
+
+  await page.locator('#references').evaluate((heading) => heading.scrollIntoView({ block: 'start' }));
+  await expect(tableOfContents.locator('a[href="#references"]')).toHaveAttribute('aria-current', 'location');
+});
+
 test('core routes have no browser console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {
