@@ -7,33 +7,52 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { SITE } from '@/config';
 ---
 
-<BaseLayout title="About" description={`About ${SITE.author} and ${SITE.name}.`} canonicalPath="/about/">
+<BaseLayout
+  title="About"
+  description={`Meet ${SITE.author}, a systems engineer, Linux enthusiast, and the author of ${SITE.name}.`}
+  canonicalPath="/about/"
+>
   <PageHeader title="About" eyebrow="nirmal@Tiger">
-    <p>A home for notes that deserve more room than a terminal scrollback.</p>
+    <p>The person behind the notes, the systems behind the work, and the hardware rabbit holes along the way.</p>
   </PageHeader>
 
   <div class="grid gap-4 lg:grid-cols-2">
     <Card>
       <CardHeader>
         <CardTitle><h2 class="text-xl font-semibold">Nirmal Katariya</h2></CardTitle>
-        <CardDescription>Software, systems, hardware, and practical computing.</CardDescription>
+        <CardDescription>Associate System Engineer at Goldman Sachs · B.Tech in Computer Science, IIT Jodhpur</CardDescription>
       </CardHeader>
-      <CardContent className="grid flex-1 gap-4 text-base leading-7 text-muted-foreground">
-        <p>Find notes about useful tools, explored systems, and technical ideas worth remembering clearly.</p>
-        <p>This blog continues the same visual language as Nirmal’s Shell: Astro, Catppuccin Mocha, thoughtful defaults, and as little client JavaScript as possible.</p>
+      <CardContent className="grid flex-1 gap-5 text-base leading-7 text-muted-foreground">
+        <p>I’m a full-time Linux enjoyer and part-time computer archaeologist, forever digging up hardware memories like they’re rare loot. I love tinkering with PCs, breaking things “for science,” and customizing my setup until it’s 10% faster and 200% cooler. If it boots, beeps, or has a suspiciously loud fan, I’m emotionally attached already.</p>
+        <dl class="grid gap-3">
+          <div class="grid gap-1">
+            <dt class="font-medium text-foreground">Expertise</dt>
+            <dd>C++, FIX, and JavaScript</dd>
+          </div>
+          <div class="grid gap-1">
+            <dt class="font-medium text-foreground">Currently</dt>
+            <dd>Supporting straight-through processing (STP) flows for a front desk.</dd>
+          </div>
+          <div class="grid gap-1">
+            <dt class="font-medium text-foreground">Education</dt>
+            <dd>B.Tech in Computer Science from IIT Jodhpur</dd>
+          </div>
+        </dl>
       </CardContent>
       <CardFooter className="flex-wrap gap-2">
         <a class={buttonVariants()} href={SITE.authorUrl}>Personal Site <ExternalLinkIcon data-icon="inline-end" aria-hidden="true" /></a>
+        <a class={buttonVariants({ variant: 'outline' })} href={SITE.retroUrl}>Retro Site <ExternalLinkIcon data-icon="inline-end" aria-hidden="true" /></a>
       </CardFooter>
     </Card>
 
     <Card>
       <CardHeader>
-        <CardTitle><h2 class="text-xl font-semibold">Follow the Writing</h2></CardTitle>
-        <CardDescription>Read here, subscribe by RSS, or browse the source.</CardDescription>
+        <CardTitle><h2 class="text-xl font-semibold">Nirmal’s Notes</h2></CardTitle>
+        <CardDescription>Practical writing about software, hardware, Linux, and the tools in between.</CardDescription>
       </CardHeader>
-      <CardContent className="grid flex-1 content-start gap-3 text-base leading-7 text-muted-foreground">
-        <p>Articles are stored as Markdown in the public repository and published as a static site.</p>
+      <CardContent className="grid flex-1 content-start gap-4 text-base leading-7 text-muted-foreground">
+        <p>This is where I keep useful tools, explored systems, and technical ideas that deserve more room than a terminal scrollback.</p>
+        <p>The blog shares the personal sites’ love of Linux, hardware, and terminal-inspired design, built with Astro, Catppuccin Mocha, and as little client JavaScript as possible.</p>
       </CardContent>
       <CardFooter className="flex-wrap gap-2">
         <a class={buttonVariants({ variant: 'secondary' })} href="/rss.xml"><RssIcon data-icon="inline-start" aria-hidden="true" />RSS</a>
