@@ -120,6 +120,7 @@
   html {
     @apply scroll-smooth font-sans;
     color-scheme: dark;
+    scrollbar-gutter: stable;
     -webkit-tap-highlight-color: color-mix(in srgb, var(--primary) 24%, transparent);
   }
 
