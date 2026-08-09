@@ -27,6 +27,23 @@ test('navigation exposes the current section', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Blog', exact: true })).toHaveAttribute('aria-current', 'page');
 });
 
+test('the home header reveals its brand after the hero title scrolls away', async ({ page }) => {
+  await page.goto('/');
+  const brand = page.locator('[data-scroll-brand]');
+  const navigation = page.getByRole('navigation', { name: 'Main navigation' });
+
+  await expect(brand).toHaveAttribute('aria-hidden', 'true');
+  await expect(navigation).toHaveAttribute('data-brand-visible', 'false');
+
+  await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight }));
+  await expect(brand).not.toHaveAttribute('aria-hidden', 'true');
+  await expect(navigation).toHaveAttribute('data-brand-visible', 'true');
+
+  await page.evaluate(() => window.scrollTo({ top: 0 }));
+  await expect(brand).toHaveAttribute('aria-hidden', 'true');
+  await expect(navigation).toHaveAttribute('data-brand-visible', 'false');
+});
+
 test('internal links use Astro client-side routing', async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => {

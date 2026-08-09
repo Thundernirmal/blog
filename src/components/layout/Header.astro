@@ -6,6 +6,7 @@ import { SITE } from '@/config';
 import { cn } from '@/lib/utils';
 
 const path = Astro.url.pathname;
+const isHome = path === '/';
 const links = [
   { href: '/', label: 'Home', active: path === '/' },
   { href: '/blog/', label: 'Blog', active: path.startsWith('/blog') },
@@ -14,12 +15,35 @@ const links = [
 ];
 ---
 
-<header class="sticky top-0 z-20 border-b bg-background/90 backdrop-blur-md" transition:name="site-header" transition:animate="none">
-  <nav class="content-shell flex flex-wrap items-center gap-2.5 py-3" aria-label="Main navigation">
+<header
+  class:list={[
+    'sticky top-0 z-20 border-b bg-background/90 backdrop-blur-md',
+    isHome && 'transition-[border-color] duration-300 motion-reduce:transition-none sm:has-data-[brand-visible=false]:border-transparent',
+  ]}
+  transition:name="site-header"
+  transition:animate="none"
+>
+  <nav
+    class:list={[
+      'content-shell flex flex-wrap items-center gap-2.5 py-3',
+      isHome && 'transition-[gap] duration-300 ease-out motion-reduce:transition-none data-[brand-visible=false]:gap-0',
+    ]}
+    aria-label="Main navigation"
+    data-brand-visible={isHome ? 'false' : undefined}
+  >
     <a
       href="/"
       data-astro-prefetch="hover"
-      class="flex min-w-0 items-center gap-2 rounded-md font-heading text-base font-semibold tracking-tight text-foreground outline-none transition-[color,background-color,box-shadow] hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50"
+      class:list={[
+        'flex min-w-0 items-center gap-2 rounded-md font-heading text-base font-semibold tracking-tight text-foreground outline-none transition-[color,background-color,box-shadow] hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50',
+        isHome
+          ? 'max-h-10 max-w-56 shrink-0 overflow-hidden whitespace-nowrap opacity-100 transition-[color,background-color,box-shadow,max-width,max-height,opacity,transform] duration-300 ease-out motion-reduce:transition-none data-[visible=false]:pointer-events-none data-[visible=false]:max-h-0 data-[visible=false]:max-w-0 data-[visible=false]:-translate-y-1 data-[visible=false]:opacity-0'
+          : 'w-full sm:w-auto',
+      ]}
+      data-scroll-brand={isHome ? '' : undefined}
+      data-visible={isHome ? 'false' : undefined}
+      aria-hidden={isHome ? 'true' : undefined}
+      tabindex={isHome ? -1 : undefined}
     >
       <TerminalIcon className="size-5 text-primary" aria-hidden="true" />
       <span>{SITE.name}</span>
@@ -71,6 +95,42 @@ const links = [
 
 <script>
   import { navigate } from 'astro:transitions/client';
+
+  let brandObserver: IntersectionObserver | undefined;
+
+  const setupScrollBrand = () => {
+    brandObserver?.disconnect();
+
+    const brand = document.querySelector<HTMLElement>('[data-scroll-brand]');
+    const navigation = brand?.closest<HTMLElement>('nav');
+    const homeTitle = document.querySelector<HTMLElement>('#home-page-header h1');
+
+    if (!brand || !navigation || !homeTitle) return;
+
+    const setBrandVisible = (visible: boolean) => {
+      brand.dataset.visible = String(visible);
+      navigation.dataset.brandVisible = String(visible);
+
+      if (visible) {
+        brand.removeAttribute('aria-hidden');
+        brand.removeAttribute('tabindex');
+      } else {
+        brand.setAttribute('aria-hidden', 'true');
+        brand.tabIndex = -1;
+      }
+    };
+
+    brandObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry) setBrandVisible(!entry.isIntersecting && entry.boundingClientRect.bottom <= 64);
+      },
+      { rootMargin: '-64px 0px 0px', threshold: 0 },
+    );
+
+    brandObserver.observe(homeTitle);
+  };
+
+  document.addEventListener('astro:page-load', setupScrollBrand);
 
   document.addEventListener('keydown', (event) => {
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
