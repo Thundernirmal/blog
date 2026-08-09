@@ -2,7 +2,6 @@
 import { ArrowRightIcon, BookOpenIcon, RssIcon } from 'lucide-react';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/layout/PageHeader.astro';
-import TerminalHero from '@/components/layout/TerminalHero.astro';
 import PostCard from '@/components/blog/PostCard.astro';
 import { buttonVariants } from '@/components/ui/button';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
@@ -25,8 +24,6 @@ const structuredData = {
   <PageHeader id="home-page-header" title={SITE.name} eyebrow="~/notes" hero>
     <p>{SITE.description}</p>
   </PageHeader>
-
-  <TerminalHero latest={posts[0]} />
 
   <section class="grid gap-5" aria-labelledby="latest-writing">
     <div class="flex flex-wrap items-end justify-between gap-4">

@@ -66,13 +66,9 @@
   --info: var(--ctp-blue);
   --info-foreground: var(--ctp-crust);
   --code-inline: var(--ctp-peach);
-  --terminal-user: var(--ctp-blue);
-  --terminal-path: var(--ctp-pink);
   --status-negative: var(--ctp-red);
   --status-caution: var(--ctp-yellow);
   --status-positive: var(--ctp-green);
-  --terminal-background: color-mix(in srgb, var(--ctp-crust) 78%, var(--ctp-mantle));
-  --terminal-toolbar: var(--ctp-mantle);
   --radius: 0.5rem;
 }
 
@@ -104,13 +100,9 @@
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
   --color-code-inline: var(--code-inline);
-  --color-terminal-user: var(--terminal-user);
-  --color-terminal-path: var(--terminal-path);
   --color-status-negative: var(--status-negative);
   --color-status-caution: var(--status-caution);
   --color-status-positive: var(--status-positive);
-  --color-terminal-background: var(--terminal-background);
-  --color-terminal-toolbar: var(--terminal-toolbar);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
