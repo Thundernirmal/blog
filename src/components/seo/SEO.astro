@@ -37,7 +37,7 @@ const {
   structuredData,
 } = Astro.props;
 const isHome = canonicalPath === '/';
-const fullTitle = isHome ? `${SITE.name} — ${SITE.description}` : `${title} | ${SITE.name}`;
+const fullTitle = isHome ? SITE.homeTitle : `${title} | ${SITE.name}`;
 const canonical = new URL(canonicalPath, SITE.url).toString();
 const socialImage = new URL(image, SITE.url).toString();
 const socialImageAlt = imageAlt ?? (isHome ? `${SITE.name} — ${SITE.description}` : `${title} — ${SITE.name}`);
@@ -51,7 +51,7 @@ const jsonLd = structuredData
 <link rel="canonical" href={canonical} />
 <link rel="alternate" type="application/rss+xml" title={`${SITE.name} RSS`} href="/rss.xml" />
 <link rel="sitemap" href="/sitemap-index.xml" />
-{noindex && <meta name="robots" content="noindex, nofollow" />}
+{noindex && <meta name="robots" content="noindex" />}
 
 <meta property="og:site_name" content={SITE.name} />
 <meta property="og:title" content={fullTitle} />

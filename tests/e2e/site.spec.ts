@@ -28,6 +28,21 @@ test('navigation exposes the current section', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Blog', exact: true })).toHaveAttribute('aria-current', 'page');
 });
 
+test('SEO metadata keeps utility and thin archive pages out of search', async ({ page }) => {
+  await page.goto('/');
+  await expect(page).toHaveTitle("Nirmal's Notes — Linux, Software & Hardware");
+  await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+
+  await page.goto('/search/');
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
+
+  await page.goto('/tags/nokia/');
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
+
+  await page.goto('/tags/android/');
+  await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+});
+
 test('the about page reflects the current profile and portfolio variants', async ({ page }) => {
   await page.goto('/about/');
 
