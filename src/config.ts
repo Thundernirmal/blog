@@ -1,6 +1,7 @@
 export const SITE = {
   name: "Nirmal's Notes",
   shortName: "Nirmal's Notes",
+  homeTitle: "Nirmal's Notes — Linux, Software & Hardware",
   description: 'Practical notes on software, hardware, Linux, and the tools in between.',
   url: 'https://blog.nirmalkatariya.com',
   author: 'Nirmal Katariya',
@@ -13,3 +14,4 @@ export const SITE = {
 } as const;
 
 export const POSTS_PER_PAGE = 10;
+export const MIN_INDEXABLE_TAG_POSTS = 2;

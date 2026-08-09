@@ -2,6 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/layout/PageHeader.astro';
 import PostCard from '@/components/blog/PostCard.astro';
+import { MIN_INDEXABLE_TAG_POSTS } from '@/config';
 import { getPublishedPosts, getTagCounts, type BlogPost } from '@/lib/content';
 
 interface Props {
@@ -18,9 +19,15 @@ export async function getStaticPaths() {
 }
 
 const { tag, posts } = Astro.props;
+const isIndexable = posts.length >= MIN_INDEXABLE_TAG_POSTS;
 ---
 
-<BaseLayout title={`Articles Tagged “${tag}”`} description={`Articles tagged ${tag}.`} canonicalPath={`/tags/${encodeURIComponent(tag)}/`}>
+<BaseLayout
+  title={`Articles Tagged “${tag}”`}
+  description={`Articles tagged ${tag}.`}
+  canonicalPath={`/tags/${encodeURIComponent(tag)}/`}
+  noindex={!isIndexable}
+>
   <PageHeader title={tag} eyebrow={`${posts.length} ${posts.length === 1 ? 'article' : 'articles'}`}>
     <p>Writing filed under <span class="font-medium text-primary">{tag}</span>.</p>
   </PageHeader>

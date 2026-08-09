@@ -64,7 +64,13 @@ export default defineConfig({
       },
     }),
     react(),
-    sitemap(),
+    sitemap({
+      filter: (page) => {
+        const pathname = new URL(page).pathname;
+        const isTagDetailPage = pathname.startsWith('/tags/') && pathname !== '/tags/';
+        return pathname !== '/search/' && !isTagDetailPage;
+      },
+    }),
   ],
   vite: {
     plugins: [tailwindcss()],
