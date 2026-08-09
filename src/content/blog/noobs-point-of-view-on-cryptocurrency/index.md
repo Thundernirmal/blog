@@ -6,6 +6,8 @@ publishedAt: "2022-01-25T16:21:04.000Z"
 updatedAt: "2022-01-25T18:13:49.095Z"
 draft: false
 tags: ["nft","bitcoin","cryptocurrency"]
+heroImage: "./image-01.jpeg"
+heroAlt: "A Bitcoin token resting on a laptop keyboard"
 originalUrl: "https://medium.com/@katariya_nirmal/noobs-point-of-view-on-cryptocurrency-874709a4b2a0"
 mediumId: "874709a4b2a0"
 archived: true

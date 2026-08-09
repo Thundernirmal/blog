@@ -13,22 +13,29 @@ interface Props {
   description?: string;
   canonicalPath?: string;
   image?: string;
+  imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  imageType?: string;
   type?: 'website' | 'article';
   publishedAt?: Date;
   updatedAt?: Date;
+  tags?: string[];
+  author?: string;
   noindex?: boolean;
   structuredData?: Record<string, unknown> | Record<string, unknown>[];
   mainClass?: string;
 }
 
 const { mainClass = '', ...seoProps } = Astro.props;
+const isArticle = seoProps.type === 'article';
 ---
 
 <!doctype html>
 <html lang={SITE.language} class="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#1e1e2e" />
     <link rel="preload" href={outfitFont} as="font" type="font/woff2" crossorigin="anonymous" />
@@ -42,13 +49,13 @@ const { mainClass = '', ...seoProps } = Astro.props;
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <div class="flex min-h-screen w-full flex-col">
-      <Header />
+      <Header readingProgress={isArticle} />
       <main
         id="main-content"
         tabindex="-1"
         transition:name="page-content"
         transition:animate="fade"
-        class:list={['content-shell grid grid-cols-[minmax(0,1fr)] flex-1 content-start gap-8 py-10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring sm:py-14', mainClass]}
+        class:list={['content-shell grid grid-cols-[minmax(0,1fr)] flex-1 content-start gap-8 py-8 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring sm:py-14', mainClass]}
       >
         <slot />
       </main>

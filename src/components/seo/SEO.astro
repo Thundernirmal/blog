@@ -6,9 +6,15 @@ interface Props {
   description?: string;
   canonicalPath?: string;
   image?: string;
+  imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  imageType?: string;
   type?: 'website' | 'article';
   publishedAt?: Date;
   updatedAt?: Date;
+  tags?: string[];
+  author?: string;
   noindex?: boolean;
   structuredData?: Record<string, unknown> | Record<string, unknown>[];
 }
@@ -18,9 +24,15 @@ const {
   description = SITE.description,
   canonicalPath = Astro.url.pathname,
   image = '/og-default.png',
+  imageAlt,
+  imageWidth = image === '/og-default.png' ? 1200 : undefined,
+  imageHeight = image === '/og-default.png' ? 630 : undefined,
+  imageType = image === '/og-default.png' ? 'image/png' : undefined,
   type = 'website',
   publishedAt,
   updatedAt,
+  tags = [],
+  author,
   noindex = false,
   structuredData,
 } = Astro.props;
@@ -28,6 +40,7 @@ const isHome = canonicalPath === '/';
 const fullTitle = isHome ? `${SITE.name} — ${SITE.description}` : `${title} | ${SITE.name}`;
 const canonical = new URL(canonicalPath, SITE.url).toString();
 const socialImage = new URL(image, SITE.url).toString();
+const socialImageAlt = imageAlt ?? (isHome ? `${SITE.name} — ${SITE.description}` : `${title} — ${SITE.name}`);
 const jsonLd = structuredData
   ? JSON.stringify(structuredData).replace(/</g, '\\u003c')
   : undefined;
@@ -46,13 +59,20 @@ const jsonLd = structuredData
 <meta property="og:type" content={type} />
 <meta property="og:url" content={canonical} />
 <meta property="og:image" content={socialImage} />
-<meta property="og:image:alt" content={`${SITE.name} — ${SITE.description}`} />
+<meta property="og:image:secure_url" content={socialImage} />
+<meta property="og:image:alt" content={socialImageAlt} />
+{imageWidth && <meta property="og:image:width" content={String(imageWidth)} />}
+{imageHeight && <meta property="og:image:height" content={String(imageHeight)} />}
+{imageType && <meta property="og:image:type" content={imageType} />}
 <meta property="og:locale" content="en_US" />
 {publishedAt && <meta property="article:published_time" content={publishedAt.toISOString()} />}
 {updatedAt && <meta property="article:modified_time" content={updatedAt.toISOString()} />}
+{author && <meta property="article:author" content={author} />}
+{tags.map((tag) => <meta property="article:tag" content={tag} />)}
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={fullTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={socialImage} />
+<meta name="twitter:image:alt" content={socialImageAlt} />
 {jsonLd && <script type="application/ld+json" set:html={jsonLd} is:inline />}

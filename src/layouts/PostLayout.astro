@@ -1,5 +1,5 @@
 ---
-import { ExternalLinkIcon, InfoIcon } from 'lucide-react';
+import { ArrowLeftIcon, ExternalLinkIcon, InfoIcon } from 'lucide-react';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
@@ -7,6 +7,8 @@ import PostMeta from '@/components/blog/PostMeta.astro';
 import TagList from '@/components/blog/TagList.astro';
 import TableOfContents from '@/components/blog/TableOfContents.astro';
 import PostNavigation from '@/components/blog/PostNavigation.astro';
+import ShareButton from '@/components/blog/ShareButton.astro';
+import { buttonVariants } from '@/components/ui/button';
 import { SITE } from '@/config';
 import type { BlogPost } from '@/lib/content';
 import { getPostReadingTime, getPostSlug, getPostUrl } from '@/lib/content';
@@ -38,8 +40,10 @@ const structuredData = {
   publisher: { '@type': 'Person', name: SITE.author, url: SITE.authorUrl },
   mainEntityOfPage: new URL(url, SITE.url).toString(),
   keywords: post.data.tags.join(', '),
+  ...(post.data.heroImage && { image: new URL(post.data.heroImage.src, SITE.url).toString() }),
 };
 const editUrl = `${SITE.githubUrl}/edit/main/src/content/blog/${slug}/index.md`;
+const socialImage = post.data.heroImage;
 ---
 
 <BaseLayout
@@ -49,12 +53,23 @@ const editUrl = `${SITE.githubUrl}/edit/main/src/content/blog/${slug}/index.md`;
   type="article"
   publishedAt={post.data.publishedAt}
   updatedAt={post.data.updatedAt}
+  image={socialImage?.src}
+  imageAlt={post.data.heroAlt ?? post.data.title}
+  imageWidth={socialImage?.width}
+  imageHeight={socialImage?.height}
+  imageType={socialImage ? `image/${socialImage.format === 'jpg' ? 'jpeg' : socialImage.format}` : undefined}
+  tags={post.data.tags}
+  author={SITE.authorUrl}
   structuredData={structuredData}
 >
-  <article class="grid min-w-0 gap-8" data-pagefind-body>
-    <header class="mx-auto grid w-full min-w-0 max-w-3xl grid-cols-[minmax(0,1fr)] gap-5">
+  <article class="grid min-w-0 gap-7 sm:gap-8" data-pagefind-body>
+    <header class="mx-auto grid w-full min-w-0 max-w-3xl grid-cols-[minmax(0,1fr)] gap-4 sm:gap-5">
       <nav class="text-sm text-muted-foreground" aria-label="Breadcrumb" data-pagefind-ignore>
-        <ol class="flex min-w-0 items-center gap-2">
+        <a class:list={[buttonVariants({ variant: 'ghost' }), '-ml-3.5 w-fit sm:hidden']} href="/blog/">
+          <ArrowLeftIcon data-icon="inline-start" aria-hidden="true" />
+          Back to Blog
+        </a>
+        <ol class="hidden min-w-0 items-center gap-2 sm:flex">
           <li><a class="rounded-sm hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none" href="/">Home</a></li>
           <li aria-hidden="true">/</li>
           <li><a class="rounded-sm hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none" href="/blog/">Blog</a></li>
@@ -62,8 +77,8 @@ const editUrl = `${SITE.githubUrl}/edit/main/src/content/blog/${slug}/index.md`;
           <li aria-current="page" class="min-w-0 flex-1 truncate">{post.data.title}</li>
         </ol>
       </nav>
-      <h1 class="text-balance text-4xl font-semibold leading-tight tracking-tight sm:text-5xl" data-pagefind-meta="title">{post.data.title}</h1>
-      <p class="text-pretty text-lg leading-8 text-muted-foreground" data-pagefind-meta="description">{post.data.description}</p>
+      <h1 class="text-balance text-[2rem] font-semibold leading-[1.15] tracking-tight min-[360px]:text-4xl sm:text-5xl" data-pagefind-meta="title">{post.data.title}</h1>
+      <p class="text-pretty text-base leading-7 text-muted-foreground min-[360px]:text-lg min-[360px]:leading-8" data-pagefind-meta="description">{post.data.description}</p>
       <PostMeta publishedAt={post.data.publishedAt} updatedAt={post.data.updatedAt} readingMinutes={getPostReadingTime(post)} />
       <div data-pagefind-meta={`tags:${post.data.tags.join(', ')}`}>
         <TagList tags={post.data.tags} />
@@ -97,8 +112,11 @@ const editUrl = `${SITE.githubUrl}/edit/main/src/content/blog/${slug}/index.md`;
     <Separator />
     <TagList tags={post.data.tags} />
     <div class="flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
-      <span>Found something to improve?</span>
-      <a class="rounded-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none" href={editUrl}>Edit on GitHub</a>
+      <div class="flex flex-wrap items-center gap-3">
+        <ShareButton title={post.data.title} text={post.data.description} />
+        <span>Found something to improve?</span>
+      </div>
+      <a class="inline-flex min-h-11 items-center rounded-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none sm:min-h-8" href={editUrl}>Edit on GitHub</a>
     </div>
     <PostNavigation newer={newer} older={older} />
   </div>

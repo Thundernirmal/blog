@@ -6,6 +6,8 @@ publishedAt: "2020-05-15T08:48:33.000Z"
 updatedAt: "2022-02-11T07:29:54.358Z"
 draft: false
 tags: ["nokia","android","redmi","smartphones","oneplus"]
+heroImage: "./image-01.jpeg"
+heroAlt: "A smartphone beside a removed SIM tray and nano-SIM card"
 originalUrl: "https://medium.com/@katariya_nirmal/features-that-are-nice-to-have-e1-mobile-madness-9086c977099d"
 mediumId: "9086c977099d"
 archived: true

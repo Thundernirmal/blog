@@ -39,6 +39,10 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'always',
   prefetch: true,
+  image: {
+    layout: 'constrained',
+    responsiveStyles: true,
+  },
   markdown: {
     processor: unified({ rehypePlugins: [rehypeAccessibleTables] }),
   },

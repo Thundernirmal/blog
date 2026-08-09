@@ -59,6 +59,37 @@ test('the home header reveals its brand after the hero title scrolls away', asyn
   await expect(navigation).toHaveAttribute('data-brand-visible', 'false');
 });
 
+test('the mobile header keeps a stable height and follows scroll direction', async ({ page }) => {
+  test.skip((page.viewportSize()?.width ?? 0) >= 640);
+
+  await page.goto('/');
+  const header = page.locator('[data-site-header]');
+  const initialHeight = await header.evaluate((element) => element.getBoundingClientRect().height);
+
+  await page.evaluate(() => window.scrollTo(0, 300));
+  await expect(header).toHaveAttribute('data-scroll-state', 'hidden');
+  await expect.poll(() => header.evaluate((element) => element.getBoundingClientRect().height)).toBe(initialHeight);
+
+  await page.evaluate(() => window.scrollBy(0, -80));
+  await expect(header).toHaveAttribute('data-scroll-state', 'visible');
+
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(header).toHaveAttribute('data-scroll-state', 'visible');
+});
+
+test('mobile article anchors remain visible below the header', async ({ page }) => {
+  test.skip((page.viewportSize()?.width ?? 0) >= 640);
+
+  await page.goto('/blog/windows-subsystem-for-linux-wsl/#installing-wsl');
+  const positions = await page.evaluate(() => {
+    const header = document.querySelector<HTMLElement>('[data-site-header]')?.getBoundingClientRect();
+    const heading = document.querySelector<HTMLElement>('#installing-wsl')?.getBoundingClientRect();
+    return { headerBottom: header?.bottom ?? 0, headingTop: heading?.top ?? 0 };
+  });
+
+  expect(positions.headingTop).toBeGreaterThanOrEqual(positions.headerBottom + 8);
+});
+
 test('tag links are rendered as icon buttons across the site', async ({ page }) => {
   for (const route of ['/tags/', '/blog/', '/blog/windows-subsystem-for-linux-wsl/']) {
     await page.goto(route);
@@ -132,6 +163,49 @@ test('core routes do not overflow the viewport', async ({ page }) => {
   }
 });
 
+test('core routes fit common phone widths and mobile landscape', async ({ page }) => {
+  const viewports = [
+    { width: 320, height: 800 },
+    { width: 360, height: 800 },
+    { width: 390, height: 844 },
+    { width: 430, height: 932 },
+    { width: 667, height: 375 },
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+    for (const route of ['/', '/blog/', '/blog/windows-subsystem-for-linux-wsl/', '/tags/', '/search/']) {
+      await page.goto(route);
+      const dimensions = await page.evaluate(() => ({
+        documentWidth: document.documentElement.scrollWidth,
+        viewportWidth: document.documentElement.clientWidth,
+      }));
+      expect(dimensions.documentWidth, `${route} should fit ${viewport.width}×${viewport.height}`).toBeLessThanOrEqual(dimensions.viewportWidth);
+    }
+  }
+});
+
+test('primary mobile controls have touch-friendly targets', async ({ page }) => {
+  test.skip((page.viewportSize()?.width ?? 0) >= 640);
+
+  await page.goto('/blog/');
+  const controls = [
+    page.getByRole('link', { name: 'Home', exact: true }),
+    page.locator('a[href^="/tags/"]:not([href="/tags/"])').first(),
+    page.getByRole('link', { name: 'Read article' }).first(),
+    page.getByRole('contentinfo').getByRole('link', { name: 'RSS' }),
+  ];
+
+  for (const control of controls) {
+    const box = await control.boundingBox();
+    expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+  }
+
+  await page.goto('/blog/windows-subsystem-for-linux-wsl/');
+  const summaryBox = await page.locator('details[data-table-of-contents] summary').boundingBox();
+  expect(summaryBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+});
+
 test('imported article images load from the local build', async ({ page }) => {
   await page.goto('/blog/windows-subsystem-for-linux-wsl/');
   const images = page.locator('.article-prose img');
@@ -140,6 +214,8 @@ test('imported article images load from the local build', async ({ page }) => {
   for (const image of await images.all()) {
     await image.scrollIntoViewIfNeeded();
     await expect.poll(() => image.evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+    await expect(image).toHaveAttribute('srcset', /\w/);
+    await expect(image).toHaveAttribute('sizes', /\w/);
   }
 });
 
@@ -150,6 +226,8 @@ test('the table of contents uses the right responsive control', async ({ page })
     await expect(disclosure).toBeVisible();
     await disclosure.locator('summary').click();
     await expect(disclosure.getByRole('link', { name: 'Installing WSL' })).toBeVisible();
+    await disclosure.getByRole('link', { name: 'Installing WSL' }).click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
   } else {
     await expect(page.getByRole('navigation', { name: 'On this page' })).toBeVisible();
   }
@@ -162,12 +240,46 @@ test('the table of contents highlights the section in view', async ({ page }) =>
     : page.locator('nav[data-table-of-contents]');
 
   await expect(tableOfContents.locator('a[href="#timeline"]')).toHaveAttribute('aria-current', 'location');
+  await expect(page.locator('[data-toc-current]').first()).toHaveText('Timeline');
 
   await page.locator('#wsl-1-vs-wsl-2').evaluate((heading) => heading.scrollIntoView({ block: 'start' }));
   await expect(tableOfContents.locator('a[href="#wsl-1-vs-wsl-2"]')).toHaveAttribute('aria-current', 'location');
+  await expect(page.locator('[data-toc-current]').first()).toHaveText('WSL 1 vs WSL 2');
 
   await page.locator('#references').evaluate((heading) => heading.scrollIntoView({ block: 'start' }));
   await expect(tableOfContents.locator('a[href="#references"]')).toHaveAttribute('aria-current', 'location');
+});
+
+test('article pages expose complete sharing metadata', async ({ page }) => {
+  await page.goto('/blog/windows-subsystem-for-linux-wsl/');
+
+  await expect(page.locator('meta[name="viewport"]')).toHaveAttribute('content', /viewport-fit=cover/);
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /\/_astro\//);
+  await expect(page.locator('meta[property="og:image:width"]')).toHaveAttribute('content', /^\d+$/);
+  await expect(page.locator('meta[property="og:image:height"]')).toHaveAttribute('content', /^\d+$/);
+  await expect(page.locator('meta[property="og:image:type"]')).toHaveAttribute('content', /^image\//);
+  await expect(page.locator('meta[name="twitter:image:alt"]')).toHaveAttribute('content', /Linux distributions available for WSL/);
+  await expect(page.locator('meta[property="article:author"]')).toHaveAttribute('content', 'https://nirmalkatariya.com');
+  await expect(page.locator('meta[property="article:tag"]')).toHaveCount(5);
+});
+
+test('the share control copies the article URL when native sharing is unavailable', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'share', { configurable: true, value: undefined });
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: {
+        writeText: async (value: string) => {
+          (window as Window & { copiedArticleUrl?: string }).copiedArticleUrl = value;
+        },
+      },
+    });
+  });
+  await page.goto('/blog/windows-subsystem-for-linux-wsl/');
+
+  await page.getByRole('button', { name: 'Share Article' }).click();
+  await expect(page.getByRole('button', { name: 'Link Copied' })).toBeVisible();
+  await expect.poll(() => page.evaluate(() => (window as Window & { copiedArticleUrl?: string }).copiedArticleUrl)).toMatch(/\/blog\/windows-subsystem-for-linux-wsl\/$/);
 });
 
 test('the desktop table of contents does not scroll horizontally', async ({ page }) => {

@@ -6,6 +6,8 @@ publishedAt: "2020-03-27T09:35:11.000Z"
 updatedAt: "2020-03-27T09:35:11.988Z"
 draft: false
 tags: ["computers","ssd","guides-and-tutorials","hdd","technology"]
+heroImage: "./image-04.jpeg"
+heroAlt: "A partially opened WD Red hard drive on a pink surface"
 originalUrl: "https://medium.com/@katariya_nirmal/guide-to-computer-storage-157790959c08"
 mediumId: "157790959c08"
 archived: true
