@@ -5,6 +5,7 @@ export const SITE = {
   url: 'https://blog.nirmalkatariya.com',
   author: 'Nirmal Katariya',
   authorUrl: 'https://nirmalkatariya.com',
+  retroUrl: 'https://retro.nirmalkatariya.com',
   githubUrl: 'https://github.com/Thundernirmal/blog',
   mediumUrl: 'https://medium.com/@katariya_nirmal',
   locale: 'en-US',

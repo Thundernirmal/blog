@@ -28,6 +28,16 @@ test('navigation exposes the current section', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Blog', exact: true })).toHaveAttribute('aria-current', 'page');
 });
 
+test('the about page reflects the current profile and portfolio variants', async ({ page }) => {
+  await page.goto('/about/');
+
+  await expect(page.getByRole('heading', { name: 'Nirmal Katariya' })).toBeVisible();
+  await expect(page.getByText('Associate System Engineer at Goldman Sachs', { exact: false })).toBeVisible();
+  await expect(page.getByText('C++, FIX, and JavaScript')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Personal Site' })).toHaveAttribute('href', 'https://nirmalkatariya.com');
+  await expect(page.getByRole('link', { name: 'Retro Site' })).toHaveAttribute('href', 'https://retro.nirmalkatariya.com');
+});
+
 test('navigation keeps its position between long and short routes', async ({ page }) => {
   await page.goto('/blog/');
   const blogNavigation = await page.getByRole('navigation', { name: 'Main navigation' }).boundingBox();
