@@ -69,6 +69,28 @@ test('the home header reveals its brand after the hero title scrolls away', asyn
   await expect(navigation).toHaveAttribute('data-brand-visible', 'false');
 });
 
+test('page sections and repeated content share the entrance animation', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const pageSections = page.locator('[data-page-enter] > *');
+  const postCards = page.locator('[data-reveal-list] > [data-slot="card"]');
+  await expect(pageSections).toHaveCount(2);
+  await expect(postCards).toHaveCount(3);
+
+  for (const element of [pageSections.first(), pageSections.last(), postCards.first(), postCards.last()]) {
+    await expect.poll(() => element.evaluate((node) => getComputedStyle(node).animationName)).toBe('content-reveal');
+  }
+
+  const cardDelays = await postCards.evaluateAll((cards) => cards.map((card) => Number.parseFloat(getComputedStyle(card).animationDelay)));
+  expect(cardDelays).toEqual([...cardDelays].sort((first, second) => first - second));
+  expect(new Set(cardDelays).size).toBe(cardDelays.length);
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.reload();
+  await expect.poll(() => postCards.first().evaluate((node) => getComputedStyle(node).animationName)).toBe('none');
+});
+
 test('the mobile header keeps a stable height and follows scroll direction', async ({ page }) => {
   test.skip((page.viewportSize()?.width ?? 0) >= 640);
 

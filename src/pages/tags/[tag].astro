@@ -24,7 +24,7 @@ const { tag, posts } = Astro.props;
   <PageHeader title={tag} eyebrow={`${posts.length} ${posts.length === 1 ? 'article' : 'articles'}`}>
     <p>Writing filed under <span class="font-medium text-primary">{tag}</span>.</p>
   </PageHeader>
-  <div class="grid gap-4 md:grid-cols-2">
+  <div class="grid gap-4 md:grid-cols-2" data-reveal-list>
     {posts.map((post) => <PostCard post={post} />)}
   </div>
 </BaseLayout>

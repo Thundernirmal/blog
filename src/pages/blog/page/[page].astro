@@ -38,7 +38,7 @@ const { posts, currentPage, totalPages, totalPosts } = Astro.props;
   <PageHeader title="Blog" eyebrow={`${totalPosts} articles · page ${currentPage} of ${totalPages}`}>
     <p>Writing on Linux, software, hardware, and the tools that make computing more interesting.</p>
   </PageHeader>
-  <div class="grid gap-4">
+  <div class="grid gap-4" data-reveal-list>
     {posts.map((post) => <PostCard post={post} />)}
   </div>
   <Pagination currentPage={currentPage} totalPages={totalPages} />

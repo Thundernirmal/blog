@@ -53,6 +53,7 @@ const isArticle = seoProps.type === 'article';
       <main
         id="main-content"
         tabindex="-1"
+        data-page-enter
         transition:name="page-content"
         transition:animate="fade"
         class:list={['content-shell grid grid-cols-[minmax(0,1fr)] flex-1 content-start gap-8 py-8 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring sm:py-14', mainClass]}
