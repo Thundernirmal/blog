@@ -1,5 +1,5 @@
 ---
-import { badgeVariants } from '@/components/ui/badge';
+import TagButton from '@/components/blog/TagButton.astro';
 
 interface Props {
   tags: string[];
@@ -14,9 +14,7 @@ const visibleTags = typeof limit === 'number' ? tags.slice(0, limit) : tags;
   <ul class="flex flex-wrap gap-2" aria-label="Tags">
     {visibleTags.map((tag) => (
       <li>
-        <a class={badgeVariants({ variant: 'secondary' })} href={`/tags/${encodeURIComponent(tag)}/`}>
-          {tag}
-        </a>
+        <TagButton tag={tag} />
       </li>
     ))}
   </ul>

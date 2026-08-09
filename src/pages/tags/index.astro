@@ -2,7 +2,7 @@
 import { TagsIcon } from 'lucide-react';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/layout/PageHeader.astro';
-import { badgeVariants } from '@/components/ui/badge';
+import TagButton from '@/components/blog/TagButton.astro';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { getPublishedPosts, getTagCounts } from '@/lib/content';
 
@@ -18,9 +18,7 @@ const tags = getTagCounts(posts);
     <ul class="flex flex-wrap gap-3">
       {tags.map(({ tag, count }) => (
         <li>
-          <a class:list={[badgeVariants({ variant: 'outline' }), 'h-8 px-3 text-sm']} href={`/tags/${encodeURIComponent(tag)}/`}>
-            {tag} <span class="text-muted-foreground">{count}</span>
-          </a>
+          <TagButton tag={tag} count={count} prominent />
         </li>
       ))}
     </ul>

@@ -44,6 +44,19 @@ test('the home header reveals its brand after the hero title scrolls away', asyn
   await expect(navigation).toHaveAttribute('data-brand-visible', 'false');
 });
 
+test('tag links are rendered as icon buttons across the site', async ({ page }) => {
+  for (const route of ['/tags/', '/blog/', '/blog/windows-subsystem-for-linux-wsl/']) {
+    await page.goto(route);
+    const tagLinks = page.locator('a[href^="/tags/"]:not([href="/tags/"])');
+    await expect(tagLinks.first(), `${route} should display tag links`).toBeVisible();
+    expect(await tagLinks.count(), `${route} should display tag links`).toBeGreaterThan(0);
+
+    for (const tagLink of await tagLinks.all()) {
+      await expect(tagLink.locator('svg'), `${route} tag links should include an icon`).toHaveCount(1);
+    }
+  }
+});
+
 test('internal links use Astro client-side routing', async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => {

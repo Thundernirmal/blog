@@ -1,0 +1,58 @@
+---
+import {
+  BitcoinIcon,
+  BookOpenIcon,
+  BotIcon,
+  CoinsIcon,
+  CpuIcon,
+  Disc3Icon,
+  HardDriveIcon,
+  ImageIcon,
+  LaptopIcon,
+  PanelsTopLeftIcon,
+  SmartphoneIcon,
+  TagIcon,
+  TerminalIcon,
+  type LucideIcon,
+} from 'lucide-react';
+import { buttonVariants } from '@/components/ui/button';
+
+interface Props {
+  tag: string;
+  count?: number;
+  prominent?: boolean;
+}
+
+const { tag, count, prominent = false } = Astro.props;
+const tagIcons: Record<string, LucideIcon> = {
+  android: BotIcon,
+  bitcoin: BitcoinIcon,
+  computers: LaptopIcon,
+  cryptocurrency: CoinsIcon,
+  'guides-and-tutorials': BookOpenIcon,
+  hdd: Disc3Icon,
+  nft: ImageIcon,
+  nokia: SmartphoneIcon,
+  oneplus: SmartphoneIcon,
+  redmi: SmartphoneIcon,
+  smartphones: SmartphoneIcon,
+  ssd: HardDriveIcon,
+  technology: CpuIcon,
+  ubuntu: TerminalIcon,
+  windows: PanelsTopLeftIcon,
+  'windows-10': PanelsTopLeftIcon,
+  wsl: TerminalIcon,
+};
+const Icon = tagIcons[tag] ?? TagIcon;
+---
+
+<a
+  class={buttonVariants({ variant: 'secondary', size: prominent ? 'default' : 'sm' })}
+  href={`/tags/${encodeURIComponent(tag)}/`}
+>
+  <Icon data-icon="inline-start" aria-hidden="true" />
+  <span>{tag}</span>
+  {typeof count === 'number' && (
+    <span class="border-l border-secondary-foreground/20 pl-1.5 font-mono text-[0.75em] text-secondary-foreground/70">{count}</span>
+  )}
+</a>
