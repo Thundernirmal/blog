@@ -15,6 +15,8 @@ The approved product and technical decisions live in [SPEC.md](./SPEC.md).
 npm install
 npx playwright install chromium firefox
 npm run dev
+# In another terminal, stop a background Astro dev server with:
+# npm run dev:stop
 ```
 
 Astro serves the site at `http://localhost:4321`. Useful checks:

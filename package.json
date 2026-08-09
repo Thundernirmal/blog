@@ -11,6 +11,7 @@
   "scripts": {
     "predev": "npm run search:sync",
     "dev": "astro dev",
+    "dev:stop": "astro dev stop",
     "prestart": "npm run search:sync",
     "start": "astro dev",
     "check": "astro check",

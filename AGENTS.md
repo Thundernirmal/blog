@@ -10,6 +10,7 @@ Use Node.js 22.12+ and npm 10.9+.
 
 - `npm install` installs dependencies; use `npm ci` in CI or for a clean lockfile-based install.
 - `npm run dev` starts Astro at `http://localhost:4321` and prepares the local Pagefind index.
+- `npm run dev:stop` stops a background Astro development server.
 - `npm run check` runs Astro's TypeScript and content validation.
 - `npm run build` creates the static site in `dist/` and builds its Pagefind index.
 - `npm run test:e2e` runs Playwright tests against the built site.
