@@ -47,8 +47,9 @@ test('the about page reflects the current profile and portfolio variants', async
   await page.goto('/about/');
 
   await expect(page.getByRole('heading', { name: 'Nirmal Katariya' })).toBeVisible();
-  await expect(page.getByText('Associate System Engineer at Goldman Sachs', { exact: false })).toBeVisible();
-  await expect(page.getByText('C++, FIX, and JavaScript')).toBeVisible();
+  await expect(page.getByText('Systems engineer in site reliability · B.Tech', { exact: false })).toBeVisible();
+  await expect(page.getByText(/Goldman|Capgemini/i)).toHaveCount(0);
+  await expect(page.getByText('SRE, SLOs & SLIs, Prometheus, Alertmanager, BigQuery, Linux, and Python')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Personal Site' })).toHaveAttribute('href', 'https://nirmalkatariya.com');
   await expect(page.getByRole('link', { name: 'Retro Site' })).toHaveAttribute('href', 'https://retro.nirmalkatariya.com');
 });
