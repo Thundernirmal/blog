@@ -552,6 +552,16 @@ test('contents links land headings just below the header, offset once', async ({
   expect(gap).toBeLessThanOrEqual(32);
 });
 
+test('article header, notes, prose and footer share one left edge', async ({ page }) => {
+  await page.goto('/blog/windows-subsystem-for-linux-wsl/');
+  const edges = await page.evaluate(() =>
+    ['article h1', '[data-slot="alert"]', '.article-prose', '[data-share-button]'].map(
+      (selector) => Math.round(document.querySelector(selector)!.getBoundingClientRect().left),
+    ),
+  );
+  expect(new Set(edges).size, `left edges ${edges.join(', ')}`).toBe(1);
+});
+
 test('core routes have no browser console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {

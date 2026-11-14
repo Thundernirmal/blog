@@ -476,6 +476,12 @@
     transform: translateX(3px);
   }
 
+  /* Article column grid: the prose column plus the contents rail on large screens. Header, notes and
+     footer use it too (leaving the rail empty), so every block starts on the prose column's edge. */
+  .post-column {
+    @apply grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-8 lg:grid-cols-[minmax(0,720px)_220px] lg:justify-center;
+  }
+
   /* Post cards: hairline-ruled and flush with the page, lifting to the card surface on hover. */
   .post-card {
     @apply flex h-full min-w-0 flex-col gap-4 border bg-background p-5 wrap-anywhere transition-colors hover:bg-card sm:p-6;

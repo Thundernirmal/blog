@@ -59,8 +59,10 @@ const socialImage = post.data.heroImage;
   author={SITE.authorUrl}
   structuredData={structuredData}
 >
+  {/* Every block shares .post-column's grid, so the header, notes, prose and footer all start on the same edge. */}
   <article class="grid min-w-0 gap-7 sm:gap-8" data-pagefind-body>
-    <header class="mx-auto grid w-full min-w-0 max-w-3xl grid-cols-[minmax(0,1fr)] gap-4 sm:gap-5">
+    <div class="post-column">
+      <header class="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-4 sm:gap-5">
       {/* The breadcrumb uses nirmalkatariya.com's uppercase label. */}
       <nav class="label text-muted-foreground" aria-label="Breadcrumb" data-pagefind-ignore>
         <a class="inline-flex min-h-11 w-fit items-center gap-2 outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring sm:hidden" href="/blog/">
@@ -82,9 +84,10 @@ const socialImage = post.data.heroImage;
         <TagList tags={post.data.tags} />
       </div>
     </header>
+    </div>
 
     {(post.data.originalUrl || post.data.archived) && (
-      <div class="mx-auto w-full max-w-3xl" data-pagefind-ignore>
+      <div class="post-column" data-pagefind-ignore>
         <Alert role="note">
           <InfoIcon aria-hidden="true" />
           <AlertTitle>From the Archive</AlertTitle>
@@ -98,7 +101,7 @@ const socialImage = post.data.heroImage;
       </div>
     )}
 
-    <div class="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,720px)_220px] lg:justify-center lg:items-start">
+    <div class="post-column gap-y-8 lg:items-start">
       <div class="article-prose min-w-0">
         <slot />
       </div>
@@ -106,12 +109,14 @@ const socialImage = post.data.heroImage;
     </div>
   </article>
 
-  <div class="mx-auto grid w-full min-w-0 max-w-3xl grid-cols-[minmax(0,1fr)] gap-6" data-pagefind-ignore>
+  <div class="post-column" data-pagefind-ignore>
+    <div class="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6">
     <Separator />
     <TagList tags={post.data.tags} />
     <div class="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
       <ShareButton title={post.data.title} text={post.data.description} />
     </div>
     <PostNavigation newer={newer} older={older} />
+    </div>
   </div>
 </BaseLayout>
