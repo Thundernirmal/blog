@@ -265,8 +265,11 @@ test('internal links use Astro client-side routing', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Blog', exact: true })).toHaveAttribute('aria-current', 'page');
   await expect.poll(() => page.evaluate(() => (window as Window & { clientRouterMarker?: boolean }).clientRouterMarker)).toBe(true);
 
-  await page.getByRole('link', { name: 'Read article' }).first().click();
-  await expect(page).toHaveURL(/\/blog\/[^/]+\/$/);
+  // Clicks are ignored while the previous navigation's view transition is still running; retry until one lands.
+  await expect(async () => {
+    await page.getByRole('link', { name: 'Read article' }).first().click();
+    await expect(page).toHaveURL(/\/blog\/[^/]+\/$/, { timeout: 1_000 });
+  }).toPass();
   await expect(page.locator('article h1')).toBeVisible();
   await expect.poll(() => page.evaluate(() => (window as Window & { clientRouterMarker?: boolean }).clientRouterMarker)).toBe(true);
 });
