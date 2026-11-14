@@ -332,6 +332,8 @@ test('core routes fit common phone widths and mobile landscape', async ({ page }
 
 test('primary mobile controls have touch-friendly targets', async ({ page }) => {
   test.skip((page.viewportSize()?.width ?? 0) >= 640);
+  // Rows slide in on load, and WebKit reports sub-pixel sizes mid-transform; measure at rest.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
 
   await page.goto('/blog/');
   const controls = [
