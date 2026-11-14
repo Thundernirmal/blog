@@ -59,11 +59,39 @@ test('a stored theme overrides the system scheme and survives client-side naviga
   expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(30, 30, 46)');
 });
 
-test('without JavaScript the system scheme still selects the flavour', async ({ browser }) => {
+test('the header toggle switches, persists, and carries the theme across navigation', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/');
+  const html = page.locator('html');
+  const toggle = page.locator('[data-site-header]').getByRole('button', { name: 'Dark theme', exact: true });
+  await expect(html).toHaveAttribute('data-theme', 'latte');
+  await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+  await toggle.click();
+  await expect(html).toHaveAttribute('data-theme', 'mocha');
+  await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  await expect(html).not.toHaveClass(/theme-switching/);
+  expect(await page.evaluate(() => localStorage.getItem('theme'))).toBe('mocha');
+  await page.locator('[data-site-header]').getByRole('link', { name: 'About', exact: true }).click();
+  await expect(page).toHaveURL(/\/about\/$/);
+  await expect(page.getByRole('heading', { name: 'About', level: 1 })).toBeVisible();
+  await expect(html).toHaveAttribute('data-theme', 'mocha');
+  const swappedToggle = page.locator('[data-site-header]').getByRole('button', { name: 'Dark theme', exact: true });
+  await expect(swappedToggle).toHaveAttribute('aria-pressed', 'true');
+  await swappedToggle.focus();
+  await page.keyboard.press('Enter');
+  await expect(html).toHaveAttribute('data-theme', 'latte');
+  await page.reload();
+  await expect(html).toHaveAttribute('data-theme', 'latte');
+  expect(await page.evaluate(() => localStorage.getItem('theme'))).toBe('latte');
+});
+
+test('without JavaScript the system scheme applies and the inert toggle stays hidden', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, colorScheme: 'dark' });
   const page = await context.newPage();
   await page.goto('/blog/windows-subsystem-for-linux-wsl/');
   await expect(page.locator('html')).not.toHaveAttribute('data-theme');
+  // The toggle needs a script to act, so it stays hidden rather than inert.
+  await expect(page.locator('[data-theme-toggle]')).toBeHidden();
   expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(30, 30, 46)');
   await context.close();
 });
