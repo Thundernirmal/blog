@@ -463,7 +463,7 @@
   }
 
   .home-cta {
-    @apply flex min-h-11 w-fit items-center gap-2 text-foreground outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring;
+    @apply flex min-h-11 w-fit items-center gap-2 text-foreground outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background;
   }
 
   /* Label-link icons name the action (RSS, read, browse, share) and pick up the accent. */
@@ -489,7 +489,8 @@
   }
 
   .post-nav-cell {
-    @apply grid min-w-0 content-start gap-3 py-6 wrap-anywhere outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring sm:pr-8;
+    /* The ring is offset outside the cell so it clears the text, including the right-aligned Newer title. */
+    @apply grid min-w-0 content-start gap-3 py-6 wrap-anywhere outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:pr-8;
   }
 
   .post-nav-cell + .post-nav-cell {
