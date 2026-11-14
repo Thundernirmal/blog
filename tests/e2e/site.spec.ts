@@ -493,9 +493,9 @@ test('the 404 page shows the shared terminal window and recovery links', async (
 });
 
 test('outline buttons draw their hairline border', async ({ page }) => {
-  await page.goto('/blog/windows-subsystem-for-linux-wsl/');
-  const share = page.getByRole('button', { name: 'Share Article' });
-  const colors = await share.evaluate((node) => {
+  await page.goto('/about/');
+  const outline = page.getByRole('link', { name: 'Retro Site' });
+  const colors = await outline.evaluate((node) => {
     const probe = document.createElement('div');
     probe.style.color = 'var(--border)';
     document.body.append(probe);
@@ -555,11 +555,27 @@ test('contents links land headings just below the header, offset once', async ({
 test('article header, notes, prose and footer share one left edge', async ({ page }) => {
   await page.goto('/blog/windows-subsystem-for-linux-wsl/');
   const edges = await page.evaluate(() =>
-    ['article h1', '[data-slot="alert"]', '.article-prose', '[data-share-button]'].map(
+    ['article h1', '[data-slot="alert"]', '.article-prose', 'nav[aria-label="Article navigation"]'].map(
       (selector) => Math.round(document.querySelector(selector)!.getBoundingClientRect().left),
     ),
   );
   expect(new Set(edges).size, `left edges ${edges.join(', ')}`).toBe(1);
+});
+
+test('older and newer articles sit in a ruled two-cell band', async ({ page }) => {
+  await page.goto('/blog/windows-subsystem-for-linux-wsl/');
+  const band = page.getByRole('navigation', { name: 'Article navigation' });
+  const older = band.getByRole('link', { name: /^← Older|^Older/ });
+  const newer = band.getByRole('link', { name: /^Newer/ });
+  await expect(older).toBeVisible();
+  await expect(newer).toBeVisible();
+  expect(await band.evaluate((node) => getComputedStyle(node).borderTopWidth)).toBe('1px');
+  if ((page.viewportSize()?.width ?? 0) >= 640) {
+    const [olderBox, newerBox] = [await older.boundingBox(), await newer.boundingBox()];
+    expect(newerBox!.x).toBeGreaterThan(olderBox!.x);
+    expect(Math.abs(newerBox!.y - olderBox!.y)).toBeLessThan(2);
+  }
+  await expect(page.getByRole('button', { name: 'Share Article' })).toHaveClass(/home-cta/);
 });
 
 test('core routes have no browser console errors', async ({ page }) => {

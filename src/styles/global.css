@@ -482,6 +482,35 @@
     @apply grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-8 lg:grid-cols-[minmax(0,720px)_220px] lg:justify-center;
   }
 
+  /* Older/Newer: a two-cell ruled band, newer always in the right-hand cell. */
+  .post-nav {
+    @apply grid min-w-0 border-y sm:grid-cols-2;
+  }
+
+  .post-nav-cell {
+    @apply grid min-w-0 content-start gap-3 py-6 wrap-anywhere outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring sm:pr-8;
+  }
+
+  .post-nav-cell + .post-nav-cell {
+    @apply border-t sm:border-t-0 sm:border-l;
+  }
+
+  .post-nav-newer {
+    @apply sm:col-start-2 sm:pl-8 sm:pr-0 sm:text-right;
+  }
+
+  .post-nav-title {
+    @apply text-balance text-xl leading-tight font-medium tracking-[-0.02em] sm:text-2xl;
+  }
+
+  .post-nav-cell:hover .home-cta-arrow {
+    transform: translateX(-3px);
+  }
+
+  .post-nav-newer:hover .home-cta-arrow {
+    transform: translateX(3px);
+  }
+
   /* Post cards: hairline-ruled and flush with the page, lifting to the card surface on hover. */
   .post-card {
     @apply flex h-full min-w-0 flex-col gap-4 border bg-background p-5 wrap-anywhere transition-colors hover:bg-card sm:p-6;

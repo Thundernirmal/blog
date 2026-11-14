@@ -111,12 +111,12 @@ const socialImage = post.data.heroImage;
 
   <div class="post-column" data-pagefind-ignore>
     <div class="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6">
-    <Separator />
-    <TagList tags={post.data.tags} />
-    <div class="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-      <ShareButton title={post.data.title} text={post.data.description} />
-    </div>
-    <PostNavigation newer={newer} older={older} />
+      <Separator />
+      <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+        <TagList tags={post.data.tags} />
+        <ShareButton title={post.data.title} text={post.data.description} />
+      </div>
+      <PostNavigation newer={newer} older={older} />
     </div>
   </div>
 </BaseLayout>
