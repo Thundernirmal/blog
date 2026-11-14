@@ -626,7 +626,7 @@ test('label links lead with an icon for their purpose, not a generic arrow', asy
 test('a listing\'s "Updated" date never splits across lines', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 800 });
   await page.goto('/blog/');
-  const updated = page.locator('.post-row .label .whitespace-nowrap', { hasText: 'Updated' }).first();
+  const updated = page.locator('.post-row [data-updated]').first();
   await expect(updated).toBeVisible();
   // Every fragment (the text and its <time>) sits on the same line.
   const tops = await updated.evaluate((node) => [...new Set([...node.getClientRects()].map((rect) => Math.round(rect.top)))]);
