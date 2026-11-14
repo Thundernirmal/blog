@@ -12,13 +12,13 @@ const { title, text } = Astro.props;
 <div class="inline-flex items-center gap-2" data-share-control>
   <button
     type="button"
-    class="home-cta label w-fit justify-start gap-2 wrap-anywhere"
+    class="home-cta label wrap-anywhere"
     data-share-button
     data-share-title={title}
     data-share-text={text}
   >
-    <Share2Icon className="size-3.5 shrink-0" aria-hidden="true" data-share-icon />
-    <CheckIcon className="hidden size-3.5 shrink-0" aria-hidden="true" data-copied-icon />
+    <Share2Icon className="label-icon" aria-hidden="true" data-share-icon />
+    <CheckIcon className="label-icon hidden" aria-hidden="true" data-copied-icon />
     <span data-share-label>Share Article</span>
   </button>
   <span class="sr-only" aria-live="polite" data-share-status></span>

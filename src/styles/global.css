@@ -463,18 +463,19 @@
   }
 
   .home-cta {
-    @apply flex min-h-11 items-center justify-between gap-3 text-foreground outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring;
+    @apply flex min-h-11 w-fit items-center gap-2 text-foreground outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring;
   }
 
-  /* Sized and set on the caps' line so the arrow centres on the label instead of sitting low. */
-  .home-cta-arrow {
-    @apply text-sm leading-none tracking-normal transition-transform duration-300 ease-out;
+  /* Label-link icons name the action (RSS, read, browse, share) and pick up the accent. */
+  .label-icon {
+    @apply size-3.5 shrink-0 text-primary;
   }
 
-  .home-cta:hover .home-cta-arrow,
-  .home-cta:focus-visible .home-cta-arrow {
-    transform: translateX(3px);
+  /* Older/Newer arrows show direction, so they are the one place a label keeps an arrow. */
+  .post-nav-arrow {
+    @apply inline-block text-sm leading-none tracking-normal transition-transform duration-300 ease-out;
   }
+
 
   /* Article column grid: the prose column plus the contents rail on large screens. Header, notes and
      footer use it too (leaving the rail empty), so every block starts on the prose column's edge. */
@@ -503,11 +504,11 @@
     @apply text-balance text-xl leading-tight font-medium tracking-[-0.02em] sm:text-2xl;
   }
 
-  .post-nav-cell:hover .home-cta-arrow {
+  .post-nav-cell:hover .post-nav-arrow {
     transform: translateX(-3px);
   }
 
-  .post-nav-newer:hover .home-cta-arrow {
+  .post-nav-newer:hover .post-nav-arrow {
     transform: translateX(3px);
   }
 

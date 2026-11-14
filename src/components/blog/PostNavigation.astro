@@ -15,13 +15,13 @@ const { newer, older } = Astro.props;
   <nav class="post-nav" aria-label="Article navigation" data-pagefind-ignore>
     {older && (
       <a class="post-nav-cell" href={getPostUrl(older)}>
-        <span class="label text-muted-foreground"><span class="home-cta-arrow" aria-hidden="true">←</span> Older</span>
+        <span class="label text-muted-foreground"><span class="post-nav-arrow" aria-hidden="true">←</span> Older</span>
         <span class="post-nav-title">{older.data.title}</span>
       </a>
     )}
     {newer && (
       <a class="post-nav-cell post-nav-newer" href={getPostUrl(newer)}>
-        <span class="label text-muted-foreground">Newer <span class="home-cta-arrow" aria-hidden="true">→</span></span>
+        <span class="label text-muted-foreground">Newer <span class="post-nav-arrow" aria-hidden="true">→</span></span>
         <span class="post-nav-title">{newer.data.title}</span>
       </a>
     )}

@@ -1,4 +1,6 @@
 ---
+import { BookOpenIcon } from 'lucide-react';
+import LabelLink from '@/components/LabelLink.astro';
 import TagList from '@/components/blog/TagList.astro';
 import type { BlogPost } from '@/lib/content';
 import { getPostReadingTime, getPostUrl } from '@/lib/content';
@@ -28,9 +30,6 @@ const hasMeaningfulUpdate = updatedAt && updatedAt.getTime() - publishedAt.getTi
   <p class="max-w-2xl text-pretty leading-7 text-muted-foreground">{post.data.description}</p>
   <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
     <TagList tags={post.data.tags} limit={3} />
-    <a class="home-cta label" href={url}>
-      <span>Read article<span class="sr-only">: {post.data.title}</span></span>
-      <span class="home-cta-arrow" aria-hidden="true">→</span>
-    </a>
+    <LabelLink href={url} icon={BookOpenIcon}>Read article<span class="sr-only">: {post.data.title}</span></LabelLink>
   </div>
 </article>

@@ -592,6 +592,19 @@ test('blog lists are one continuous ruled list with label meta', async ({ page }
   }
 });
 
+test('label links lead with an icon for their purpose, not a generic arrow', async ({ page }) => {
+  await page.goto('/');
+  const rss = page.getByRole('link', { name: 'RSS Feed', exact: true });
+  await expect(rss.locator('svg.lucide-rss')).toHaveCount(1);
+  await expect(page.getByRole('link', { name: /^View All \d+ Articles$/ }).locator('svg.lucide-library')).toHaveCount(1);
+  await expect(page.locator('.home-band').getByRole('link', { name: /^Read article/ }).first().locator('svg.lucide-book-open')).toHaveCount(1);
+  // No label link falls back to a bare "→".
+  for (const route of ['/', '/blog/', '/blog/windows-subsystem-for-linux-wsl/']) {
+    await page.goto(route);
+    expect(await page.locator('main .home-cta').evaluateAll((links) => links.filter((link) => link.textContent?.includes('→')).length), route).toBe(0);
+  }
+});
+
 test('core routes have no browser console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {
