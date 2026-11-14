@@ -490,6 +490,21 @@ test('the 404 page shows the shared terminal window and recovery links', async (
   for (const name of ['Home', 'Blog', 'Search']) await expect(recovery.getByRole('link', { name, exact: true })).toBeVisible();
 });
 
+test('outline buttons draw their hairline border', async ({ page }) => {
+  await page.goto('/blog/windows-subsystem-for-linux-wsl/');
+  const share = page.getByRole('button', { name: 'Share Article' });
+  const colors = await share.evaluate((node) => {
+    const probe = document.createElement('div');
+    probe.style.color = 'var(--border)';
+    document.body.append(probe);
+    const border = getComputedStyle(probe).color;
+    probe.remove();
+    return { button: getComputedStyle(node).borderTopColor, border };
+  });
+  expect(colors.button).not.toBe('rgba(0, 0, 0, 0)');
+  expect(colors.button).toBe(colors.border);
+});
+
 test('core routes have no browser console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {
