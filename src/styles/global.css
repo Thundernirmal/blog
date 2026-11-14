@@ -511,9 +511,13 @@
     transform: translateX(3px);
   }
 
-  /* Post cards: hairline-ruled and flush with the page, lifting to the card surface on hover. */
-  .post-card {
-    @apply flex h-full min-w-0 flex-col gap-4 border bg-background p-5 wrap-anywhere transition-colors hover:bg-card sm:p-6;
+  /* Post lists: one continuous ruled list, a hairline between rows and none doubled. */
+  .post-list {
+    @apply grid border-t;
+  }
+
+  .post-row {
+    @apply grid min-w-0 gap-4 border-b py-8 wrap-anywhere sm:py-10;
   }
 
   /* Terminal window, shared with Nirmal's Shell. */

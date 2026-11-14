@@ -578,6 +578,20 @@ test('older and newer articles sit in a ruled two-cell band', async ({ page }) =
   await expect(page.getByRole('button', { name: 'Share Article' })).toHaveClass(/home-cta/);
 });
 
+test('blog lists are one continuous ruled list with label meta', async ({ page }) => {
+  // Rows slide in on load; measure them at rest.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  for (const route of ['/blog/', '/tags/android/']) {
+    await page.goto(route);
+    const rows = page.locator('.post-list > .post-row');
+    expect(await rows.count(), route).toBeGreaterThan(1);
+    // Rows touch: each starts where the previous ends, so rules are never doubled.
+    const [first, second] = [await rows.nth(0).boundingBox(), await rows.nth(1).boundingBox()];
+    expect(Math.abs(second!.y - (first!.y + first!.height)), route).toBeLessThan(1);
+    await expect(rows.first().locator('.label').first()).toHaveText(/^[A-Z][a-z]+ \d{1,2}, \d{4} · \d+ min/);
+  }
+});
+
 test('core routes have no browser console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {

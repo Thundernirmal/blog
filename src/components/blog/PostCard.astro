@@ -1,8 +1,8 @@
 ---
-import PostMeta from '@/components/blog/PostMeta.astro';
 import TagList from '@/components/blog/TagList.astro';
 import type { BlogPost } from '@/lib/content';
 import { getPostReadingTime, getPostUrl } from '@/lib/content';
+import { formatDate } from '@/lib/dates';
 
 interface Props {
   post: BlogPost;
@@ -12,18 +12,25 @@ interface Props {
 const { post, headingLevel = 'h2' } = Astro.props;
 const url = getPostUrl(post);
 const Heading = headingLevel;
+const { publishedAt, updatedAt } = post.data;
+const hasMeaningfulUpdate = updatedAt && updatedAt.getTime() - publishedAt.getTime() >= 24 * 60 * 60 * 1000;
 ---
 
-{/* A ruled card like nirmalkatariya.com's: a display-weight title and an uppercase label link. */}
-<article class="post-card">
-  <Heading class="text-balance wrap-anywhere text-2xl leading-tight font-medium tracking-[-0.025em]">
+{/* One row of a continuous ruled list, with the same "date · N min" label as the home page's band. */}
+<article class="post-row">
+  <p class="label text-muted-foreground">
+    <time datetime={publishedAt.toISOString()}>{formatDate(publishedAt)}</time> · {getPostReadingTime(post)} min
+    {hasMeaningfulUpdate && updatedAt && <> · Updated <time datetime={updatedAt.toISOString()}>{formatDate(updatedAt)}</time></>}
+  </p>
+  <Heading class="text-balance text-2xl leading-tight font-medium tracking-[-0.025em] sm:text-3xl">
     <a class="outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring" href={url}>{post.data.title}</a>
   </Heading>
-  <p class="text-pretty leading-7 text-muted-foreground">{post.data.description}</p>
-  <PostMeta publishedAt={post.data.publishedAt} updatedAt={post.data.updatedAt} readingMinutes={getPostReadingTime(post)} />
-  <TagList tags={post.data.tags} limit={3} />
-  <a class="home-cta label mt-auto" href={url}>
-    <span>Read article<span class="sr-only">: {post.data.title}</span></span>
-    <span class="home-cta-arrow" aria-hidden="true">→</span>
-  </a>
+  <p class="max-w-2xl text-pretty leading-7 text-muted-foreground">{post.data.description}</p>
+  <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+    <TagList tags={post.data.tags} limit={3} />
+    <a class="home-cta label" href={url}>
+      <span>Read article<span class="sr-only">: {post.data.title}</span></span>
+      <span class="home-cta-arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
 </article>
