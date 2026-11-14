@@ -338,7 +338,15 @@
   }
 
   .brand-mark {
-    @apply size-[1.125rem] shrink-0 text-primary;
+    @apply h-[1.0625rem] w-5 shrink-0 text-foreground;
+  }
+
+  .brand-mark-dot {
+    fill: var(--primary);
+  }
+
+  .site-brand:hover .brand-mark {
+    @apply text-primary;
   }
 
   /* On the home page the brand waits until the page title scrolls away, as the portfolio's does. */
