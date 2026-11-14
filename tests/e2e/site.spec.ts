@@ -661,6 +661,19 @@ test('search results are ruled rows led by a meta label', async ({ page }) => {
   await expect(firstLine).toHaveClass(/label/);
 });
 
+test('terminal-style eyebrows are lowercase mono like the header brand', async ({ page }) => {
+  for (const [route, text] of [['/', '~/notes'], ['/about/', 'nirmal@Tiger']] as const) {
+    await page.goto(route);
+    const eyebrow = page.locator('main header > p').first();
+    await expect(eyebrow).toHaveText(text);
+    const style = await eyebrow.evaluate((node) => ({ font: getComputedStyle(node).fontFamily, transform: getComputedStyle(node).textTransform }));
+    expect(style.font, route).toContain('JetBrains Mono');
+    expect(style.transform, route).toBe('none');
+  }
+  await page.goto('/blog/');
+  await expect(page.locator('main header > p').first()).toHaveClass(/label/);
+});
+
 test('core routes have no browser console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {

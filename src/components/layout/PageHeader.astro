@@ -3,14 +3,16 @@ interface Props {
   id?: string;
   title: string;
   eyebrow?: string;
+  /** Set a terminal-style eyebrow ("~/notes", "nirmal@Tiger") in lowercase mono, like the header's "~/notes" brand. */
+  eyebrowMono?: boolean;
   hero?: boolean;
 }
 
-const { id, title, eyebrow, hero = false } = Astro.props;
+const { id, title, eyebrow, eyebrowMono = false, hero = false } = Astro.props;
 ---
 
 <header id={id} class="grid max-w-3xl gap-4 sm:gap-5">
-  {eyebrow && <p class="label text-primary">{eyebrow}</p>}
+  {eyebrow && <p class:list={[eyebrowMono ? 'font-mono text-sm font-medium' : 'label', 'text-primary']} translate={eyebrowMono ? 'no' : undefined}>{eyebrow}</p>}
   <h1 class:list={['display text-balance wrap-anywhere text-foreground', hero ? 'text-[clamp(3rem,10vw,5.5rem)]' : 'text-[2.75rem] sm:text-6xl']}>
     {title}{hero && <span class="text-primary" aria-hidden="true">.</span>}
   </h1>
