@@ -646,6 +646,21 @@ test('article headers use the same uppercase meta label as the listings', async 
   await expect(page.locator('.post-row [data-post-meta]').first()).toHaveClass(/label/);
 });
 
+test('search results are ruled rows led by a meta label', async ({ page }) => {
+  await page.goto('/search/?q=WSL');
+  const card = page.locator('pagefind-results .pf-result-card').first();
+  await expect(card).toContainText('Windows Subsystem for Linux');
+  const styles = await card.evaluate((node) => {
+    const style = getComputedStyle(node);
+    return { background: style.backgroundColor, bottom: style.borderBottomWidth, top: style.borderTopWidth, shadow: style.boxShadow };
+  });
+  expect(styles).toEqual({ background: 'rgba(0, 0, 0, 0)', bottom: '1px', top: '0px', shadow: 'none' });
+  // The meta label comes before the title, as in the blog listing.
+  const firstLine = card.locator('.pf-result-content > :first-child');
+  await expect(firstLine).toHaveClass(/pf-result-meta/);
+  await expect(firstLine).toHaveClass(/label/);
+});
+
 test('core routes have no browser console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {

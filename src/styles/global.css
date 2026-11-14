@@ -791,8 +791,8 @@
     --pf-input-font-size: 1rem;
     --pf-summary-font-size: 0.875rem;
     --pf-result-title-font-size: 1.125rem;
-    --pf-result-excerpt-font-size: 0.875rem;
-    --pf-results-gap: 0.75rem;
+    --pf-result-excerpt-font-size: 1rem;
+    --pf-results-gap: 0;
     --pf-border-radius: calc(var(--radius) * 1.4);
   }
 
@@ -816,29 +816,32 @@
     border-radius: var(--radius);
   }
 
-  .pagefind-ui .pf-summary {
-    @apply leading-6;
+  /* Results are ruled rows like the blog listing: no card fill or frame, a hairline between rows. */
+  .pagefind-ui .pf-results {
+    border-top: 1px solid var(--border);
   }
 
   .pagefind-ui .pf-result-card {
-    @apply p-4;
+    @apply px-0 py-6 sm:py-8;
     border: 0;
-    box-shadow: 0 0 0 1px var(--pf-border);
-    transition:
-      background-color 150ms,
-      box-shadow 150ms;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
-  .pagefind-ui .pf-result-card:hover {
-    background: var(--pf-hover);
-    box-shadow: var(--pf-shadow-sm);
+  .pagefind-ui .pf-result-content {
+    @apply grid gap-3;
   }
 
   .pagefind-ui .pf-result-title {
+    @apply text-2xl leading-tight tracking-[-0.025em];
     font-family: var(--font-display);
     font-weight: 500;
-    letter-spacing: -0.015em;
-    line-height: 1.5rem;
+  }
+
+  .pagefind-ui .pf-result-link {
+    @apply outline-none focus-visible:ring-3 focus-visible:ring-ring;
   }
 
   .pagefind-ui .pf-result-link:hover {
@@ -852,12 +855,17 @@
     white-space: normal;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
-    line-height: 1.5rem;
+    line-height: 1.75rem;
+    color: var(--muted-foreground);
   }
 
   .pagefind-ui .pf-result-meta {
-    @apply mt-2 block text-sm leading-6 text-muted-foreground;
-    -webkit-line-clamp: unset;
+    @apply leading-5 text-muted-foreground;
+  }
+
+  /* The result count reads as a label, like the listings' meta. */
+  .pagefind-ui .pf-summary {
+    @apply text-xs leading-6 font-semibold tracking-[0.14em] text-muted-foreground uppercase;
   }
 
   .pagefind-ui :is(.pf-result-card, .pf-result-content, .pf-result-excerpt, .pf-result-meta),
