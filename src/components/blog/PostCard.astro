@@ -17,7 +17,7 @@ const Heading = headingLevel;
 {/* A ruled card like nirmalkatariya.com's: a display-weight title and an uppercase label link. */}
 <article class="post-card">
   <Heading class="text-balance text-2xl leading-tight font-medium tracking-[-0.025em]">
-    <a class="outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50" href={url}>{post.data.title}</a>
+    <a class="outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring" href={url}>{post.data.title}</a>
   </Heading>
   <p class="text-pretty leading-7 text-muted-foreground">{post.data.description}</p>
   <PostMeta publishedAt={post.data.publishedAt} updatedAt={post.data.updatedAt} readingMinutes={getPostReadingTime(post)} />

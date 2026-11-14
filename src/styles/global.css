@@ -254,7 +254,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring;
   }
 
   html {
@@ -342,7 +342,7 @@
   }
 
   .site-brand {
-    @apply min-h-11 shrink-0 items-center gap-2 text-[0.9375rem] font-semibold tracking-[-0.01em] whitespace-nowrap text-foreground outline-none transition-colors hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50;
+    @apply min-h-11 shrink-0 items-center gap-2 text-[0.9375rem] font-semibold tracking-[-0.01em] whitespace-nowrap text-foreground outline-none transition-colors hover:text-primary focus-visible:ring-3 focus-visible:ring-ring;
   }
 
   .brand-mark {
@@ -381,7 +381,7 @@
 
   /* Header links repeat on every route, so their treatment lives in one class. */
   .site-nav-link {
-    @apply relative inline-flex min-h-11 min-w-11 items-center justify-center gap-1 text-[0.6875rem] font-semibold tracking-[0.1em] whitespace-nowrap text-muted-foreground uppercase transition-colors outline-none select-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 sm:min-w-0 sm:text-xs sm:tracking-[0.14em];
+    @apply relative inline-flex min-h-11 min-w-11 items-center justify-center gap-1 text-[0.6875rem] font-semibold tracking-[0.1em] whitespace-nowrap text-muted-foreground uppercase transition-colors outline-none select-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring sm:min-w-0 sm:text-xs sm:tracking-[0.14em];
   }
 
   .site-nav-link::after {
@@ -425,7 +425,7 @@
 
   /* Theme toggle, after nirmalkatariya.com: only shown once a script can act on it. */
   .theme-toggle {
-    @apply hidden size-11 items-center justify-center text-muted-foreground transition-[color,transform] outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-90 sm:-mr-2.5 sm:size-9;
+    @apply hidden size-11 items-center justify-center text-muted-foreground transition-[color,transform] outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring active:scale-90 sm:-mr-2.5 sm:size-9;
   }
 
   :root[data-theme] .theme-toggle {
@@ -470,7 +470,7 @@
   }
 
   .home-cta {
-    @apply flex min-h-11 items-center justify-between gap-3 text-foreground outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50;
+    @apply flex min-h-11 items-center justify-between gap-3 text-foreground outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring;
   }
 
   .home-cta-arrow {
@@ -535,7 +535,7 @@
 
   /* Footer links stay quiet like the portfolio's, but keep an underline so they read as links. */
   .footer-link {
-    @apply inline-flex min-h-11 items-center text-muted-foreground underline decoration-current/40 underline-offset-4 outline-none hover:text-foreground hover:decoration-current focus-visible:ring-3 focus-visible:ring-ring/50 sm:min-h-6;
+    @apply inline-flex min-h-11 items-center text-muted-foreground underline decoration-current/40 underline-offset-4 outline-none hover:text-foreground hover:decoration-current focus-visible:ring-3 focus-visible:ring-ring sm:min-h-6;
   }
 
   /* Like nirmalkatariya.com's footer, name the Catppuccin flavour in view. */
@@ -681,7 +681,7 @@
   }
 
   .article-prose a {
-    @apply break-words font-medium text-primary underline decoration-primary/40 underline-offset-4 hover:decoration-primary focus-visible:rounded-sm focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none;
+    @apply break-words font-medium text-primary underline decoration-primary/40 underline-offset-4 hover:decoration-primary focus-visible:rounded-sm focus-visible:ring-3 focus-visible:ring-ring focus-visible:outline-none;
   }
 
   .article-prose blockquote {
@@ -706,7 +706,7 @@
   }
 
   .article-prose .table-scroll {
-    @apply w-full overflow-x-auto rounded-lg focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none;
+    @apply w-full overflow-x-auto rounded-lg focus-visible:ring-3 focus-visible:ring-ring focus-visible:outline-none;
     overscroll-behavior-inline: contain;
     background:
       linear-gradient(to right, var(--background) 30%, transparent) left center,

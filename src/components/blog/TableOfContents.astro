@@ -24,7 +24,7 @@ const visible = headings.filter((heading) => heading.depth === 2 || heading.dept
         {visible.map((heading) => (
           <li class:list={[heading.depth === 3 && 'pl-4']}>
             <a
-              class="flex min-h-11 items-center rounded-sm py-1 transition-colors hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none aria-[current=location]:text-primary lg:min-h-0"
+              class="flex min-h-11 items-center rounded-sm py-1 transition-colors hover:text-primary focus-visible:ring-3 focus-visible:ring-ring focus-visible:outline-none aria-[current=location]:text-primary lg:min-h-0"
               href={`#${heading.slug}`}
               data-toc-link
             >
@@ -40,7 +40,7 @@ const visible = headings.filter((heading) => heading.depth === 2 || heading.dept
         {visible.map((heading) => (
           <li class:list={[heading.depth === 3 && 'pl-3']}>
             <a
-              class="block rounded-sm py-1 transition-colors hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none aria-[current=location]:text-primary"
+              class="block rounded-sm py-1 transition-colors hover:text-primary focus-visible:ring-3 focus-visible:ring-ring focus-visible:outline-none aria-[current=location]:text-primary"
               href={`#${heading.slug}`}
               data-toc-link
             >

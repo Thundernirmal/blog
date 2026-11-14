@@ -505,6 +505,18 @@ test('outline buttons draw their hairline border', async ({ page }) => {
   expect(colors.button).toBe(colors.border);
 });
 
+test('focus rings reach 3:1 contrast against the Latte page', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/blog/');
+  const link = page.locator('[data-site-header]').getByRole('link', { name: 'Tags', exact: true });
+  await link.focus();
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Tab');
+  const shadow = await page.evaluate(() => getComputedStyle(document.activeElement!).boxShadow);
+  // The ring is drawn in the full mauve tone, not a 50% tint.
+  expect(shadow).toMatch(/(oklab|rgb)\([^)/,]*( [^)/,]*)*\) 0px 0px 0px 3px/);
+});
+
 test('core routes have no browser console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {
