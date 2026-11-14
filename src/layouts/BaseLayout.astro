@@ -5,8 +5,7 @@ import Footer from '@/components/layout/Footer.astro';
 import SEO from '@/components/seo/SEO.astro';
 import { SITE } from '@/config';
 import { ClientRouter } from 'astro:transitions';
-import outfitFont from '@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url';
-import jakartaFont from '@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2?url';
+import sansFont from '@fontsource-variable/instrument-sans/files/instrument-sans-latin-standard-normal.woff2?url';
 
 interface Props {
   title: string;
@@ -38,8 +37,7 @@ const isArticle = seoProps.type === 'article';
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#1e1e2e" />
-    <link rel="preload" href={outfitFont} as="font" type="font/woff2" crossorigin="anonymous" />
-    <link rel="preload" href={jakartaFont} as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href={sansFont} as="font" type="font/woff2" crossorigin="anonymous" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />

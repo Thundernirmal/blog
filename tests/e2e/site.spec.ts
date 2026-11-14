@@ -349,3 +349,14 @@ test('core routes have no browser console errors', async ({ page }) => {
   for (const route of coreRoutes) await page.goto(route);
   expect(errors).toEqual([]);
 });
+
+test('the site is set in Instrument Sans like nirmalkatariya.com', async ({ page }) => {
+  await page.goto('/');
+  const fonts = await page.evaluate(() => ({
+    body: getComputedStyle(document.body).fontFamily,
+    heading: getComputedStyle(document.querySelector('h1')!).fontFamily,
+  }));
+  expect(fonts.body).toContain('Instrument Sans');
+  expect(fonts.heading).toContain('Instrument Sans');
+  await expect.poll(() => page.evaluate(() => document.fonts.check('500 1rem "Instrument Sans Variable"'))).toBe(true);
+});
