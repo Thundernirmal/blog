@@ -11,7 +11,7 @@ export default defineEcConfig({
   defaultProps: { wrap: true },
   emitExternalStylesheet: true,
   styleOverrides: {
-    borderRadius: '0.5rem',
+    borderRadius: '0',
     codeFontFamily: 'var(--font-mono)',
     codeFontSize: '0.875rem',
     codeLineHeight: '1.7',

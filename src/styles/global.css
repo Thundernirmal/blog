@@ -112,7 +112,7 @@
     --on-accent: var(--ctp-crust);
     --surface-muted: var(--ctp-surface0);
     --surface-accent: var(--ctp-surface1);
-    --rule: var(--ctp-surface1);
+    --rule: var(--ctp-surface0);
     --rule-strong: var(--ctp-surface1);
   }
 }
@@ -162,7 +162,7 @@
   --on-accent: var(--ctp-crust);
   --surface-muted: var(--ctp-surface0);
   --surface-accent: var(--ctp-surface1);
-  --rule: var(--ctp-surface1);
+  --rule: var(--ctp-surface0);
   --rule-strong: var(--ctp-surface1);
 }
 
@@ -200,7 +200,8 @@
   --status-negative: var(--tone-red);
   --status-caution: var(--tone-yellow);
   --status-positive: var(--tone-green);
-  --radius: 0.5rem;
+  /* nirmalkatariya.com is built from square edges and hairline rules. */
+  --radius: 0rem;
 }
 
 @theme inline {
@@ -266,6 +267,7 @@
   h5,
   h6 {
     @apply font-heading;
+    text-wrap: balance;
   }
 
   code,
@@ -294,7 +296,7 @@
 
 @layer components {
   .skip-link {
-    @apply fixed top-2 left-2 -translate-y-20 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground shadow-md transition-transform focus-visible:translate-y-0;
+    @apply fixed top-2 left-2 -translate-y-20 bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-transform focus-visible:translate-y-0;
     z-index: 60;
   }
 
@@ -312,9 +314,98 @@
     transform: translateY(calc(-100% - env(safe-area-inset-top)));
   }
 
+  /* Typography roles shared with nirmalkatariya.com. */
+  .label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .display {
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+    font-stretch: 92%;
+  }
+
+  .site-brand {
+    @apply min-h-11 shrink-0 items-center gap-2 text-[0.9375rem] font-semibold tracking-[-0.01em] whitespace-nowrap text-foreground outline-none transition-colors hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50;
+  }
+
+  .brand-mark {
+    @apply size-[1.125rem] shrink-0 text-primary;
+  }
+
+  /* On the home page the brand waits until the page title scrolls away, as the portfolio's does. */
+  .site-brand-scroll {
+    transition:
+      opacity 0.3s ease,
+      translate 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0s;
+  }
+
+  .site-brand-scroll[data-visible="false"] {
+    @apply pointer-events-none invisible translate-y-1.5 opacity-0;
+    transition:
+      opacity 0.3s ease,
+      translate 0.3s ease,
+      visibility 0s 0.3s;
+  }
+
+  .site-nav-links {
+    /* One row on phones; it wraps rather than scrolling sideways when text is enlarged. */
+    @apply flex w-full min-w-0 flex-wrap items-center justify-between gap-x-1 sm:ml-auto sm:w-auto sm:flex-nowrap sm:gap-6;
+  }
+
+  /* Header links repeat on every route, so their treatment lives in one class. */
+  .site-nav-link {
+    @apply relative inline-flex min-h-11 min-w-11 items-center justify-center gap-1 text-[0.6875rem] font-semibold tracking-[0.1em] whitespace-nowrap text-muted-foreground uppercase transition-colors outline-none select-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 sm:min-w-0 sm:text-xs sm:tracking-[0.14em];
+  }
+
+  .site-nav-link::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0.5rem;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .site-nav-link[aria-current="page"] {
+    @apply text-foreground;
+  }
+
+  .site-nav-link[aria-current="page"]:not(.site-nav-home)::after {
+    transform: scaleX(1);
+  }
+
+  @media (hover: hover) {
+    .site-nav-link:not(.site-nav-home):hover::after {
+      transform: scaleX(1);
+    }
+  }
+
+  /* The search link's underline spans its label, not the shortcut hint or the phone icon. */
+  .site-nav-link[data-search-link]::after {
+    display: none;
+  }
+
+  .site-nav-home {
+    @apply justify-start;
+  }
+
+  .site-nav-arrow {
+    @apply text-[0.875em] tracking-normal;
+  }
+
   /* Theme toggle, after nirmalkatariya.com: only shown once a script can act on it. */
   .theme-toggle {
-    @apply hidden h-11 w-full min-w-0 items-center justify-center rounded-md text-muted-foreground transition-[color,background-color,transform] outline-none hover:bg-muted hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-90 sm:size-7;
+    @apply hidden size-11 items-center justify-center text-muted-foreground transition-[color,transform] outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-90 sm:-mr-2.5 sm:size-9;
   }
 
   :root[data-theme] .theme-toggle {
@@ -322,7 +413,7 @@
   }
 
   .theme-icons {
-    @apply size-4;
+    @apply size-[18px];
   }
 
   .theme-icons path {
@@ -335,6 +426,26 @@
   :root[data-theme="mocha"] .theme-icon-sun {
     opacity: 0;
     transform: rotate(-90deg) scale(0.5);
+  }
+
+  /* Footer links stay quiet like the portfolio's, but keep an underline so they read as links. */
+  .footer-link {
+    @apply inline-flex min-h-11 items-center text-muted-foreground underline decoration-current/40 underline-offset-4 outline-none hover:text-foreground hover:decoration-current focus-visible:ring-3 focus-visible:ring-ring/50 sm:min-h-6;
+  }
+
+  /* Like nirmalkatariya.com's footer, name the Catppuccin flavour in view. */
+  .footer-theme-name::after {
+    content: "Latte";
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="latte"]) .footer-theme-name::after {
+      content: "Mocha";
+    }
+  }
+
+  :root[data-theme="mocha"] .footer-theme-name::after {
+    content: "Mocha";
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -432,7 +543,7 @@
   }
 
   .article-prose :is(h2, h3, h4) {
-    @apply text-balance font-semibold tracking-tight text-foreground;
+    @apply text-balance font-medium tracking-[-0.025em] text-foreground;
     scroll-margin-top: calc(var(--site-header-height, 5rem) + 1rem);
   }
 
@@ -469,7 +580,7 @@
   }
 
   .article-prose blockquote {
-    @apply rounded-r-lg border-l-4 border-primary bg-card px-5 py-4 text-muted-foreground;
+    @apply border-l-2 border-primary bg-card px-5 py-4 text-muted-foreground;
   }
 
   .article-prose :not(pre) > code {
@@ -511,7 +622,7 @@
   }
 
   .article-prose th {
-    @apply bg-card font-semibold;
+    @apply bg-card text-xs font-semibold tracking-[0.14em] whitespace-nowrap uppercase;
   }
 
   .article-prose .expressive-code {
