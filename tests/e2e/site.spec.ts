@@ -465,17 +465,19 @@ test('the search shortcut hint shows only with a fine pointer and hover', async 
   }
 });
 
-test('the header brand pairs the "n." mark with the wordmark, and the mark alone links home on phones', async ({ page }) => {
+test('the header brand is the portfolio-style "~/notes" path, and "~/" alone links home on phones', async ({ page }) => {
   await page.goto('/tags/');
   const header = page.locator('[data-site-header]');
   if ((page.viewportSize()?.width ?? 0) >= 640) {
-    const brand = header.getByRole('link', { name: "Nirmal's Notes", exact: true });
+    const brand = header.getByRole('link', { name: "Nirmal's Notes, home", exact: true });
     await expect(brand).toBeVisible();
-    await expect(brand.locator('svg.brand-mark')).toHaveCount(1);
+    await expect(brand).toHaveText('~/notes');
+    await expect(brand.locator('.text-primary')).toHaveText('~/');
+    expect(await brand.evaluate((node) => getComputedStyle(node).fontFamily)).toContain('JetBrains Mono');
   } else {
     const home = header.getByRole('link', { name: 'Home', exact: true });
     await expect(home).toBeVisible();
-    await expect(home.locator('svg.brand-mark')).toBeVisible();
+    await expect(home).toHaveText('~/');
   }
 });
 

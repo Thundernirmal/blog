@@ -1,6 +1,5 @@
 ---
 import { SearchIcon } from 'lucide-react';
-import BrandMark from '@/components/layout/BrandMark.astro';
 import { Kbd } from '@/components/ui/kbd';
 import { SITE } from '@/config';
 
@@ -19,7 +18,7 @@ const links = [
 ];
 ---
 
-{/* Modelled on nirmalkatariya.com's header: the "n." mark with the wordmark, uppercase tracked links with an underline for the
+{/* Modelled on nirmalkatariya.com's header: a mono path-style wordmark ("~/notes", as the portfolio's "~/nirmal"), uppercase tracked links with an underline for the
     current section, and an icon-only theme toggle. */}
 <header
   class:list={[
@@ -40,14 +39,14 @@ const links = [
       data-visible={isHome ? 'false' : undefined}
       aria-hidden={isHome ? 'true' : undefined}
       tabindex={isHome ? -1 : undefined}
+      aria-label={`${SITE.name}, home`}
     >
-      <BrandMark />
-      <span>{SITE.name}</span>
+      <span class="text-primary">~/</span>notes
     </a>
 
     <div class="site-nav-links">
-      {/* The brand is hidden on phones, so its mark alone links Home and leaves room for the labelled sections. */}
-      <a href="/" aria-current={isHome ? 'page' : undefined} aria-label="Home" class="site-nav-link site-nav-home sm:hidden" data-astro-prefetch="hover"><BrandMark /></a>
+      {/* The wordmark is hidden on phones, so its mauve "~/" alone links Home and leaves room for the labelled sections. */}
+      <a href="/" aria-current={isHome ? 'page' : undefined} aria-label="Home" class="site-nav-link site-nav-home sm:hidden" data-astro-prefetch="hover"><span class="site-nav-home-mark" aria-hidden="true">~/</span></a>
       {links.map(({ href, label, active }) => (
         <a href={href} aria-current={active ? 'page' : undefined} class="site-nav-link" data-astro-prefetch="hover">{label}</a>
       ))}

@@ -341,20 +341,13 @@
     font-stretch: 92%;
   }
 
+  /* The portfolio's brand is a mono path, "~/nirmal", with a mauve "~/"; this site's is "~/notes". */
   .site-brand {
-    @apply min-h-11 shrink-0 items-center gap-2 text-[0.9375rem] font-semibold tracking-[-0.01em] whitespace-nowrap text-foreground outline-none transition-colors hover:text-primary focus-visible:ring-3 focus-visible:ring-ring;
+    @apply min-h-11 shrink-0 items-center font-mono text-[0.8125rem] font-medium whitespace-nowrap text-foreground outline-none transition-colors hover:text-primary focus-visible:ring-3 focus-visible:ring-ring;
   }
 
-  .brand-mark {
-    @apply h-[1.0625rem] w-5 shrink-0 text-foreground;
-  }
-
-  .brand-mark-dot {
-    fill: var(--primary);
-  }
-
-  .site-brand:hover .brand-mark {
-    @apply text-primary;
+  .site-nav-home-mark {
+    @apply font-mono text-sm font-medium tracking-normal text-primary normal-case;
   }
 
   /* On the home page the brand waits until the page title scrolls away, as the portfolio's does. */
