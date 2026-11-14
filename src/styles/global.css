@@ -8,9 +8,118 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
+/* Same theme switch as nirmalkatariya.com: data-theme="latte" | "mocha" on <html>,
+   set before first paint by the inline script in BaseLayout.astro. */
+@custom-variant dark (&:where([data-theme="mocha"], [data-theme="mocha"] *));
 
-:root {
+:root,
+:root[data-theme="latte"] {
+  /* Catppuccin Latte */
+  color-scheme: light;
+  --ctp-rosewater: #dc8a78;
+  --ctp-flamingo: #dd7878;
+  --ctp-pink: #ea76cb;
+  --ctp-mauve: #8839ef;
+  --ctp-red: #d20f39;
+  --ctp-maroon: #e64553;
+  --ctp-peach: #fe640b;
+  --ctp-yellow: #df8e1d;
+  --ctp-green: #40a02b;
+  --ctp-teal: #179299;
+  --ctp-sky: #04a5e5;
+  --ctp-sapphire: #209fb5;
+  --ctp-blue: #1e66f5;
+  --ctp-lavender: #7287fd;
+  --ctp-text: #4c4f69;
+  --ctp-subtext1: #5c5f77;
+  --ctp-subtext0: #6c6f85;
+  --ctp-overlay2: #7c7f93;
+  --ctp-overlay1: #8c8fa1;
+  --ctp-overlay0: #9ca0b0;
+  --ctp-surface2: #acb0be;
+  --ctp-surface1: #bcc0cc;
+  --ctp-surface0: #ccd0da;
+  --ctp-base: #eff1f5;
+  --ctp-mantle: #e6e9ef;
+  --ctp-crust: #dce0e8;
+
+  /* Most Latte accents fall below 4.5:1 as text on Latte surfaces (yellow is 2.3:1).
+     Each is darkened toward black just enough to clear 4.5:1 on mantle and on its own
+     10% tint, keeping its hue so accents still read as the same colours. */
+  --tone-mauve: color-mix(in oklab, var(--ctp-mauve) 88%, #000);
+  --tone-red: color-mix(in oklab, var(--ctp-red) 86%, #000);
+  --tone-maroon: color-mix(in oklab, var(--ctp-maroon) 76%, #000);
+  --tone-peach: color-mix(in oklab, var(--ctp-peach) 66%, #000);
+  --tone-yellow: color-mix(in oklab, var(--ctp-yellow) 64%, #000);
+  --tone-green: color-mix(in oklab, var(--ctp-green) 70%, #000);
+  --tone-blue: color-mix(in oklab, var(--ctp-blue) 84%, #000);
+
+  /* Ink and rules follow nirmalkatariya.com's Latte values. */
+  --ink: color-mix(in oklab, var(--ctp-text) 82%, #000);
+  --ink-muted: color-mix(in oklab, var(--ctp-subtext1) 90%, #000);
+  --ink-soft: color-mix(in oklab, var(--ctp-text) 92%, #000);
+  --on-accent: var(--ctp-base);
+  --surface-muted: var(--ctp-crust);
+  --surface-accent: var(--ctp-surface0);
+  --rule: color-mix(in oklab, var(--ctp-text) 20%, transparent);
+  --rule-strong: color-mix(in oklab, var(--ctp-text) 38%, transparent);
+}
+
+/* Without a stored choice (or without JavaScript) the system preference decides. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="latte"]) {
+    /* Catppuccin Mocha */
+    color-scheme: dark;
+    --ctp-rosewater: #f5e0dc;
+    --ctp-flamingo: #f2cdcd;
+    --ctp-pink: #f5c2e7;
+    --ctp-mauve: #cba6f7;
+    --ctp-red: #f38ba8;
+    --ctp-maroon: #eba0ac;
+    --ctp-peach: #fab387;
+    --ctp-yellow: #f9e2af;
+    --ctp-green: #a6e3a1;
+    --ctp-teal: #94e2d5;
+    --ctp-sky: #89dceb;
+    --ctp-sapphire: #74c7ec;
+    --ctp-blue: #89b4fa;
+    --ctp-lavender: #b4befe;
+    --ctp-text: #cdd6f4;
+    --ctp-subtext1: #bac2de;
+    --ctp-subtext0: #a6adc8;
+    --ctp-overlay2: #9399b2;
+    --ctp-overlay1: #7f849c;
+    --ctp-overlay0: #6c7086;
+    --ctp-surface2: #585b70;
+    --ctp-surface1: #45475a;
+    --ctp-surface0: #313244;
+    --ctp-base: #1e1e2e;
+    --ctp-mantle: #181825;
+    --ctp-crust: #11111b;
+
+    /* Mocha accents are light enough to read as text on every surface as-is. */
+    --tone-mauve: var(--ctp-mauve);
+    --tone-red: var(--ctp-red);
+    --tone-maroon: var(--ctp-maroon);
+    --tone-peach: var(--ctp-peach);
+    --tone-yellow: var(--ctp-yellow);
+    --tone-green: var(--ctp-green);
+    --tone-blue: var(--ctp-blue);
+
+    --ink: var(--ctp-text);
+    --ink-muted: var(--ctp-subtext0);
+    --ink-soft: var(--ctp-subtext1);
+    --on-accent: var(--ctp-crust);
+    --surface-muted: var(--ctp-surface0);
+    --surface-accent: var(--ctp-surface1);
+    --rule: var(--ctp-surface1);
+    --rule-strong: var(--ctp-surface1);
+  }
+}
+
+:root[data-theme="mocha"] {
+  /* Catppuccin Mocha */
+  color-scheme: dark;
   --ctp-rosewater: #f5e0dc;
   --ctp-flamingo: #f2cdcd;
   --ctp-pink: #f5c2e7;
@@ -38,38 +147,59 @@
   --ctp-mantle: #181825;
   --ctp-crust: #11111b;
 
+  /* Mocha accents are light enough to read as text on every surface as-is. */
+  --tone-mauve: var(--ctp-mauve);
+  --tone-red: var(--ctp-red);
+  --tone-maroon: var(--ctp-maroon);
+  --tone-peach: var(--ctp-peach);
+  --tone-yellow: var(--ctp-yellow);
+  --tone-green: var(--ctp-green);
+  --tone-blue: var(--ctp-blue);
+
+  --ink: var(--ctp-text);
+  --ink-muted: var(--ctp-subtext0);
+  --ink-soft: var(--ctp-subtext1);
+  --on-accent: var(--ctp-crust);
+  --surface-muted: var(--ctp-surface0);
+  --surface-accent: var(--ctp-surface1);
+  --rule: var(--ctp-surface1);
+  --rule-strong: var(--ctp-surface1);
+}
+
+:root {
   /* Same families as nirmalkatariya.com: one sans for display and body, plus the mono. */
   --font-display: "Instrument Sans Variable", "Instrument Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-body: var(--font-display);
   --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
+  /* shadcn semantic tokens, shared by both themes */
   --background: var(--ctp-base);
-  --foreground: var(--ctp-text);
+  --foreground: var(--ink);
   --card: var(--ctp-mantle);
-  --card-foreground: var(--ctp-text);
+  --card-foreground: var(--ink);
   --popover: var(--ctp-mantle);
-  --popover-foreground: var(--ctp-text);
-  --primary: var(--ctp-mauve);
-  --primary-foreground: var(--ctp-crust);
-  --secondary: var(--ctp-surface0);
-  --secondary-foreground: var(--ctp-text);
-  --muted: var(--ctp-surface0);
-  --muted-foreground: var(--ctp-subtext0);
-  --accent: var(--ctp-surface1);
-  --accent-foreground: var(--ctp-text);
-  --destructive: var(--ctp-red);
-  --destructive-foreground: var(--ctp-crust);
-  --border: var(--ctp-surface1);
-  --input: var(--ctp-surface1);
-  --ring: var(--ctp-mauve);
-  --warning: var(--ctp-yellow);
-  --warning-foreground: var(--ctp-crust);
-  --info: var(--ctp-blue);
-  --info-foreground: var(--ctp-crust);
-  --code-inline: var(--ctp-peach);
-  --status-negative: var(--ctp-red);
-  --status-caution: var(--ctp-yellow);
-  --status-positive: var(--ctp-green);
+  --popover-foreground: var(--ink);
+  --primary: var(--tone-mauve);
+  --primary-foreground: var(--on-accent);
+  --secondary: var(--surface-muted);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface-muted);
+  --muted-foreground: var(--ink-muted);
+  --accent: var(--surface-accent);
+  --accent-foreground: var(--ink);
+  --destructive: var(--tone-red);
+  --destructive-foreground: var(--on-accent);
+  --border: var(--rule);
+  --input: var(--rule-strong);
+  --ring: var(--tone-mauve);
+  --warning: var(--tone-yellow);
+  --warning-foreground: var(--on-accent);
+  --info: var(--tone-blue);
+  --info-foreground: var(--on-accent);
+  --code-inline: var(--tone-peach);
+  --status-negative: var(--tone-red);
+  --status-caution: var(--tone-yellow);
+  --status-positive: var(--tone-green);
   --radius: 0.5rem;
 }
 
@@ -119,8 +249,7 @@
   }
 
   html {
-    @apply scroll-smooth font-sans;
-    color-scheme: dark;
+    @apply scroll-smooth bg-background font-sans;
     scrollbar-gutter: stable;
     scroll-padding-top: calc(var(--site-header-height, 5rem) + 1rem);
     -webkit-tap-highlight-color: color-mix(in srgb, var(--primary) 24%, transparent);
@@ -366,7 +495,7 @@
 
   #article-search {
     --pf-text: var(--foreground);
-    --pf-text-secondary: var(--ctp-subtext1);
+    --pf-text-secondary: var(--ink-soft);
     --pf-text-muted: var(--muted-foreground);
     --pf-background: var(--card);
     --pf-border: color-mix(in srgb, var(--foreground) 10%, transparent);
@@ -381,7 +510,7 @@
     --pf-error-bg: color-mix(in srgb, var(--destructive) 10%, var(--card));
     --pf-error-border: color-mix(in srgb, var(--destructive) 45%, transparent);
     --pf-error-text: var(--destructive);
-    --pf-error-text-secondary: var(--ctp-maroon);
+    --pf-error-text-secondary: var(--tone-maroon);
     --pf-font: var(--font-body);
     --pf-input-height: 2.75rem;
     --pf-input-font-size: 1rem;

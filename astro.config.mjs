@@ -47,22 +47,8 @@ export default defineConfig({
     processor: unified({ rehypePlugins: [rehypeAccessibleTables] }),
   },
   integrations: [
-    expressiveCode({
-      themes: ['catppuccin-mocha'],
-      defaultLocale: 'en-US',
-      defaultProps: { wrap: true },
-      emitExternalStylesheet: true,
-      styleOverrides: {
-        borderRadius: '0.5rem',
-        codeFontFamily: 'var(--font-mono)',
-        codeFontSize: '0.875rem',
-        codeLineHeight: '1.7',
-        borderColor: 'var(--border)',
-        frames: {
-          shadowColor: 'transparent',
-        },
-      },
-    }),
+    // Options live in ec.config.mjs: themeCssSelector is a function, which inline config can't serialize.
+    expressiveCode(),
     react(),
     sitemap({
       filter: (page) => {

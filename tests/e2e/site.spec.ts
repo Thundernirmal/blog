@@ -11,17 +11,82 @@ const coreRoutes = [
   '/404.html',
 ];
 
-for (const route of coreRoutes) {
-  test(`${route} has no serious accessibility violations`, async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto(route);
-    await expect(page.locator('main')).toBeVisible();
-    const results = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-      .analyze();
-    expect(results.violations.filter(({ impact }) => impact === 'critical' || impact === 'serious')).toEqual([]);
+// Both Catppuccin flavours are audited: Latte accents are darkened for contrast, Mocha's are not.
+for (const colorScheme of ['light', 'dark'] as const) {
+  for (const route of coreRoutes) {
+    test(`${route} has no serious accessibility violations in ${colorScheme} mode`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: 'reduce', colorScheme });
+      await page.goto(route);
+      await expect(page.locator('main')).toBeVisible();
+      const results = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+        .analyze();
+      expect(results.violations.filter(({ impact }) => impact === 'critical' || impact === 'serious')).toEqual([]);
+    });
+  }
+}
+
+for (const [scheme, theme, hex, rgb] of [
+  ['light', 'latte', '#eff1f5', 'rgb(239, 241, 245)'],
+  ['dark', 'mocha', '#1e1e2e', 'rgb(30, 30, 46)'],
+] as const) {
+  test(`browser chrome follows a ${scheme} system scheme with Catppuccin ${theme}`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme: scheme });
+    await page.goto('/');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
+    await expect(page.locator('meta[name="color-scheme"]')).toHaveAttribute('content', 'light dark');
+    for (const meta of await page.locator('meta[name="theme-color"]').all()) await expect(meta).toHaveAttribute('content', hex);
+    const colors = await page.evaluate(() => ({
+      html: getComputedStyle(document.documentElement).backgroundColor,
+      body: getComputedStyle(document.body).backgroundColor,
+      scheme: getComputedStyle(document.documentElement).colorScheme,
+    }));
+    expect(colors).toEqual({ html: rgb, body: rgb, scheme });
   });
 }
+
+test('a stored theme overrides the system scheme and survives client-side navigation', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.addInitScript(() => localStorage.setItem('theme', 'mocha'));
+  await page.goto('/');
+  const html = page.locator('html');
+  await expect(html).toHaveAttribute('data-theme', 'mocha');
+  await page.locator('[data-site-header]').getByRole('link', { name: 'Tags', exact: true }).click();
+  await expect(page).toHaveURL(/\/tags\/$/);
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(html).toHaveAttribute('data-theme', 'mocha');
+  for (const meta of await page.locator('meta[name="theme-color"]').all()) await expect(meta).toHaveAttribute('content', '#1e1e2e');
+  expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(30, 30, 46)');
+});
+
+test('without JavaScript the system scheme still selects the flavour', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, colorScheme: 'dark' });
+  const page = await context.newPage();
+  await page.goto('/blog/windows-subsystem-for-linux-wsl/');
+  await expect(page.locator('html')).not.toHaveAttribute('data-theme');
+  expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(30, 30, 46)');
+  await context.close();
+});
+
+test('without a stored theme, a live system scheme change switches the theme', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'latte');
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'mocha');
+});
+
+test('code blocks follow the page flavour', async ({ page }) => {
+  for (const [scheme, theme] of [['light', 'latte'], ['dark', 'mocha']] as const) {
+    await page.emulateMedia({ colorScheme: scheme });
+    await page.goto('/blog/windows-subsystem-for-linux-wsl/');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
+    const code = page.locator('.expressive-code pre').first();
+    await expect(code).toBeVisible();
+    const background = await code.evaluate((node) => getComputedStyle(node).backgroundColor);
+    expect(background, `${theme} code background`).toBe(theme === 'latte' ? 'rgb(239, 241, 245)' : 'rgb(30, 30, 46)');
+  }
+});
 
 test('navigation exposes the current section', async ({ page }) => {
   await page.goto('/blog/');
