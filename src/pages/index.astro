@@ -1,12 +1,13 @@
 ---
-import { ArrowRightIcon, BookOpenIcon, RssIcon } from 'lucide-react';
+import { BookOpenIcon, LibraryIcon, RssIcon } from 'lucide-react';
+import LabelLink from '@/components/LabelLink.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/layout/PageHeader.astro';
-import PostCard from '@/components/blog/PostCard.astro';
-import { buttonVariants } from '@/components/ui/button';
+import TagList from '@/components/blog/TagList.astro';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { SITE } from '@/config';
-import { getPublishedPosts } from '@/lib/content';
+import { formatDate } from '@/lib/dates';
+import { getPostReadingTime, getPostUrl, getPublishedPosts } from '@/lib/content';
 
 const posts = await getPublishedPosts();
 const latestPosts = posts.slice(0, 3);
@@ -21,26 +22,39 @@ const structuredData = {
 ---
 
 <BaseLayout title={SITE.name} canonicalPath="/" structuredData={structuredData}>
-  <PageHeader id="home-page-header" title={SITE.name} eyebrow="~/notes" hero>
+  <PageHeader id="home-page-header" title={SITE.name} eyebrow="~/notes" eyebrowMono hero>
     <p>{SITE.description}</p>
   </PageHeader>
 
-  <section class="grid gap-5" aria-labelledby="latest-writing">
-    <div class="flex flex-wrap items-end justify-between gap-4">
-      <div class="grid gap-1.5">
-        <h2 id="latest-writing" class="text-3xl font-semibold tracking-tight">Latest Writing</h2>
+  <section class="grid gap-6" aria-labelledby="latest-writing">
+    <div class="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+      <div class="grid gap-3">
+        <h2 id="latest-writing" class="display wrap-anywhere text-4xl sm:text-5xl">Latest Writing</h2>
         <p class="text-muted-foreground">Long-form notes, practical guides, and ideas worth keeping.</p>
       </div>
-      <a class={buttonVariants({ variant: 'outline' })} href="/rss.xml">
-        <RssIcon data-icon="inline-start" aria-hidden="true" />
-        RSS
-      </a>
+      <LabelLink href="/rss.xml" icon={RssIcon}>RSS Feed</LabelLink>
     </div>
 
     {latestPosts.length > 0 ? (
-      <div class="grid gap-4 lg:grid-cols-3" data-reveal-list>
-        {latestPosts.map((post) => <PostCard post={post} />)}
-      </div>
+      /* The portfolio's playground band: numbered cells divided by hairline rules, each ending in a label link. */
+      <ol class="home-band" data-reveal-list>
+        {latestPosts.map((post, index) => (
+          <li class="home-cell">
+            <article class="contents">
+              <p class="label text-muted-foreground"><span class="font-mono text-primary">{String(index + 1).padStart(2, '0')}</span> / <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time> · {getPostReadingTime(post)} min</p>
+              <h3 class="text-balance wrap-anywhere text-2xl leading-tight font-medium tracking-[-0.025em]">
+                <a class="outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring" href={getPostUrl(post)}>{post.data.title}</a>
+              </h3>
+              <p class="text-pretty leading-7 text-muted-foreground">{post.data.description}</p>
+              {/* Tags and link sit at the foot of each cell, so they line up across the band. */}
+              <div class="mt-auto grid gap-4">
+                <TagList tags={post.data.tags} limit={3} />
+                <LabelLink href={getPostUrl(post)} icon={BookOpenIcon}>Read article<span class="sr-only">: {post.data.title}</span></LabelLink>
+              </div>
+            </article>
+          </li>
+        ))}
+      </ol>
     ) : (
       <Empty className="border">
         <EmptyHeader>
@@ -51,12 +65,6 @@ const structuredData = {
       </Empty>
     )}
 
-    <div>
-      <a class={buttonVariants({ size: 'lg' })} href="/blog/">
-        <BookOpenIcon data-icon="inline-start" aria-hidden="true" />
-        View All Articles
-        <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
-      </a>
-    </div>
+    <LabelLink href="/blog/" icon={LibraryIcon}>View All {posts.length} Articles</LabelLink>
   </section>
 </BaseLayout>

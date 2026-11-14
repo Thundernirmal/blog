@@ -1,5 +1,5 @@
 ---
-import { ArrowLeftIcon, ExternalLinkIcon, InfoIcon } from 'lucide-react';
+import { ExternalLinkIcon, InfoIcon } from 'lucide-react';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
@@ -8,7 +8,6 @@ import TagList from '@/components/blog/TagList.astro';
 import TableOfContents from '@/components/blog/TableOfContents.astro';
 import PostNavigation from '@/components/blog/PostNavigation.astro';
 import ShareButton from '@/components/blog/ShareButton.astro';
-import { buttonVariants } from '@/components/ui/button';
 import { SITE } from '@/config';
 import type { BlogPost } from '@/lib/content';
 import { getPostReadingTime, getPostUrl } from '@/lib/content';
@@ -60,31 +59,35 @@ const socialImage = post.data.heroImage;
   author={SITE.authorUrl}
   structuredData={structuredData}
 >
+  {/* Every block shares .post-column's grid, so the header, notes, prose and footer all start on the same edge. */}
   <article class="grid min-w-0 gap-7 sm:gap-8" data-pagefind-body>
-    <header class="mx-auto grid w-full min-w-0 max-w-3xl grid-cols-[minmax(0,1fr)] gap-4 sm:gap-5">
-      <nav class="text-sm text-muted-foreground" aria-label="Breadcrumb" data-pagefind-ignore>
-        <a class:list={[buttonVariants({ variant: 'ghost' }), '-ml-3.5 w-fit sm:hidden']} href="/blog/">
-          <ArrowLeftIcon data-icon="inline-start" aria-hidden="true" />
+    <div class="post-column">
+      <header class="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-4 sm:gap-5">
+      {/* The breadcrumb uses nirmalkatariya.com's uppercase label. */}
+      <nav class="label text-muted-foreground" aria-label="Breadcrumb" data-pagefind-ignore>
+        <a class="inline-flex min-h-11 w-fit items-center gap-2 outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring sm:hidden" href="/blog/">
+          <span aria-hidden="true">←</span>
           Back to Blog
         </a>
         <ol class="hidden min-w-0 items-center gap-2 sm:flex">
-          <li><a class="rounded-sm hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none" href="/">Home</a></li>
+          <li><a class="rounded-sm hover:text-primary focus-visible:ring-3 focus-visible:ring-ring focus-visible:outline-none" href="/">Home</a></li>
           <li aria-hidden="true">/</li>
-          <li><a class="rounded-sm hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none" href="/blog/">Blog</a></li>
+          <li><a class="rounded-sm hover:text-primary focus-visible:ring-3 focus-visible:ring-ring focus-visible:outline-none" href="/blog/">Blog</a></li>
           <li aria-hidden="true">/</li>
           <li aria-current="page" class="min-w-0 flex-1 truncate">{post.data.title}</li>
         </ol>
       </nav>
-      <h1 class="text-balance text-[2rem] font-semibold leading-[1.15] tracking-tight min-[360px]:text-4xl sm:text-5xl" data-pagefind-meta="title">{post.data.title}</h1>
+      <h1 class="display text-balance wrap-anywhere text-[2.25rem] leading-none min-[360px]:text-[2.5rem] sm:text-6xl" data-pagefind-meta="title">{post.data.title}</h1>
       <p class="text-pretty text-base leading-7 text-muted-foreground min-[360px]:text-lg min-[360px]:leading-8" data-pagefind-meta="description">{post.data.description}</p>
       <PostMeta publishedAt={post.data.publishedAt} updatedAt={post.data.updatedAt} readingMinutes={getPostReadingTime(post)} />
       <div data-pagefind-meta={`tags:${post.data.tags.join(', ')}`}>
         <TagList tags={post.data.tags} />
       </div>
     </header>
+    </div>
 
     {(post.data.originalUrl || post.data.archived) && (
-      <div class="mx-auto w-full max-w-3xl" data-pagefind-ignore>
+      <div class="post-column" data-pagefind-ignore>
         <Alert role="note">
           <InfoIcon aria-hidden="true" />
           <AlertTitle>From the Archive</AlertTitle>
@@ -98,7 +101,7 @@ const socialImage = post.data.heroImage;
       </div>
     )}
 
-    <div class="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,720px)_220px] lg:justify-center lg:items-start">
+    <div class="post-column gap-y-8 lg:items-start">
       <div class="article-prose min-w-0">
         <slot />
       </div>
@@ -106,12 +109,14 @@ const socialImage = post.data.heroImage;
     </div>
   </article>
 
-  <div class="mx-auto grid w-full min-w-0 max-w-3xl grid-cols-[minmax(0,1fr)] gap-6" data-pagefind-ignore>
-    <Separator />
-    <TagList tags={post.data.tags} />
-    <div class="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-      <ShareButton title={post.data.title} text={post.data.description} />
+  <div class="post-column" data-pagefind-ignore>
+    <div class="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6">
+      <Separator />
+      <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+        <TagList tags={post.data.tags} />
+        <ShareButton title={post.data.title} text={post.data.description} />
+      </div>
+      <PostNavigation newer={newer} older={older} />
     </div>
-    <PostNavigation newer={newer} older={older} />
   </div>
 </BaseLayout>

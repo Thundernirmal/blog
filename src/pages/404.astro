@@ -1,21 +1,32 @@
 ---
-import { BookOpenIcon, HomeIcon, SearchIcon, TerminalIcon } from 'lucide-react';
+import { BookOpenIcon, HomeIcon, SearchIcon } from 'lucide-react';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { buttonVariants } from '@/components/ui/button';
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import TerminalPrompt from '@/components/TerminalPrompt.astro';
+import TerminalWindow from '@/components/TerminalWindow.astro';
+import LabelLink from '@/components/LabelLink.astro';
 ---
 
 <BaseLayout title="Page Not Found" description="The requested page could not be found." canonicalPath="/404.html" noindex>
-  <Empty className="min-h-[50vh] border bg-card">
-    <EmptyHeader>
-      <EmptyMedia variant="icon"><TerminalIcon aria-hidden="true" /></EmptyMedia>
-      <EmptyTitle><h1>404: Path Not Found</h1></EmptyTitle>
-      <EmptyDescription>The page may have moved, or the address may be incomplete. Try the home page or search the archive.</EmptyDescription>
-    </EmptyHeader>
-    <EmptyContent className="flex-row flex-wrap justify-center">
-      <a class={buttonVariants()} href="/"><HomeIcon data-icon="inline-start" aria-hidden="true" />Home</a>
-      <a class={buttonVariants({ variant: 'secondary' })} href="/blog/"><BookOpenIcon data-icon="inline-start" aria-hidden="true" />Blog</a>
-      <a class={buttonVariants({ variant: 'outline' })} href="/search/"><SearchIcon data-icon="inline-start" aria-hidden="true" />Search</a>
-    </EmptyContent>
-  </Empty>
+  <section class="grid max-w-3xl gap-6" aria-labelledby="not-found-title">
+    <header class="grid gap-4 sm:gap-5">
+      <p class="label text-primary">HTTP 404</p>
+      <h1 id="not-found-title" class="display text-balance text-[2.75rem] text-foreground sm:text-6xl">Path not found.</h1>
+      <p class="max-w-2xl text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
+        The page may have moved, or the address may be incomplete. Try the home page or search the archive.
+      </p>
+    </header>
+
+    <figure>
+      <figcaption class="sr-only">Terminal showing that the requested page does not exist.</figcaption>
+      <TerminalWindow title="nirmal@Tiger: ~/notes" status="exit 1" statusTone="error">
+        <pre class="terminal-body" translate="no"><code><span class="block"><TerminalPrompt>cd&nbsp;/requested/page</TerminalPrompt></span><span class="block text-destructive">cd: no such file or directory: /requested/page</span><span class="block h-3" aria-hidden="true"></span><span class="block"><TerminalPrompt cursor /></span></code></pre>
+      </TerminalWindow>
+    </figure>
+
+    <nav class="flex flex-wrap gap-x-6" aria-label="Recovery links">
+      <LabelLink href="/" icon={HomeIcon}>Home</LabelLink>
+      <LabelLink href="/blog/" icon={BookOpenIcon}>Blog</LabelLink>
+      <LabelLink href="/search/" icon={SearchIcon}>Search</LabelLink>
+    </nav>
+  </section>
 </BaseLayout>

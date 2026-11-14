@@ -1,16 +1,129 @@
 @layer properties, theme, base, pagefind-vendor, components, utilities;
 
-@import "@fontsource-variable/outfit/wght.css";
-@import "@fontsource-variable/plus-jakarta-sans/wght.css";
+/* standard.css carries the width axis as well as weight: display type is set slightly condensed. */
+@import "@fontsource-variable/instrument-sans/standard.css";
 @import "@fontsource-variable/jetbrains-mono/wght.css";
 @import "@pagefind/component-ui/css" layer(pagefind-vendor);
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
+/* Same theme switch as nirmalkatariya.com: data-theme="latte" | "mocha" on <html>,
+   set before first paint by the inline script in BaseLayout.astro. */
+@custom-variant dark (&:where([data-theme="mocha"], [data-theme="mocha"] *));
 
-:root {
+:root,
+:root[data-theme="latte"] {
+  /* Catppuccin Latte */
+  color-scheme: light;
+  --ctp-rosewater: #dc8a78;
+  --ctp-flamingo: #dd7878;
+  --ctp-pink: #ea76cb;
+  --ctp-mauve: #8839ef;
+  --ctp-red: #d20f39;
+  --ctp-maroon: #e64553;
+  --ctp-peach: #fe640b;
+  --ctp-yellow: #df8e1d;
+  --ctp-green: #40a02b;
+  --ctp-teal: #179299;
+  --ctp-sky: #04a5e5;
+  --ctp-sapphire: #209fb5;
+  --ctp-blue: #1e66f5;
+  --ctp-lavender: #7287fd;
+  --ctp-text: #4c4f69;
+  --ctp-subtext1: #5c5f77;
+  --ctp-subtext0: #6c6f85;
+  --ctp-overlay2: #7c7f93;
+  --ctp-overlay1: #8c8fa1;
+  --ctp-overlay0: #9ca0b0;
+  --ctp-surface2: #acb0be;
+  --ctp-surface1: #bcc0cc;
+  --ctp-surface0: #ccd0da;
+  --ctp-base: #eff1f5;
+  --ctp-mantle: #e6e9ef;
+  --ctp-crust: #dce0e8;
+
+  /* Most Latte accents fall below 4.5:1 as text on Latte surfaces (yellow is 2.3:1).
+     Each is darkened toward black just enough to clear 4.5:1 on mantle and on its own
+     10% tint, keeping its hue so accents still read as the same colours. */
+  --tone-mauve: color-mix(in oklab, var(--ctp-mauve) 88%, #000);
+  --tone-red: color-mix(in oklab, var(--ctp-red) 86%, #000);
+  --tone-maroon: color-mix(in oklab, var(--ctp-maroon) 76%, #000);
+  --tone-peach: color-mix(in oklab, var(--ctp-peach) 66%, #000);
+  --tone-yellow: color-mix(in oklab, var(--ctp-yellow) 64%, #000);
+  --tone-green: color-mix(in oklab, var(--ctp-green) 70%, #000);
+  --tone-blue: color-mix(in oklab, var(--ctp-blue) 84%, #000);
+
+  /* Ink and rules follow nirmalkatariya.com's Latte values. */
+  --ink: color-mix(in oklab, var(--ctp-text) 82%, #000);
+  --ink-muted: color-mix(in oklab, var(--ctp-subtext1) 90%, #000);
+  --ink-soft: color-mix(in oklab, var(--ctp-text) 92%, #000);
+  --on-accent: var(--ctp-base);
+  --surface-muted: var(--ctp-crust);
+  --surface-accent: var(--ctp-surface0);
+  --rule: color-mix(in oklab, var(--ctp-text) 20%, transparent);
+  --rule-strong: color-mix(in oklab, var(--ctp-text) 38%, transparent);
+  --terminal-background: color-mix(in srgb, var(--ctp-crust) 55%, var(--ctp-mantle));
+  --terminal-toolbar: var(--ctp-crust);
+}
+
+/* Without a stored choice (or without JavaScript) the system preference decides. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="latte"]) {
+    /* Catppuccin Mocha */
+    color-scheme: dark;
+    --ctp-rosewater: #f5e0dc;
+    --ctp-flamingo: #f2cdcd;
+    --ctp-pink: #f5c2e7;
+    --ctp-mauve: #cba6f7;
+    --ctp-red: #f38ba8;
+    --ctp-maroon: #eba0ac;
+    --ctp-peach: #fab387;
+    --ctp-yellow: #f9e2af;
+    --ctp-green: #a6e3a1;
+    --ctp-teal: #94e2d5;
+    --ctp-sky: #89dceb;
+    --ctp-sapphire: #74c7ec;
+    --ctp-blue: #89b4fa;
+    --ctp-lavender: #b4befe;
+    --ctp-text: #cdd6f4;
+    --ctp-subtext1: #bac2de;
+    --ctp-subtext0: #a6adc8;
+    --ctp-overlay2: #9399b2;
+    --ctp-overlay1: #7f849c;
+    --ctp-overlay0: #6c7086;
+    --ctp-surface2: #585b70;
+    --ctp-surface1: #45475a;
+    --ctp-surface0: #313244;
+    --ctp-base: #1e1e2e;
+    --ctp-mantle: #181825;
+    --ctp-crust: #11111b;
+
+    /* Mocha accents are light enough to read as text on every surface as-is. */
+    --tone-mauve: var(--ctp-mauve);
+    --tone-red: var(--ctp-red);
+    --tone-maroon: var(--ctp-maroon);
+    --tone-peach: var(--ctp-peach);
+    --tone-yellow: var(--ctp-yellow);
+    --tone-green: var(--ctp-green);
+    --tone-blue: var(--ctp-blue);
+
+    --ink: var(--ctp-text);
+    --ink-muted: var(--ctp-subtext0);
+    --ink-soft: var(--ctp-subtext1);
+    --on-accent: var(--ctp-crust);
+    --surface-muted: var(--ctp-surface0);
+    --surface-accent: var(--ctp-surface1);
+    --rule: var(--ctp-surface0);
+    --rule-strong: var(--ctp-surface1);
+    --terminal-background: color-mix(in srgb, var(--ctp-crust) 78%, var(--ctp-mantle));
+    --terminal-toolbar: var(--ctp-mantle);
+  }
+}
+
+:root[data-theme="mocha"] {
+  /* Catppuccin Mocha */
+  color-scheme: dark;
   --ctp-rosewater: #f5e0dc;
   --ctp-flamingo: #f2cdcd;
   --ctp-pink: #f5c2e7;
@@ -38,38 +151,63 @@
   --ctp-mantle: #181825;
   --ctp-crust: #11111b;
 
-  --font-display: "Outfit Variable", "Outfit", sans-serif;
-  --font-body: "Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif;
-  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", monospace;
+  /* Mocha accents are light enough to read as text on every surface as-is. */
+  --tone-mauve: var(--ctp-mauve);
+  --tone-red: var(--ctp-red);
+  --tone-maroon: var(--ctp-maroon);
+  --tone-peach: var(--ctp-peach);
+  --tone-yellow: var(--ctp-yellow);
+  --tone-green: var(--ctp-green);
+  --tone-blue: var(--ctp-blue);
 
+  --ink: var(--ctp-text);
+  --ink-muted: var(--ctp-subtext0);
+  --ink-soft: var(--ctp-subtext1);
+  --on-accent: var(--ctp-crust);
+  --surface-muted: var(--ctp-surface0);
+  --surface-accent: var(--ctp-surface1);
+  --rule: var(--ctp-surface0);
+  --rule-strong: var(--ctp-surface1);
+  --terminal-background: color-mix(in srgb, var(--ctp-crust) 78%, var(--ctp-mantle));
+  --terminal-toolbar: var(--ctp-mantle);
+}
+
+:root {
+  /* Same families as nirmalkatariya.com: one sans for display and body, plus the mono. */
+  --font-display: "Instrument Sans Variable", "Instrument Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-body: var(--font-display);
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* shadcn semantic tokens, shared by both themes */
   --background: var(--ctp-base);
-  --foreground: var(--ctp-text);
+  --foreground: var(--ink);
   --card: var(--ctp-mantle);
-  --card-foreground: var(--ctp-text);
+  --card-foreground: var(--ink);
   --popover: var(--ctp-mantle);
-  --popover-foreground: var(--ctp-text);
-  --primary: var(--ctp-mauve);
-  --primary-foreground: var(--ctp-crust);
-  --secondary: var(--ctp-surface0);
-  --secondary-foreground: var(--ctp-text);
-  --muted: var(--ctp-surface0);
-  --muted-foreground: var(--ctp-subtext0);
-  --accent: var(--ctp-surface1);
-  --accent-foreground: var(--ctp-text);
-  --destructive: var(--ctp-red);
-  --destructive-foreground: var(--ctp-crust);
-  --border: var(--ctp-surface1);
-  --input: var(--ctp-surface1);
-  --ring: var(--ctp-mauve);
-  --warning: var(--ctp-yellow);
-  --warning-foreground: var(--ctp-crust);
-  --info: var(--ctp-blue);
-  --info-foreground: var(--ctp-crust);
-  --code-inline: var(--ctp-peach);
-  --status-negative: var(--ctp-red);
-  --status-caution: var(--ctp-yellow);
-  --status-positive: var(--ctp-green);
-  --radius: 0.5rem;
+  --popover-foreground: var(--ink);
+  --primary: var(--tone-mauve);
+  --primary-foreground: var(--on-accent);
+  --secondary: var(--surface-muted);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface-muted);
+  --muted-foreground: var(--ink-muted);
+  --accent: var(--surface-accent);
+  --accent-foreground: var(--ink);
+  --destructive: var(--tone-red);
+  --destructive-foreground: var(--on-accent);
+  --border: var(--rule);
+  --input: var(--rule-strong);
+  --ring: var(--tone-mauve);
+  --warning: var(--tone-yellow);
+  --warning-foreground: var(--on-accent);
+  --info: var(--tone-blue);
+  --info-foreground: var(--on-accent);
+  --code-inline: var(--tone-peach);
+  --status-negative: var(--tone-red);
+  --status-caution: var(--tone-yellow);
+  --status-positive: var(--tone-green);
+  /* nirmalkatariya.com is built from square edges and hairline rules. */
+  --radius: 0rem;
 }
 
 @theme inline {
@@ -103,6 +241,8 @@
   --color-status-negative: var(--status-negative);
   --color-status-caution: var(--status-caution);
   --color-status-positive: var(--status-positive);
+  --color-terminal-background: var(--terminal-background);
+  --color-terminal-toolbar: var(--terminal-toolbar);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -114,13 +254,15 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring;
   }
 
   html {
-    @apply scroll-smooth font-sans;
-    color-scheme: dark;
+    @apply scroll-smooth bg-background font-sans;
     scrollbar-gutter: stable;
+    /* Inherited by every scroller (page, contents column, code blocks, tables), so scrollbars use
+       the theme's own surfaces instead of the browser's default grays in either flavour. */
+    scrollbar-color: var(--ctp-surface2) transparent;
     scroll-padding-top: calc(var(--site-header-height, 5rem) + 1rem);
     -webkit-tap-highlight-color: color-mix(in srgb, var(--primary) 24%, transparent);
   }
@@ -136,6 +278,7 @@
   h5,
   h6 {
     @apply font-heading;
+    text-wrap: balance;
   }
 
   code,
@@ -164,7 +307,7 @@
 
 @layer components {
   .skip-link {
-    @apply fixed top-2 left-2 -translate-y-20 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground shadow-md transition-transform focus-visible:translate-y-0;
+    @apply fixed top-2 left-2 -translate-y-20 bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-transform focus-visible:translate-y-0;
     z-index: 60;
   }
 
@@ -180,6 +323,269 @@
 
   .site-header[data-scroll-state="hidden"] {
     transform: translateY(calc(-100% - env(safe-area-inset-top)));
+  }
+
+  /* Typography roles shared with nirmalkatariya.com. */
+  .label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .display {
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+    font-stretch: 92%;
+  }
+
+  /* The portfolio's brand is a mono path, "~/nirmal", with a mauve "~/"; this site's is "~/notes". */
+  .site-brand {
+    @apply min-h-11 shrink-0 items-center font-mono text-[0.8125rem] font-medium whitespace-nowrap text-foreground outline-none transition-colors hover:text-primary focus-visible:ring-3 focus-visible:ring-ring;
+  }
+
+  .site-nav-home-mark {
+    @apply font-mono text-sm font-medium tracking-normal text-primary normal-case;
+  }
+
+  /* On the home page the brand waits until the page title scrolls away, as the portfolio's does. */
+  /* Timings follow nirmalkatariya.com: a quick 0.2s exit and a softer 0.35s entrance. */
+  .site-brand-scroll {
+    transition:
+      opacity 0.35s ease,
+      translate 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0s;
+  }
+
+  .site-brand-scroll[data-visible="false"] {
+    @apply pointer-events-none invisible translate-y-1.5 opacity-0;
+    transition:
+      opacity 0.2s ease,
+      translate 0.2s ease,
+      visibility 0s 0.2s;
+  }
+
+  .site-nav-links {
+    /* One row on phones; it wraps rather than scrolling sideways when text is enlarged. */
+    @apply flex w-full min-w-0 flex-wrap items-center justify-between gap-x-1 sm:ml-auto sm:w-auto sm:flex-nowrap sm:gap-6;
+  }
+
+  /* Header links repeat on every route, so their treatment lives in one class. */
+  .site-nav-link {
+    @apply relative inline-flex min-h-11 min-w-11 items-center justify-center gap-1 text-[0.6875rem] font-semibold tracking-[0.1em] whitespace-nowrap text-muted-foreground uppercase transition-colors outline-none select-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring sm:min-w-0 sm:text-xs sm:tracking-[0.14em];
+  }
+
+  .site-nav-link::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0.5rem;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .site-nav-link[aria-current="page"] {
+    @apply text-foreground;
+  }
+
+  .site-nav-link[aria-current="page"]:not(.site-nav-home)::after {
+    transform: scaleX(1);
+  }
+
+  @media (hover: hover) {
+    .site-nav-link:not(.site-nav-home):hover::after {
+      transform: scaleX(1);
+    }
+  }
+
+  /* The search link's underline spans its label, not the shortcut hint or the phone icon. */
+  .site-nav-link[data-search-link]::after {
+    display: none;
+  }
+
+  .site-nav-home {
+    @apply justify-start;
+  }
+
+  .site-nav-arrow {
+    @apply text-[0.875em] tracking-normal;
+  }
+
+  /* Theme toggle, after nirmalkatariya.com: only shown once a script can act on it. */
+  .theme-toggle {
+    @apply hidden size-11 items-center justify-center text-muted-foreground transition-[color,transform] outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring active:scale-90 sm:-mr-2.5 sm:size-9;
+  }
+
+  :root[data-theme] .theme-toggle {
+    @apply inline-flex;
+  }
+
+  .theme-icons {
+    @apply size-[18px];
+  }
+
+  .theme-icons path {
+    transform-origin: center;
+    transform-box: view-box;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+  }
+
+  :root[data-theme="latte"] .theme-icon-moon,
+  :root[data-theme="mocha"] .theme-icon-sun {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.5);
+  }
+
+  /* Home page band, after the portfolio's playground: cells split by hairline rules. */
+  .home-band {
+    @apply grid border-y lg:grid-cols-3;
+  }
+
+  .home-cell {
+    @apply flex min-w-0 flex-col gap-4 py-8 wrap-anywhere lg:px-8 lg:py-10;
+  }
+
+  .home-cell:first-child {
+    @apply lg:pl-0;
+  }
+
+  .home-cell:last-child {
+    @apply lg:pr-0;
+  }
+
+  .home-cell + .home-cell {
+    @apply border-t lg:border-t-0 lg:border-l;
+  }
+
+  .home-cta {
+    @apply flex min-h-11 w-fit items-center gap-2 text-foreground outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background;
+  }
+
+  /* Label-link icons name the action (RSS, read, browse, share) and pick up the accent. */
+  .label-icon {
+    @apply size-3.5 shrink-0 text-primary;
+  }
+
+  /* Older/Newer arrows show direction, so they are the one place a label keeps an arrow. */
+  .post-nav-arrow {
+    @apply inline-block text-sm leading-none tracking-normal transition-transform duration-300 ease-out;
+  }
+
+
+  /* Article column grid: the prose column plus the contents rail on large screens. Header, notes and
+     footer use it too (leaving the rail empty), so every block starts on the prose column's edge. */
+  .post-column {
+    @apply grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-8 lg:grid-cols-[minmax(0,720px)_220px] lg:justify-center;
+  }
+
+  /* Older/Newer: a two-cell ruled band, newer always in the right-hand cell. */
+  .post-nav {
+    @apply grid min-w-0 border-y sm:grid-cols-2;
+  }
+
+  .post-nav-cell {
+    /* The ring is offset outside the cell so it clears the text, including the right-aligned Newer title. */
+    @apply grid min-w-0 content-start gap-3 py-6 wrap-anywhere outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:pr-8;
+  }
+
+  .post-nav-cell + .post-nav-cell {
+    @apply border-t sm:border-t-0 sm:border-l;
+  }
+
+  .post-nav-newer {
+    @apply sm:col-start-2 sm:pl-8 sm:pr-0 sm:text-right;
+  }
+
+  .post-nav-title {
+    @apply text-balance text-xl leading-tight font-medium tracking-[-0.02em] sm:text-2xl;
+  }
+
+  .post-nav-cell:hover .post-nav-arrow {
+    transform: translateX(-3px);
+  }
+
+  .post-nav-newer:hover .post-nav-arrow {
+    transform: translateX(3px);
+  }
+
+  /* Post lists: one continuous ruled list, a hairline between rows and none doubled. */
+  .post-list {
+    @apply grid border-t;
+  }
+
+  .post-row {
+    @apply grid min-w-0 gap-4 border-b py-8 wrap-anywhere sm:py-10;
+  }
+
+  /* Terminal window, shared with Nirmal's Shell. */
+  .terminal-window {
+    @apply grid min-w-0 overflow-hidden border bg-terminal-background font-mono;
+  }
+
+  .terminal-titlebar {
+    @apply grid h-9 grid-cols-[1fr_auto_1fr] items-center gap-3 border-b bg-terminal-toolbar px-3.5;
+  }
+
+  .terminal-lights {
+    @apply flex gap-1.5;
+  }
+
+  .terminal-lights > span {
+    @apply size-2.5 rounded-full;
+    background: var(--light);
+  }
+
+  .terminal-lights > span:nth-child(1) { --light: var(--ctp-red); }
+  .terminal-lights > span:nth-child(2) { --light: var(--ctp-yellow); }
+  .terminal-lights > span:nth-child(3) { --light: var(--ctp-green); }
+
+  .terminal-title {
+    @apply truncate text-xs text-muted-foreground;
+  }
+
+  .terminal-tag {
+    @apply justify-self-end text-[0.6875rem] font-semibold tracking-[0.14em] text-muted-foreground uppercase;
+  }
+
+  .terminal-body {
+    @apply overflow-x-auto p-4 text-sm leading-6 break-words whitespace-pre-wrap sm:px-6 sm:py-5;
+  }
+
+  .terminal-status {
+    @apply flex h-7 min-w-0 items-center gap-3 border-t bg-terminal-toolbar pr-3.5 text-[0.6875rem] text-muted-foreground;
+  }
+
+  .terminal-status-session {
+    @apply flex h-full items-center bg-primary px-2.5 font-semibold text-primary-foreground;
+  }
+
+  .terminal-status-end {
+    @apply ml-auto truncate;
+  }
+
+  /* Footer links stay quiet like the portfolio's, but keep an underline so they read as links. */
+  .footer-link {
+    @apply inline-flex min-h-11 items-center text-muted-foreground underline decoration-current/40 underline-offset-4 outline-none hover:text-foreground hover:decoration-current focus-visible:ring-3 focus-visible:ring-ring sm:min-h-6;
+  }
+
+  /* Like nirmalkatariya.com's footer, name the Catppuccin flavour in view. */
+  .footer-theme-name::after {
+    content: "Latte";
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="latte"]) .footer-theme-name::after {
+      content: "Mocha";
+    }
+  }
+
+  :root[data-theme="mocha"] .footer-theme-name::after {
+    content: "Mocha";
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -277,8 +683,7 @@
   }
 
   .article-prose :is(h2, h3, h4) {
-    @apply text-balance font-semibold tracking-tight text-foreground;
-    scroll-margin-top: calc(var(--site-header-height, 5rem) + 1rem);
+    @apply text-balance font-medium tracking-[-0.025em] wrap-anywhere text-foreground;
   }
 
   .article-prose h2 {
@@ -310,11 +715,11 @@
   }
 
   .article-prose a {
-    @apply break-words font-medium text-primary underline decoration-primary/40 underline-offset-4 hover:decoration-primary focus-visible:rounded-sm focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none;
+    @apply break-words font-medium text-primary underline decoration-primary/40 underline-offset-4 hover:decoration-primary focus-visible:rounded-sm focus-visible:ring-3 focus-visible:ring-ring focus-visible:outline-none;
   }
 
   .article-prose blockquote {
-    @apply rounded-r-lg border-l-4 border-primary bg-card px-5 py-4 text-muted-foreground;
+    @apply border-l-2 border-primary bg-card px-5 py-4 text-muted-foreground;
   }
 
   .article-prose :not(pre) > code {
@@ -335,7 +740,7 @@
   }
 
   .article-prose .table-scroll {
-    @apply w-full overflow-x-auto rounded-lg focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none;
+    @apply w-full overflow-x-auto rounded-lg focus-visible:ring-3 focus-visible:ring-ring focus-visible:outline-none;
     overscroll-behavior-inline: contain;
     background:
       linear-gradient(to right, var(--background) 30%, transparent) left center,
@@ -356,7 +761,7 @@
   }
 
   .article-prose th {
-    @apply bg-card font-semibold;
+    @apply bg-card text-xs font-semibold tracking-[0.14em] whitespace-nowrap uppercase;
   }
 
   .article-prose .expressive-code {
@@ -365,7 +770,7 @@
 
   #article-search {
     --pf-text: var(--foreground);
-    --pf-text-secondary: var(--ctp-subtext1);
+    --pf-text-secondary: var(--ink-soft);
     --pf-text-muted: var(--muted-foreground);
     --pf-background: var(--card);
     --pf-border: color-mix(in srgb, var(--foreground) 10%, transparent);
@@ -380,14 +785,14 @@
     --pf-error-bg: color-mix(in srgb, var(--destructive) 10%, var(--card));
     --pf-error-border: color-mix(in srgb, var(--destructive) 45%, transparent);
     --pf-error-text: var(--destructive);
-    --pf-error-text-secondary: var(--ctp-maroon);
+    --pf-error-text-secondary: var(--tone-maroon);
     --pf-font: var(--font-body);
     --pf-input-height: 2.75rem;
     --pf-input-font-size: 1rem;
     --pf-summary-font-size: 0.875rem;
     --pf-result-title-font-size: 1.125rem;
-    --pf-result-excerpt-font-size: 0.875rem;
-    --pf-results-gap: 0.75rem;
+    --pf-result-excerpt-font-size: 1rem;
+    --pf-results-gap: 0;
     --pf-border-radius: calc(var(--radius) * 1.4);
   }
 
@@ -411,28 +816,32 @@
     border-radius: var(--radius);
   }
 
-  .pagefind-ui .pf-summary {
-    @apply leading-6;
+  /* Results are ruled rows like the blog listing: no card fill or frame, a hairline between rows. */
+  .pagefind-ui .pf-results {
+    border-top: 1px solid var(--border);
   }
 
   .pagefind-ui .pf-result-card {
-    @apply p-4;
+    @apply px-0 py-6 sm:py-8;
     border: 0;
-    box-shadow: 0 0 0 1px var(--pf-border);
-    transition:
-      background-color 150ms,
-      box-shadow 150ms;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
-  .pagefind-ui .pf-result-card:hover {
-    background: var(--pf-hover);
-    box-shadow: var(--pf-shadow-sm);
+  .pagefind-ui .pf-result-content {
+    @apply grid gap-3;
   }
 
   .pagefind-ui .pf-result-title {
+    @apply text-2xl leading-tight tracking-[-0.025em];
     font-family: var(--font-display);
-    font-weight: 600;
-    line-height: 1.5rem;
+    font-weight: 500;
+  }
+
+  .pagefind-ui .pf-result-link {
+    @apply outline-none focus-visible:ring-3 focus-visible:ring-ring;
   }
 
   .pagefind-ui .pf-result-link:hover {
@@ -446,12 +855,17 @@
     white-space: normal;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
-    line-height: 1.5rem;
+    line-height: 1.75rem;
+    color: var(--muted-foreground);
   }
 
   .pagefind-ui .pf-result-meta {
-    @apply mt-2 block text-sm leading-6 text-muted-foreground;
-    -webkit-line-clamp: unset;
+    @apply leading-5 text-muted-foreground;
+  }
+
+  /* The result count reads as a label, like the listings' meta. */
+  .pagefind-ui .pf-summary {
+    @apply text-xs leading-6 font-semibold tracking-[0.14em] text-muted-foreground uppercase;
   }
 
   .pagefind-ui :is(.pf-result-card, .pf-result-content, .pf-result-excerpt, .pf-result-meta),
@@ -470,6 +884,28 @@
   pagefind-summary,
   pagefind-results {
     display: block;
+  }
+}
+
+/* While the theme swaps, colour transitions hold off so the circular reveal doesn't repaint
+   every frame, and named router regions join the root snapshot instead of cross-fading. */
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition-property: transform, translate, scale, rotate, opacity !important;
+  view-transition-name: none !important;
+}
+
+html.theme-switching::view-transition-old(root),
+html.theme-switching::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* The ⌘ K search shortcut needs a hardware keyboard; hide its hint on touch-first devices. */
+@media not ((hover: hover) and (pointer: fine)) {
+  .keyboard-hint {
+    display: none !important;
   }
 }
 

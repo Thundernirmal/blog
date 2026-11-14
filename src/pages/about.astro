@@ -1,9 +1,8 @@
 ---
-import { Code2Icon, ExternalLinkIcon, RssIcon } from 'lucide-react';
+import { Code2Icon, GlobeIcon, MonitorIcon, NewspaperIcon, RssIcon } from 'lucide-react';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/layout/PageHeader.astro';
-import { buttonVariants } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import LabelLink from '@/components/LabelLink.astro';
 import { SITE } from '@/config';
 ---
 
@@ -12,53 +11,48 @@ import { SITE } from '@/config';
   description={`Meet ${SITE.author}, a systems engineer, Linux enthusiast, and the author of ${SITE.name}.`}
   canonicalPath="/about/"
 >
-  <PageHeader title="About" eyebrow="nirmal@Tiger">
+  <PageHeader title="About" eyebrow="nirmal@Tiger" eyebrowMono>
     <p>The person behind the notes, the systems behind the work, and the hardware rabbit holes along the way.</p>
   </PageHeader>
 
-  <div class="grid gap-4 lg:grid-cols-2" data-reveal-list>
-    <Card>
-      <CardHeader>
-        <CardTitle><h2 class="text-xl font-semibold">Nirmal Katariya</h2></CardTitle>
-        <CardDescription>Systems engineer in site reliability · B.Tech in Computer Science, IIT Jodhpur</CardDescription>
-      </CardHeader>
-      <CardContent className="grid flex-1 gap-5 text-base leading-7 text-muted-foreground">
-        <p>I’m a systems engineer in site reliability, supporting production infrastructure for straight-through processing applications. I build the tooling that keeps it healthy: SLOs, Prometheus, Alertmanager and BigQuery.</p>
-        <dl class="grid gap-3">
-          <div class="grid gap-1">
-            <dt class="font-medium text-foreground">Expertise</dt>
-            <dd>SRE, SLOs &amp; SLIs, Prometheus, Alertmanager, BigQuery, Linux, and Python</dd>
-          </div>
-          <div class="grid gap-1">
-            <dt class="font-medium text-foreground">Currently</dt>
-            <dd>Production support and SRE development.</dd>
-          </div>
-          <div class="grid gap-1">
-            <dt class="font-medium text-foreground">Education</dt>
-            <dd>B.Tech in Computer Science from IIT Jodhpur</dd>
-          </div>
-        </dl>
-      </CardContent>
-      <CardFooter className="flex-wrap gap-2">
-        <a class={buttonVariants()} href={SITE.authorUrl}>Personal Site <ExternalLinkIcon data-icon="inline-end" aria-hidden="true" /></a>
-        <a class={buttonVariants({ variant: 'outline' })} href={SITE.retroUrl}>Retro Site <ExternalLinkIcon data-icon="inline-end" aria-hidden="true" /></a>
-      </CardFooter>
-    </Card>
+  {/* Two cells of the portfolio's ruled band instead of raised cards, each ending in label links. */}
+  <div class="home-band lg:grid-cols-2" data-reveal-list>
+    <section class="home-cell" aria-labelledby="about-author">
+      <p class="label text-muted-foreground"><span class="font-mono text-primary">01</span> / Author</p>
+      <h2 id="about-author" class="display text-4xl sm:text-5xl">Nirmal Katariya</h2>
+      <p class="text-muted-foreground">Systems engineer in site reliability · B.Tech in Computer Science, IIT Jodhpur</p>
+      <p class="leading-7 text-muted-foreground">I’m a systems engineer in site reliability, supporting production infrastructure for straight-through processing applications. I build the tooling that keeps it healthy: SLOs, Prometheus, Alertmanager and BigQuery.</p>
+      <dl class="grid gap-4 leading-7 text-muted-foreground">
+        <div class="grid gap-1">
+          <dt class="label text-foreground">Expertise</dt>
+          <dd>SRE, SLOs &amp; SLIs, Prometheus, Alertmanager, BigQuery, Linux, and Python</dd>
+        </div>
+        <div class="grid gap-1">
+          <dt class="label text-foreground">Currently</dt>
+          <dd>Production support and SRE development.</dd>
+        </div>
+        <div class="grid gap-1">
+          <dt class="label text-foreground">Education</dt>
+          <dd>B.Tech in Computer Science from IIT Jodhpur</dd>
+        </div>
+      </dl>
+      <div class="mt-auto flex flex-wrap gap-x-6">
+        <LabelLink href={SITE.authorUrl} icon={GlobeIcon} external>Personal Site</LabelLink>
+        <LabelLink href={SITE.retroUrl} icon={MonitorIcon} external>Retro Site</LabelLink>
+      </div>
+    </section>
 
-    <Card>
-      <CardHeader>
-        <CardTitle><h2 class="text-xl font-semibold">Nirmal’s Notes</h2></CardTitle>
-        <CardDescription>Practical writing about software, hardware, Linux, and the tools in between.</CardDescription>
-      </CardHeader>
-      <CardContent className="grid flex-1 content-start gap-4 text-base leading-7 text-muted-foreground">
-        <p>This is where I keep useful tools, explored systems, and technical ideas that deserve more room than a terminal scrollback.</p>
-        <p>The blog shares the personal sites’ love of Linux, hardware, and terminal-inspired design, built with Astro, Catppuccin Mocha, and as little client JavaScript as possible.</p>
-      </CardContent>
-      <CardFooter className="flex-wrap gap-2">
-        <a class={buttonVariants({ variant: 'secondary' })} href="/rss.xml"><RssIcon data-icon="inline-start" aria-hidden="true" />RSS</a>
-        <a class={buttonVariants({ variant: 'outline' })} href={SITE.githubUrl}><Code2Icon data-icon="inline-start" aria-hidden="true" />GitHub</a>
-        <a class={buttonVariants({ variant: 'ghost' })} href={SITE.mediumUrl}>Medium <ExternalLinkIcon data-icon="inline-end" aria-hidden="true" /></a>
-      </CardFooter>
-    </Card>
+    <section class="home-cell" aria-labelledby="about-notes">
+      <p class="label text-muted-foreground"><span class="font-mono text-primary">02</span> / Blog</p>
+      <h2 id="about-notes" class="display text-4xl sm:text-5xl">Nirmal’s Notes</h2>
+      <p class="text-muted-foreground">Practical writing about software, hardware, Linux, and the tools in between.</p>
+      <p class="leading-7 text-muted-foreground">This is where I keep useful tools, explored systems, and technical ideas that deserve more room than a terminal scrollback.</p>
+      <p class="leading-7 text-muted-foreground">The blog shares the personal sites’ love of Linux, hardware, and terminal-inspired design, built with Astro, Catppuccin Latte and Mocha, and as little client JavaScript as possible.</p>
+      <div class="mt-auto flex flex-wrap gap-x-6">
+        <LabelLink href="/rss.xml" icon={RssIcon}>RSS Feed</LabelLink>
+        <LabelLink href={SITE.githubUrl} icon={Code2Icon} external>GitHub</LabelLink>
+        <LabelLink href={SITE.mediumUrl} icon={NewspaperIcon} external>Medium</LabelLink>
+      </div>
+    </section>
   </div>
 </BaseLayout>

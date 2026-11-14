@@ -2,12 +2,13 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/layout/PageHeader.astro';
 
+// Results read like the blog listing's ruled rows: the meta label first, then the title and description.
 const resultTemplate = `<li class="pf-result">
   <div class="pf-result-card">
     <div class="pf-result-content">
+      <p class="pf-result-meta label">{{ meta.date }}{{#if meta.tags}} · Tags: {{ meta.tags }}{{/if}}</p>
       <p class="pf-result-title"><a class="pf-result-link" href="{{ meta.url | default(url) | safeUrl }}">{{ meta.title }}</a></p>
       {{#if meta.description}}<p class="pf-result-excerpt">{{ meta.description }}</p>{{/if}}
-      <p class="pf-result-excerpt pf-result-meta">{{ meta.date }}{{#if meta.tags}} · Tags: {{ meta.tags }}{{/if}}</p>
     </div>
   </div>
 </li>`;

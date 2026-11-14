@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
+import { buttonVariants } from '../../src/components/ui/button';
 
 const coreRoutes = [
   '/',
@@ -11,17 +12,110 @@ const coreRoutes = [
   '/404.html',
 ];
 
-for (const route of coreRoutes) {
-  test(`${route} has no serious accessibility violations`, async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto(route);
-    await expect(page.locator('main')).toBeVisible();
-    const results = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-      .analyze();
-    expect(results.violations.filter(({ impact }) => impact === 'critical' || impact === 'serious')).toEqual([]);
+// Both Catppuccin flavours are audited: Latte accents are darkened for contrast, Mocha's are not.
+for (const colorScheme of ['light', 'dark'] as const) {
+  for (const route of coreRoutes) {
+    test(`${route} has no serious accessibility violations in ${colorScheme} mode`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: 'reduce', colorScheme });
+      await page.goto(route);
+      await expect(page.locator('main')).toBeVisible();
+      const results = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+        .analyze();
+      expect(results.violations.filter(({ impact }) => impact === 'critical' || impact === 'serious')).toEqual([]);
+    });
+  }
+}
+
+for (const [scheme, theme, hex, rgb] of [
+  ['light', 'latte', '#eff1f5', 'rgb(239, 241, 245)'],
+  ['dark', 'mocha', '#1e1e2e', 'rgb(30, 30, 46)'],
+] as const) {
+  test(`browser chrome follows a ${scheme} system scheme with Catppuccin ${theme}`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme: scheme });
+    await page.goto('/');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
+    await expect(page.locator('meta[name="color-scheme"]')).toHaveAttribute('content', 'light dark');
+    for (const meta of await page.locator('meta[name="theme-color"]').all()) await expect(meta).toHaveAttribute('content', hex);
+    const colors = await page.evaluate(() => ({
+      html: getComputedStyle(document.documentElement).backgroundColor,
+      body: getComputedStyle(document.body).backgroundColor,
+      scheme: getComputedStyle(document.documentElement).colorScheme,
+    }));
+    expect(colors).toEqual({ html: rgb, body: rgb, scheme });
   });
 }
+
+test('a stored theme overrides the system scheme and survives client-side navigation', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.addInitScript(() => localStorage.setItem('theme', 'mocha'));
+  await page.goto('/');
+  const html = page.locator('html');
+  await expect(html).toHaveAttribute('data-theme', 'mocha');
+  await page.locator('[data-site-header]').getByRole('link', { name: 'Tags', exact: true }).click();
+  await expect(page).toHaveURL(/\/tags\/$/);
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(html).toHaveAttribute('data-theme', 'mocha');
+  for (const meta of await page.locator('meta[name="theme-color"]').all()) await expect(meta).toHaveAttribute('content', '#1e1e2e');
+  expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(30, 30, 46)');
+});
+
+test('the header toggle switches, persists, and carries the theme across navigation', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/');
+  const html = page.locator('html');
+  const toggle = page.locator('[data-site-header]').getByRole('button', { name: 'Dark theme', exact: true });
+  await expect(html).toHaveAttribute('data-theme', 'latte');
+  await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+  await toggle.click();
+  await expect(html).toHaveAttribute('data-theme', 'mocha');
+  await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  await expect(html).not.toHaveClass(/theme-switching/);
+  expect(await page.evaluate(() => localStorage.getItem('theme'))).toBe('mocha');
+  await page.locator('[data-site-header]').getByRole('link', { name: 'About', exact: true }).click();
+  await expect(page).toHaveURL(/\/about\/$/);
+  await expect(page.getByRole('heading', { name: 'About', level: 1 })).toBeVisible();
+  await expect(html).toHaveAttribute('data-theme', 'mocha');
+  const swappedToggle = page.locator('[data-site-header]').getByRole('button', { name: 'Dark theme', exact: true });
+  await expect(swappedToggle).toHaveAttribute('aria-pressed', 'true');
+  await swappedToggle.focus();
+  await page.keyboard.press('Enter');
+  await expect(html).toHaveAttribute('data-theme', 'latte');
+  await page.reload();
+  await expect(html).toHaveAttribute('data-theme', 'latte');
+  expect(await page.evaluate(() => localStorage.getItem('theme'))).toBe('latte');
+});
+
+test('without JavaScript the system scheme applies and the inert toggle stays hidden', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, colorScheme: 'dark' });
+  const page = await context.newPage();
+  await page.goto('/blog/windows-subsystem-for-linux-wsl/');
+  await expect(page.locator('html')).not.toHaveAttribute('data-theme');
+  // The toggle needs a script to act, so it stays hidden rather than inert.
+  await expect(page.locator('[data-theme-toggle]')).toBeHidden();
+  expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(30, 30, 46)');
+  await context.close();
+});
+
+test('without a stored theme, a live system scheme change switches the theme', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'latte');
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'mocha');
+});
+
+test('code blocks follow the page flavour', async ({ page }) => {
+  for (const [scheme, theme] of [['light', 'latte'], ['dark', 'mocha']] as const) {
+    await page.emulateMedia({ colorScheme: scheme });
+    await page.goto('/blog/windows-subsystem-for-linux-wsl/');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
+    const code = page.locator('.expressive-code pre').first();
+    await expect(code).toBeVisible();
+    const background = await code.evaluate((node) => getComputedStyle(node).backgroundColor);
+    expect(background, `${theme} code background`).toBe(theme === 'latte' ? 'rgb(239, 241, 245)' : 'rgb(30, 30, 46)');
+  }
+});
 
 test('navigation exposes the current section', async ({ page }) => {
   await page.goto('/blog/');
@@ -51,6 +145,15 @@ test('the about page reflects the current profile and portfolio variants', async
   await expect(page.getByText(/Goldman|Capgemini/i)).toHaveCount(0);
   await expect(page.getByText('SRE, SLOs & SLIs, Prometheus, Alertmanager, BigQuery, Linux, and Python')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Personal Site' })).toHaveAttribute('href', 'https://nirmalkatariya.com');
+  // Ruled cells with label links, not raised cards with filled buttons.
+  await expect(page.locator('.home-band > .home-cell')).toHaveCount(2);
+  await expect(page.getByRole('link', { name: 'Personal Site' })).toHaveClass(/home-cta/);
+  // Off-site links say so: a trailing ↗ and a new-tab note for screen readers.
+  for (const name of ['Personal Site', 'Retro Site', 'GitHub', 'Medium']) {
+    const link = page.locator('main').getByRole('link', { name: `${name} (opens in a new tab)` });
+    await expect(link).toHaveAttribute('target', '_blank');
+    await expect(link).toContainText('↗');
+  }
   await expect(page.getByRole('link', { name: 'Retro Site' })).toHaveAttribute('href', 'https://retro.nirmalkatariya.com');
 });
 
@@ -90,7 +193,7 @@ test('page sections and repeated content share the entrance animation', async ({
   await page.goto('/');
 
   const pageSections = page.locator('[data-page-enter] > *');
-  const postCards = page.locator('[data-reveal-list] > [data-slot="card"]');
+  const postCards = page.locator('[data-reveal-list] > li');
   await expect(pageSections).toHaveCount(2);
   await expect(postCards).toHaveCount(3);
 
@@ -162,8 +265,11 @@ test('internal links use Astro client-side routing', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Blog', exact: true })).toHaveAttribute('aria-current', 'page');
   await expect.poll(() => page.evaluate(() => (window as Window & { clientRouterMarker?: boolean }).clientRouterMarker)).toBe(true);
 
-  await page.getByRole('link', { name: 'Read article' }).first().click();
-  await expect(page).toHaveURL(/\/blog\/[^/]+\/$/);
+  // Clicks are ignored while the previous navigation's view transition is still running; retry until one lands.
+  await expect(async () => {
+    await page.getByRole('link', { name: 'Read article' }).first().click();
+    await expect(page).toHaveURL(/\/blog\/[^/]+\/$/, { timeout: 1_000 });
+  }).toPass();
   await expect(page.locator('article h1')).toBeVisible();
   await expect.poll(() => page.evaluate(() => (window as Window & { clientRouterMarker?: boolean }).clientRouterMarker)).toBe(true);
 });
@@ -235,6 +341,8 @@ test('core routes fit common phone widths and mobile landscape', async ({ page }
 
 test('primary mobile controls have touch-friendly targets', async ({ page }) => {
   test.skip((page.viewportSize()?.width ?? 0) >= 640);
+  // Rows slide in on load, and WebKit reports sub-pixel sizes mid-transform; measure at rest.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
 
   await page.goto('/blog/');
   const controls = [
@@ -325,8 +433,11 @@ test('the share control copies the article URL when native sharing is unavailabl
   });
   await page.goto('/blog/windows-subsystem-for-linux-wsl/');
 
-  await page.getByRole('button', { name: 'Share Article' }).click();
-  await expect(page.getByRole('button', { name: 'Link Copied' })).toBeVisible();
+  // The share script binds after load; a click that lands first does nothing, so retry until it responds.
+  await expect(async () => {
+    await page.locator('[data-share-button]').click();
+    await expect(page.getByRole('button', { name: 'Link Copied' })).toBeVisible({ timeout: 1_000 });
+  }).toPass();
   await expect.poll(() => page.evaluate(() => (window as Window & { copiedArticleUrl?: string }).copiedArticleUrl)).toMatch(/\/blog\/windows-subsystem-for-linux-wsl\/$/);
 });
 
@@ -340,6 +451,232 @@ test('the desktop table of contents does not scroll horizontally', async ({ page
   expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
 });
 
+test('the home page lists the latest writing as a numbered, ruled band', async ({ page }) => {
+  await page.goto('/');
+  // The hero ends in the portfolio's mauve period, hidden from the heading's accessible name.
+  await expect(page.getByRole('heading', { level: 1, name: "Nirmal's Notes", exact: true })).toBeVisible();
+  await expect(page.locator('#home-page-header h1 [aria-hidden="true"]')).toHaveText('.');
+  const cells = page.locator('.home-band > li');
+  await expect(cells).toHaveCount(3);
+  await expect(cells.first().locator('.label').first()).toHaveText(/^01 \/ /);
+  await expect(cells.nth(2).locator('.label').first()).toHaveText(/^03 \/ /);
+  for (const cell of await cells.all()) {
+    // Each "Read article" link names its post for screen readers.
+    const title = (await cell.getByRole('heading', { level: 3 }).textContent())?.trim() ?? '';
+    const readLink = cell.getByRole('link', { name: /^Read article/ });
+    await expect(readLink).toBeVisible();
+    await expect(readLink).toContainText(title);
+  }
+  await expect(page.getByRole('link', { name: /^View All \d+ Articles$/ })).toHaveAttribute('href', '/blog/');
+});
+
+test('the search shortcut hint shows only with a fine pointer and hover', async ({ browser }) => {
+  for (const [hasTouch, visible] of [[false, true], [true, false]] as const) {
+    const context = await browser.newContext({ viewport: { width: 1024, height: 800 }, hasTouch, isMobile: hasTouch });
+    const page = await context.newPage();
+    await page.goto('/blog/');
+    const hint = page.locator('[data-site-header] .keyboard-hint');
+    await expect(hint).toHaveCount(1);
+    if (visible) await expect(hint).toBeVisible();
+    else await expect(hint).toBeHidden();
+    await context.close();
+  }
+});
+
+test('the header brand is the portfolio-style "~/notes" path, and "~/" alone links home on phones', async ({ page }) => {
+  await page.goto('/tags/');
+  const header = page.locator('[data-site-header]');
+  if ((page.viewportSize()?.width ?? 0) >= 640) {
+    const brand = header.getByRole('link', { name: "Nirmal's Notes, home", exact: true });
+    await expect(brand).toBeVisible();
+    await expect(brand).toHaveText('~/notes');
+    await expect(brand.locator('.text-primary')).toHaveText('~/');
+    expect(await brand.evaluate((node) => getComputedStyle(node).fontFamily)).toContain('JetBrains Mono');
+  } else {
+    const home = header.getByRole('link', { name: 'Home', exact: true });
+    await expect(home).toBeVisible();
+    await expect(home).toHaveText('~/');
+  }
+});
+
+test('the 404 page shows the shared terminal window and recovery links', async ({ page }) => {
+  await page.goto('/404.html');
+  await expect(page.getByRole('heading', { level: 1, name: 'Path not found.' })).toBeVisible();
+  const terminal = page.locator('.terminal-window');
+  await expect(terminal.locator('.terminal-title')).toHaveText('nirmal@Tiger: ~/notes');
+  await expect(terminal).toContainText('cd: no such file or directory: /requested/page');
+  await expect(terminal.locator('.terminal-status-end')).toHaveText('exit 1');
+  const recovery = page.getByRole('navigation', { name: 'Recovery links' });
+  for (const name of ['Home', 'Blog', 'Search']) await expect(recovery.getByRole('link', { name, exact: true })).toBeVisible();
+});
+
+test('outline buttons draw their hairline border', async ({ page }) => {
+  // No current page shows an outline button (pagination appears past ten posts), so probe the variant's real classes.
+  await page.goto('/blog/');
+  const colors = await page.evaluate((className) => {
+    const probe = document.createElement('a');
+    probe.className = className;
+    probe.textContent = 'Probe';
+    const reference = document.createElement('div');
+    reference.style.color = 'var(--border)';
+    document.querySelector('main')!.append(probe, reference);
+    const result = { button: getComputedStyle(probe).borderTopColor, border: getComputedStyle(reference).color };
+    probe.remove();
+    reference.remove();
+    return result;
+  }, buttonVariants({ variant: 'outline' }));
+  expect(colors.button).not.toBe('rgba(0, 0, 0, 0)');
+  expect(colors.button).toBe(colors.border);
+});
+
+test('focus rings reach 3:1 contrast against the Latte page', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/blog/');
+  const link = page.locator('[data-site-header]').getByRole('link', { name: 'Tags', exact: true });
+  await link.focus();
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Tab');
+  const shadow = await page.evaluate(() => getComputedStyle(document.activeElement!).boxShadow);
+  // The ring is drawn in the full mauve tone, not a 50% tint.
+  expect(shadow).toMatch(/(oklab|rgb)\([^)/,]*( [^)/,]*)*\) 0px 0px 0px 3px/);
+});
+
+test('enlarged text on phones wraps instead of overflowing', async ({ page }) => {
+  for (const width of [320, 375]) {
+    await page.setViewportSize({ width, height: 800 });
+    for (const route of ['/', '/blog/', '/tags/', '/tags/guides-and-tutorials/', '/blog/windows-subsystem-for-linux-wsl/', '/404.html']) {
+      await page.goto(route);
+      // Approximates a 200% browser text size.
+      await page.addStyleTag({ content: 'html { font-size: 200% !important; }' });
+      const dimensions = await page.evaluate(() => ({
+        documentWidth: document.documentElement.scrollWidth,
+        viewportWidth: document.documentElement.clientWidth,
+      }));
+      expect(dimensions.documentWidth, `${route} at ${width}px with 200% text`).toBeLessThanOrEqual(dimensions.viewportWidth);
+    }
+  }
+});
+
+test('contents links land headings just below the header, offset once', async ({ page }) => {
+  test.skip((page.viewportSize()?.width ?? 0) < 1024);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/blog/windows-subsystem-for-linux-wsl/');
+  await page.locator('nav[data-table-of-contents]').getByRole('link', { name: 'WSL 1 vs WSL 2' }).click();
+  await expect(page).toHaveURL(/#wsl-1-vs-wsl-2$/);
+  await expect.poll(async () => {
+    const { headerBottom, headingTop } = await page.evaluate(() => ({
+      headerBottom: document.querySelector('[data-site-header]')!.getBoundingClientRect().bottom,
+      headingTop: document.querySelector('#wsl-1-vs-wsl-2')!.getBoundingClientRect().top,
+    }));
+    return headingTop - headerBottom;
+  }).toBeGreaterThanOrEqual(8);
+  const gap = await page.evaluate(() => document.querySelector('#wsl-1-vs-wsl-2')!.getBoundingClientRect().top - document.querySelector('[data-site-header]')!.getBoundingClientRect().bottom);
+  expect(gap).toBeLessThanOrEqual(32);
+});
+
+test('article header, notes, prose and footer share one left edge', async ({ page }) => {
+  await page.goto('/blog/windows-subsystem-for-linux-wsl/');
+  const edges = await page.evaluate(() =>
+    ['article h1', '[data-slot="alert"]', '.article-prose', 'nav[aria-label="Article navigation"]'].map(
+      (selector) => Math.round(document.querySelector(selector)!.getBoundingClientRect().left),
+    ),
+  );
+  expect(new Set(edges).size, `left edges ${edges.join(', ')}`).toBe(1);
+});
+
+test('older and newer articles sit in a ruled two-cell band', async ({ page }) => {
+  // The band slides in on load; measure it at rest.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/blog/windows-subsystem-for-linux-wsl/');
+  const band = page.getByRole('navigation', { name: 'Article navigation' });
+  const older = band.getByRole('link', { name: /^← Older|^Older/ });
+  const newer = band.getByRole('link', { name: /^Newer/ });
+  await expect(older).toBeVisible();
+  await expect(newer).toBeVisible();
+  expect(await band.evaluate((node) => getComputedStyle(node).borderTopWidth)).toBe('1px');
+  if ((page.viewportSize()?.width ?? 0) >= 640) {
+    const [olderBox, newerBox] = [await older.boundingBox(), await newer.boundingBox()];
+    expect(newerBox!.x).toBeGreaterThan(olderBox!.x);
+    expect(Math.abs(newerBox!.y - olderBox!.y)).toBeLessThan(2);
+  }
+  await expect(page.getByRole('button', { name: 'Share Article' })).toHaveClass(/home-cta/);
+});
+
+test('blog lists are one continuous ruled list with label meta', async ({ page }) => {
+  // Rows slide in on load; measure them at rest.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  for (const route of ['/blog/', '/tags/android/']) {
+    await page.goto(route);
+    const rows = page.locator('.post-list > .post-row');
+    expect(await rows.count(), route).toBeGreaterThan(1);
+    // Rows touch: each starts where the previous ends, so rules are never doubled.
+    const [first, second] = [await rows.nth(0).boundingBox(), await rows.nth(1).boundingBox()];
+    expect(Math.abs(second!.y - (first!.y + first!.height)), route).toBeLessThan(1);
+    await expect(rows.first().locator('.label').first()).toHaveText(/^[A-Z][a-z]+ \d{1,2}, \d{4} · \d+ min/);
+  }
+});
+
+test('label links lead with an icon for their purpose, not a generic arrow', async ({ page }) => {
+  await page.goto('/');
+  const rss = page.getByRole('link', { name: 'RSS Feed', exact: true });
+  await expect(rss.locator('svg.lucide-rss')).toHaveCount(1);
+  await expect(page.getByRole('link', { name: /^View All \d+ Articles$/ }).locator('svg.lucide-library')).toHaveCount(1);
+  await expect(page.locator('.home-band').getByRole('link', { name: /^Read article/ }).first().locator('svg.lucide-book-open')).toHaveCount(1);
+  // No label link falls back to a bare "→".
+  for (const route of ['/', '/blog/', '/blog/windows-subsystem-for-linux-wsl/']) {
+    await page.goto(route);
+    expect(await page.locator('main .home-cta').evaluateAll((links) => links.filter((link) => link.textContent?.includes('→')).length), route).toBe(0);
+  }
+});
+
+test('a listing\'s "Updated" date never splits across lines', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 800 });
+  await page.goto('/blog/');
+  const updated = page.locator('.post-row [data-updated]').first();
+  await expect(updated).toBeVisible();
+  // Every fragment (the text and its <time>) sits on the same line.
+  const tops = await updated.evaluate((node) => [...new Set([...node.getClientRects()].map((rect) => Math.round(rect.top)))]);
+  expect(tops).toHaveLength(1);
+});
+
+test('article headers use the same uppercase meta label as the listings', async ({ page }) => {
+  await page.goto('/blog/features-that-are-nice-to-have-e1-mobile-madness/');
+  const meta = page.locator('article header [data-post-meta]');
+  await expect(meta).toHaveText(/^May 15, 2020 · \d+ min read · Updated February 11, 2022$/);
+  await expect(meta).toHaveClass(/label/);
+  await expect(meta.locator('svg')).toHaveCount(0);
+  await page.goto('/blog/');
+  await expect(page.locator('.post-row [data-post-meta]').first()).toHaveClass(/label/);
+});
+
+test('search results are ruled rows led by a meta label', async ({ page }) => {
+  await page.goto('/search/?q=WSL');
+  const card = page.locator('pagefind-results .pf-result-card').first();
+  await expect(card).toContainText('Windows Subsystem for Linux');
+  const styles = await card.evaluate((node) => {
+    const style = getComputedStyle(node);
+    return { background: style.backgroundColor, bottom: style.borderBottomWidth, top: style.borderTopWidth, shadow: style.boxShadow };
+  });
+  expect(styles).toEqual({ background: 'rgba(0, 0, 0, 0)', bottom: '1px', top: '0px', shadow: 'none' });
+  // The meta label comes before the title, as in the blog listing.
+  const firstLine = card.locator('.pf-result-content > :first-child');
+  await expect(firstLine).toHaveClass(/pf-result-meta/);
+  await expect(firstLine).toHaveClass(/label/);
+});
+
+test('terminal-style eyebrows are lowercase mono like the header brand', async ({ page }) => {
+  for (const [route, text] of [['/', '~/notes'], ['/about/', 'nirmal@Tiger']] as const) {
+    await page.goto(route);
+    const eyebrow = page.locator('main header > p').first();
+    await expect(eyebrow).toHaveText(text);
+    const style = await eyebrow.evaluate((node) => ({ font: getComputedStyle(node).fontFamily, transform: getComputedStyle(node).textTransform }));
+    expect(style.font, route).toContain('JetBrains Mono');
+    expect(style.transform, route).toBe('none');
+  }
+  await page.goto('/blog/');
+  await expect(page.locator('main header > p').first()).toHaveClass(/label/);
+});
+
 test('core routes have no browser console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {
@@ -348,4 +685,15 @@ test('core routes have no browser console errors', async ({ page }) => {
   page.on('pageerror', (error) => errors.push(error.message));
   for (const route of coreRoutes) await page.goto(route);
   expect(errors).toEqual([]);
+});
+
+test('the site is set in Instrument Sans like nirmalkatariya.com', async ({ page }) => {
+  await page.goto('/');
+  const fonts = await page.evaluate(() => ({
+    body: getComputedStyle(document.body).fontFamily,
+    heading: getComputedStyle(document.querySelector('h1')!).fontFamily,
+  }));
+  expect(fonts.body).toContain('Instrument Sans');
+  expect(fonts.heading).toContain('Instrument Sans');
+  await expect.poll(() => page.evaluate(() => document.fonts.check('500 1rem "Instrument Sans Variable"'))).toBe(true);
 });

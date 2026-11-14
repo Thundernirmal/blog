@@ -50,11 +50,14 @@ const Icon = tagIcons[tag] ?? TagIcon;
   class:list={[
     buttonVariants({ variant: 'secondary', size: prominent ? 'default' : 'sm' }),
     !prominent && 'min-h-11 sm:min-h-7',
+    // Long tags wrap inside the chip rather than overflowing narrow screens or enlarged text.
+    'h-auto! max-w-full whitespace-normal! wrap-anywhere',
+    prominent && 'min-h-11',
   ]}
   href={`/tags/${encodeURIComponent(tag)}/`}
 >
   <Icon data-icon="inline-start" aria-hidden="true" />
-  <span>{tag}</span>
+  <span class="min-w-0">{tag}</span>
   {typeof count === 'number' && (
     <span class="border-l border-secondary-foreground/20 pl-1.5 font-mono text-[0.75em] text-secondary-foreground/70">{count}</span>
   )}

@@ -1,0 +1,26 @@
+---
+import type { LucideIcon } from 'lucide-react';
+
+/**
+ * An uppercase label link, after nirmalkatariya.com, led by an icon that says what the link does
+ * (RSS, read, browse) rather than a generic arrow. External links end in "↗".
+ */
+interface Props {
+  href: string;
+  icon: LucideIcon;
+  external?: boolean;
+  class?: string;
+}
+
+const { href, icon: Icon, external = false, class: className } = Astro.props;
+---
+
+<a
+  class:list={['home-cta label', className]}
+  href={href}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+>
+  <Icon className="label-icon" aria-hidden="true" />
+  <span><slot />{external && <><span class="site-nav-arrow" aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></>}</span>
+</a>

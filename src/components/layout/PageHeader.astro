@@ -3,21 +3,18 @@ interface Props {
   id?: string;
   title: string;
   eyebrow?: string;
+  /** Set a terminal-style eyebrow ("~/notes", "nirmal@Tiger") in lowercase mono, like the header's "~/notes" brand. */
+  eyebrowMono?: boolean;
   hero?: boolean;
 }
 
-const { id, title, eyebrow, hero = false } = Astro.props;
-const titleParts = title.trim().split(/\s+/);
-const titleAccent = titleParts.pop() ?? title;
-const titleLead = titleParts.join(' ');
+const { id, title, eyebrow, eyebrowMono = false, hero = false } = Astro.props;
 ---
 
-<header id={id} class="grid max-w-3xl gap-3">
-  {eyebrow && <p class="font-mono text-sm font-medium text-primary">{eyebrow}</p>}
-  <h1 class:list={['text-balance font-semibold tracking-tight', hero ? 'text-[2.5rem] leading-[1.1] sm:text-6xl' : 'text-4xl sm:text-5xl']}>
-    {hero && titleLead ? (
-      <><span class="text-primary">{titleLead}</span>{' '}<span class="text-foreground">{titleAccent}</span></>
-    ) : title}
+<header id={id} class="grid max-w-3xl gap-4 sm:gap-5">
+  {eyebrow && <p class:list={[eyebrowMono ? 'font-mono text-sm font-medium' : 'label', 'text-primary']} translate={eyebrowMono ? 'no' : undefined}>{eyebrow}</p>}
+  <h1 class:list={['display text-balance wrap-anywhere text-foreground', hero ? 'text-[clamp(3rem,10vw,5.5rem)]' : 'text-[2.75rem] sm:text-6xl']}>
+    {title}{hero && <span class="text-primary" aria-hidden="true">.</span>}
   </h1>
   <div class="text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
     <slot />

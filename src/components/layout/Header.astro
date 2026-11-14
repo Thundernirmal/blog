@@ -1,28 +1,28 @@
 ---
-import { ExternalLinkIcon, SearchIcon, TerminalIcon } from 'lucide-react';
-import { buttonVariants } from '@/components/ui/button';
+import { SearchIcon } from 'lucide-react';
 import { Kbd } from '@/components/ui/kbd';
 import { SITE } from '@/config';
-import { cn } from '@/lib/utils';
 
 const path = Astro.url.pathname;
 const isHome = path === '/';
+const isSearch = path.startsWith('/search');
 interface Props {
   readingProgress?: boolean;
 }
 
 const { readingProgress = false } = Astro.props;
 const links = [
-  { href: '/', label: 'Home', active: path === '/' },
   { href: '/blog/', label: 'Blog', active: path.startsWith('/blog') },
   { href: '/tags/', label: 'Tags', active: path.startsWith('/tags') },
   { href: '/about/', label: 'About', active: path.startsWith('/about') },
 ];
 ---
 
+{/* Modelled on nirmalkatariya.com's header: a mono path-style wordmark ("~/notes", as the portfolio's "~/nirmal"), uppercase tracked links with an underline for the
+    current section, and an icon-only theme toggle. */}
 <header
   class:list={[
-    'site-header sticky top-0 z-20 border-b bg-background/90 backdrop-blur-md transition-transform duration-200 ease-out motion-reduce:transition-none',
+    'site-header sticky top-0 z-20 border-b bg-background transition-transform duration-200 ease-out motion-reduce:transition-none',
     isHome && 'sm:transition-[border-color] sm:duration-300 motion-reduce:transition-none sm:has-data-[brand-visible=false]:border-transparent',
   ]}
   data-site-header
@@ -30,78 +30,42 @@ const links = [
   transition:name="site-header"
   transition:animate="none"
 >
-  <nav
-    class:list={[
-      'content-shell flex flex-wrap items-center gap-2.5 py-3',
-      isHome && 'transition-[gap] duration-300 ease-out motion-reduce:transition-none data-[brand-visible=false]:gap-0',
-    ]}
-    aria-label="Main navigation"
-    data-brand-visible={isHome ? 'false' : undefined}
-  >
+  <nav class="content-shell flex min-h-14 items-center gap-4" aria-label="Main navigation" data-brand-visible={isHome ? 'false' : undefined}>
     <a
       href="/"
       data-astro-prefetch="hover"
-      class:list={[
-        'hidden h-11 min-w-0 items-center gap-2 rounded-md font-heading text-xl font-semibold tracking-tight text-foreground outline-none transition-[color,background-color,box-shadow] hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 sm:flex sm:h-auto sm:text-base',
-        isHome
-          ? 'max-h-11 max-w-56 shrink-0 overflow-hidden whitespace-nowrap opacity-100 transition-[color,background-color,box-shadow,max-width,max-height,opacity,transform] duration-300 ease-out motion-reduce:transition-none data-[visible=false]:pointer-events-none data-[visible=false]:max-h-0 data-[visible=false]:max-w-0 data-[visible=false]:-translate-y-1 data-[visible=false]:opacity-0 sm:max-h-10'
-          : 'w-full sm:w-auto',
-      ]}
+      class:list={['site-brand hidden sm:inline-flex', isHome && 'site-brand-scroll']}
       data-scroll-brand={isHome ? '' : undefined}
       data-visible={isHome ? 'false' : undefined}
       aria-hidden={isHome ? 'true' : undefined}
       tabindex={isHome ? -1 : undefined}
+      aria-label={`${SITE.name}, home`}
     >
-      <TerminalIcon className="size-6 text-primary sm:size-5" aria-hidden="true" />
-      <span>{SITE.name}</span>
+      <span class="text-primary">~/</span>notes
     </a>
 
-    <div class="grid w-full min-w-0 grid-cols-5 items-center gap-1 rounded-lg border bg-card/60 p-1 shadow-sm sm:ml-auto sm:flex sm:w-auto sm:flex-wrap sm:justify-end">
-      {links.map((link) => (
-        <a
-          href={link.href}
-          aria-current={link.active ? 'page' : undefined}
-          class:list={[
-            buttonVariants({ variant: link.active ? 'secondary' : 'ghost', size: 'sm' }),
-            'min-h-11 w-full min-w-0 px-1 text-sm sm:min-h-7 sm:w-auto sm:px-2.5 sm:text-[0.8rem]',
-          ]}
-          data-astro-prefetch="hover"
-        >
-          {link.label}
-        </a>
+    <div class="site-nav-links">
+      {/* The wordmark is hidden on phones, so its mauve "~/" alone links Home and leaves room for the labelled sections. */}
+      <a href="/" aria-current={isHome ? 'page' : undefined} aria-label="Home" class="site-nav-link site-nav-home sm:hidden" data-astro-prefetch="hover"><span class="site-nav-home-mark" aria-hidden="true">~/</span></a>
+      {links.map(({ href, label, active }) => (
+        <a href={href} aria-current={active ? 'page' : undefined} class="site-nav-link" data-astro-prefetch="hover">{label}</a>
       ))}
-      <a
-        href="/search/"
-        class={cn(buttonVariants({ variant: path.startsWith('/search') ? 'secondary' : 'ghost', size: 'sm' }), 'hidden sm:inline-flex')}
-        aria-current={path.startsWith('/search') ? 'page' : undefined}
-        data-search-link
-        data-astro-prefetch="hover"
-      >
-        <SearchIcon data-icon="inline-start" aria-hidden="true" />
-        Search
-        <Kbd className="ml-1">⌘&nbsp;K</Kbd>
+      <a href="/search/" aria-current={isSearch ? 'page' : undefined} class="site-nav-link" data-search-link data-astro-prefetch="hover">
+        <SearchIcon className="size-4 sm:hidden" aria-hidden="true" />
+        <span class="sr-only sm:not-sr-only">Search</span><span class="sr-only"> articles</span>
+        <Kbd className="keyboard-hint ml-1 hidden tracking-normal normal-case sm:inline-flex" aria-hidden="true">⌘&nbsp;K</Kbd>
       </a>
-      <a
-        href="/search/"
-        class={cn(
-          buttonVariants({ variant: path.startsWith('/search') ? 'secondary' : 'ghost', size: 'icon-sm' }),
-          'h-11 w-full min-w-0 sm:hidden',
-        )}
-        aria-current={path.startsWith('/search') ? 'page' : undefined}
-        data-astro-prefetch="hover"
-      >
-        <SearchIcon aria-hidden="true" />
-        <span class="sr-only">Search articles</span>
+      <a href={SITE.githubUrl} target="_blank" rel="noopener noreferrer" class="site-nav-link hidden lg:inline-flex">
+        GitHub<span class="site-nav-arrow" aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span>
       </a>
-      <a
-        href={SITE.githubUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        class={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'hidden lg:inline-flex')}
-      >
-        <ExternalLinkIcon data-icon="inline-start" aria-hidden="true" />
-        GitHub <span class="sr-only">(opens in a new tab)</span>
-      </a>
+      {/* src/lib/theme.ts keeps aria-pressed in sync; hidden until the pre-paint script has run. */}
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Dark theme" aria-pressed="false">
+        {/* Lucide's sun and moon, each flattened to one path to keep the header's DOM small. */}
+        <svg class="theme-icons" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path class="theme-icon-sun" d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+          <path class="theme-icon-moon" d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" />
+        </svg>
+      </button>
     </div>
   </nav>
   {readingProgress && (
@@ -113,6 +77,9 @@ const links = [
 
 <script>
   import { navigate } from 'astro:transitions/client';
+  import { initTheme } from '@/lib/theme';
+
+  initTheme();
 
   let brandObserver: IntersectionObserver | undefined;
   let cleanUpSmartHeader: (() => void) | undefined;
