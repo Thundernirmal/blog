@@ -11,7 +11,7 @@ const { id, title, eyebrow, hero = false } = Astro.props;
 
 <header id={id} class="grid max-w-3xl gap-4 sm:gap-5">
   {eyebrow && <p class="label text-primary">{eyebrow}</p>}
-  <h1 class:list={['display text-balance break-words text-foreground', hero ? 'text-[clamp(3rem,10vw,5.5rem)]' : 'text-[2.75rem] sm:text-6xl']}>
+  <h1 class:list={['display text-balance wrap-anywhere text-foreground', hero ? 'text-[clamp(3rem,10vw,5.5rem)]' : 'text-[2.75rem] sm:text-6xl']}>
     {title}{hero && <span class="text-primary" aria-hidden="true">.</span>}
   </h1>
   <div class="text-pretty text-base leading-7 text-muted-foreground sm:text-lg">

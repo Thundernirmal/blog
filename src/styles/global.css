@@ -454,7 +454,7 @@
   }
 
   .home-cell {
-    @apply flex min-w-0 flex-col gap-4 py-8 lg:px-8 lg:py-10;
+    @apply flex min-w-0 flex-col gap-4 py-8 wrap-anywhere lg:px-8 lg:py-10;
   }
 
   .home-cell:first-child {
@@ -484,7 +484,7 @@
 
   /* Post cards: hairline-ruled and flush with the page, lifting to the card surface on hover. */
   .post-card {
-    @apply flex h-full min-w-0 flex-col gap-4 border bg-background p-5 transition-colors hover:bg-card sm:p-6;
+    @apply flex h-full min-w-0 flex-col gap-4 border bg-background p-5 wrap-anywhere transition-colors hover:bg-card sm:p-6;
   }
 
   /* Terminal window, shared with Nirmal's Shell. */
@@ -648,7 +648,7 @@
   }
 
   .article-prose :is(h2, h3, h4) {
-    @apply text-balance font-medium tracking-[-0.025em] text-foreground;
+    @apply text-balance font-medium tracking-[-0.025em] wrap-anywhere text-foreground;
     scroll-margin-top: calc(var(--site-header-height, 5rem) + 1rem);
   }
 

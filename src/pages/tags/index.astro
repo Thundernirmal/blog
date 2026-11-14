@@ -17,7 +17,7 @@ const tags = getTagCounts(posts);
   {tags.length > 0 ? (
     <ul class="flex flex-wrap gap-3" data-reveal-list>
       {tags.map(({ tag, count }) => (
-        <li>
+        <li class="max-w-full">
           <TagButton tag={tag} count={count} prominent />
         </li>
       ))}

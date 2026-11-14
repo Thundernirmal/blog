@@ -517,6 +517,22 @@ test('focus rings reach 3:1 contrast against the Latte page', async ({ page }) =
   expect(shadow).toMatch(/(oklab|rgb)\([^)/,]*( [^)/,]*)*\) 0px 0px 0px 3px/);
 });
 
+test('enlarged text on phones wraps instead of overflowing', async ({ page }) => {
+  for (const width of [320, 375]) {
+    await page.setViewportSize({ width, height: 800 });
+    for (const route of ['/', '/blog/', '/tags/', '/tags/guides-and-tutorials/', '/blog/windows-subsystem-for-linux-wsl/', '/404.html']) {
+      await page.goto(route);
+      // Approximates a 200% browser text size.
+      await page.addStyleTag({ content: 'html { font-size: 200% !important; }' });
+      const dimensions = await page.evaluate(() => ({
+        documentWidth: document.documentElement.scrollWidth,
+        viewportWidth: document.documentElement.clientWidth,
+      }));
+      expect(dimensions.documentWidth, `${route} at ${width}px with 200% text`).toBeLessThanOrEqual(dimensions.viewportWidth);
+    }
+  }
+});
+
 test('core routes have no browser console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {

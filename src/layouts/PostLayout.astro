@@ -75,7 +75,7 @@ const socialImage = post.data.heroImage;
           <li aria-current="page" class="min-w-0 flex-1 truncate">{post.data.title}</li>
         </ol>
       </nav>
-      <h1 class="display text-balance break-words text-[2.25rem] leading-none min-[360px]:text-[2.5rem] sm:text-6xl" data-pagefind-meta="title">{post.data.title}</h1>
+      <h1 class="display text-balance wrap-anywhere text-[2.25rem] leading-none min-[360px]:text-[2.5rem] sm:text-6xl" data-pagefind-meta="title">{post.data.title}</h1>
       <p class="text-pretty text-base leading-7 text-muted-foreground min-[360px]:text-lg min-[360px]:leading-8" data-pagefind-meta="description">{post.data.description}</p>
       <PostMeta publishedAt={post.data.publishedAt} updatedAt={post.data.updatedAt} readingMinutes={getPostReadingTime(post)} />
       <div data-pagefind-meta={`tags:${post.data.tags.join(', ')}`}>
