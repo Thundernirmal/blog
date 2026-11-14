@@ -462,6 +462,11 @@
     transform: translateX(3px);
   }
 
+  /* Post cards: hairline-ruled and flush with the page, lifting to the card surface on hover. */
+  .post-card {
+    @apply flex h-full min-w-0 flex-col gap-4 border bg-background p-5 transition-colors hover:bg-card sm:p-6;
+  }
+
   /* Footer links stay quiet like the portfolio's, but keep an underline so they read as links. */
   .footer-link {
     @apply inline-flex min-h-11 items-center text-muted-foreground underline decoration-current/40 underline-offset-4 outline-none hover:text-foreground hover:decoration-current focus-visible:ring-3 focus-visible:ring-ring/50 sm:min-h-6;
@@ -731,7 +736,8 @@
 
   .pagefind-ui .pf-result-title {
     font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 500;
+    letter-spacing: -0.015em;
     line-height: 1.5rem;
   }
 

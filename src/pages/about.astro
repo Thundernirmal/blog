@@ -18,23 +18,23 @@ import { SITE } from '@/config';
 
   <div class="grid gap-4 lg:grid-cols-2" data-reveal-list>
     <Card>
-      <CardHeader>
-        <CardTitle><h2 class="text-xl font-semibold">Nirmal Katariya</h2></CardTitle>
+      <CardHeader className="gap-3">
+        <CardTitle><h2 class="display text-4xl">Nirmal Katariya</h2></CardTitle>
         <CardDescription>Systems engineer in site reliability · B.Tech in Computer Science, IIT Jodhpur</CardDescription>
       </CardHeader>
       <CardContent className="grid flex-1 gap-5 text-base leading-7 text-muted-foreground">
         <p>I’m a systems engineer in site reliability, supporting production infrastructure for straight-through processing applications. I build the tooling that keeps it healthy: SLOs, Prometheus, Alertmanager and BigQuery.</p>
         <dl class="grid gap-3">
           <div class="grid gap-1">
-            <dt class="font-medium text-foreground">Expertise</dt>
+            <dt class="label text-foreground">Expertise</dt>
             <dd>SRE, SLOs &amp; SLIs, Prometheus, Alertmanager, BigQuery, Linux, and Python</dd>
           </div>
           <div class="grid gap-1">
-            <dt class="font-medium text-foreground">Currently</dt>
+            <dt class="label text-foreground">Currently</dt>
             <dd>Production support and SRE development.</dd>
           </div>
           <div class="grid gap-1">
-            <dt class="font-medium text-foreground">Education</dt>
+            <dt class="label text-foreground">Education</dt>
             <dd>B.Tech in Computer Science from IIT Jodhpur</dd>
           </div>
         </dl>
@@ -46,13 +46,13 @@ import { SITE } from '@/config';
     </Card>
 
     <Card>
-      <CardHeader>
-        <CardTitle><h2 class="text-xl font-semibold">Nirmal’s Notes</h2></CardTitle>
+      <CardHeader className="gap-3">
+        <CardTitle><h2 class="display text-4xl">Nirmal’s Notes</h2></CardTitle>
         <CardDescription>Practical writing about software, hardware, Linux, and the tools in between.</CardDescription>
       </CardHeader>
       <CardContent className="grid flex-1 content-start gap-4 text-base leading-7 text-muted-foreground">
         <p>This is where I keep useful tools, explored systems, and technical ideas that deserve more room than a terminal scrollback.</p>
-        <p>The blog shares the personal sites’ love of Linux, hardware, and terminal-inspired design, built with Astro, Catppuccin Mocha, and as little client JavaScript as possible.</p>
+        <p>The blog shares the personal sites’ love of Linux, hardware, and terminal-inspired design, built with Astro, Catppuccin Latte and Mocha, and as little client JavaScript as possible.</p>
       </CardContent>
       <CardFooter className="flex-wrap gap-2">
         <a class={buttonVariants({ variant: 'secondary' })} href="/rss.xml"><RssIcon data-icon="inline-start" aria-hidden="true" />RSS</a>

@@ -1,6 +1,4 @@
 ---
-import { ArrowRightIcon } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import PostMeta from '@/components/blog/PostMeta.astro';
 import TagList from '@/components/blog/TagList.astro';
 import type { BlogPost } from '@/lib/content';
@@ -16,23 +14,16 @@ const url = getPostUrl(post);
 const Heading = headingLevel;
 ---
 
-<Card className="h-full transition-[border-color,box-shadow,transform] motion-safe:hover:-translate-y-0.5">
-  <CardHeader className="gap-2">
-    <CardTitle>
-      <Heading class="text-balance text-xl font-semibold leading-snug">
-        <a class="rounded-sm outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50" href={url}>{post.data.title}</a>
-      </Heading>
-    </CardTitle>
-    <CardDescription className="text-pretty leading-6">{post.data.description}</CardDescription>
-  </CardHeader>
-  <CardContent className="grid flex-1 content-start gap-4">
-    <PostMeta publishedAt={post.data.publishedAt} updatedAt={post.data.updatedAt} readingMinutes={getPostReadingTime(post)} />
-    <TagList tags={post.data.tags} limit={3} />
-  </CardContent>
-  <CardFooter className="px-(--card-spacing) py-1">
-    <a class="flex min-h-11 w-full items-center justify-between gap-3 rounded-sm text-sm text-muted-foreground outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 sm:min-h-8" href={url}>
-      Read article
-      <ArrowRightIcon className="size-4 text-primary" aria-hidden="true" />
-    </a>
-  </CardFooter>
-</Card>
+{/* A ruled card like nirmalkatariya.com's: a display-weight title and an uppercase label link. */}
+<article class="post-card">
+  <Heading class="text-balance text-2xl leading-tight font-medium tracking-[-0.025em]">
+    <a class="outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50" href={url}>{post.data.title}</a>
+  </Heading>
+  <p class="text-pretty leading-7 text-muted-foreground">{post.data.description}</p>
+  <PostMeta publishedAt={post.data.publishedAt} updatedAt={post.data.updatedAt} readingMinutes={getPostReadingTime(post)} />
+  <TagList tags={post.data.tags} limit={3} />
+  <a class="home-cta label mt-auto" href={url}>
+    <span>Read article<span class="sr-only">: {post.data.title}</span></span>
+    <span class="home-cta-arrow" aria-hidden="true">→</span>
+  </a>
+</article>

@@ -15,10 +15,10 @@ const visible = headings.filter((heading) => heading.depth === 2 || heading.dept
 
 {visible.length >= 3 && (
   <>
-    <details class="-order-1 min-w-0 rounded-lg border bg-card p-4 lg:hidden" data-pagefind-ignore data-table-of-contents>
-      <summary class="min-h-11 cursor-pointer py-2 font-heading font-semibold" data-toc-summary>
-        <span>On This Page</span>
-        <span class="mt-1 block truncate font-sans text-xs font-normal text-muted-foreground" data-toc-current>{visible[0]?.text}</span>
+    <details class="-order-1 min-w-0 border bg-card p-4 lg:hidden" data-pagefind-ignore data-table-of-contents>
+      <summary class="min-h-11 cursor-pointer py-2" data-toc-summary>
+        <span class="label">On This Page</span>
+        <span class="mt-1.5 block truncate text-sm text-muted-foreground" data-toc-current>{visible[0]?.text}</span>
       </summary>
       <ol class="mt-3 grid gap-2 text-sm text-muted-foreground">
         {visible.map((heading) => (
@@ -34,8 +34,8 @@ const visible = headings.filter((heading) => heading.depth === 2 || heading.dept
         ))}
       </ol>
     </details>
-    <nav class="sticky top-24 hidden max-h-[calc(100vh-7rem)] overflow-x-hidden overflow-y-auto lg:block" aria-label="On this page" data-pagefind-ignore data-table-of-contents>
-      <p class="mb-3 font-heading text-sm font-semibold text-foreground">On This Page</p>
+    <nav class="sticky top-24 hidden max-h-[calc(100vh-7rem)] overflow-x-hidden overflow-y-auto [scrollbar-width:thin] lg:block" aria-label="On this page" data-pagefind-ignore data-table-of-contents>
+      <p class="label mb-3 text-foreground">On This Page</p>
       <ol class="grid gap-2 border-l pl-4 text-sm leading-5 text-muted-foreground">
         {visible.map((heading) => (
           <li class:list={[heading.depth === 3 && 'pl-3']}>
