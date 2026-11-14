@@ -617,6 +617,16 @@ test('label links lead with an icon for their purpose, not a generic arrow', asy
   }
 });
 
+test('a listing\'s "Updated" date never splits across lines', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 800 });
+  await page.goto('/blog/');
+  const updated = page.locator('.post-row .label .whitespace-nowrap', { hasText: 'Updated' }).first();
+  await expect(updated).toBeVisible();
+  // Every fragment (the text and its <time>) sits on the same line.
+  const tops = await updated.evaluate((node) => [...new Set([...node.getClientRects()].map((rect) => Math.round(rect.top)))]);
+  expect(tops).toHaveLength(1);
+});
+
 test('core routes have no browser console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {

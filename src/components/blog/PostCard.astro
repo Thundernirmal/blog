@@ -22,7 +22,8 @@ const hasMeaningfulUpdate = updatedAt && updatedAt.getTime() - publishedAt.getTi
 <article class="post-row">
   <p class="label text-muted-foreground">
     <time datetime={publishedAt.toISOString()}>{formatDate(publishedAt)}</time> · {getPostReadingTime(post)} min
-    {hasMeaningfulUpdate && updatedAt && <> · Updated <time datetime={updatedAt.toISOString()}>{formatDate(updatedAt)}</time></>}
+    {/* The update note wraps as a unit, so its date never splits across lines. */}
+    {hasMeaningfulUpdate && updatedAt && <> · <span class="whitespace-nowrap">Updated <time datetime={updatedAt.toISOString()}>{formatDate(updatedAt)}</time></span></>}
   </p>
   <Heading class="text-balance text-2xl leading-tight font-medium tracking-[-0.025em] sm:text-3xl">
     <a class="outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring" href={url}>{post.data.title}</a>
