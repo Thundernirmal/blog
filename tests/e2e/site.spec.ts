@@ -571,6 +571,8 @@ test('article header, notes, prose and footer share one left edge', async ({ pag
 });
 
 test('older and newer articles sit in a ruled two-cell band', async ({ page }) => {
+  // The band slides in on load; measure it at rest.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/blog/windows-subsystem-for-linux-wsl/');
   const band = page.getByRole('navigation', { name: 'Article navigation' });
   const older = band.getByRole('link', { name: /^← Older|^Older/ });
