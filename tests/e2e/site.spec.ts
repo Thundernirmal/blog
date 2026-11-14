@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
+import { buttonVariants } from '../../src/components/ui/button';
 
 const coreRoutes = [
   '/',
@@ -144,6 +145,9 @@ test('the about page reflects the current profile and portfolio variants', async
   await expect(page.getByText(/Goldman|Capgemini/i)).toHaveCount(0);
   await expect(page.getByText('SRE, SLOs & SLIs, Prometheus, Alertmanager, BigQuery, Linux, and Python')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Personal Site' })).toHaveAttribute('href', 'https://nirmalkatariya.com');
+  // Ruled cells with label links, not raised cards with filled buttons.
+  await expect(page.locator('.home-band > .home-cell')).toHaveCount(2);
+  await expect(page.getByRole('link', { name: 'Personal Site' })).toHaveClass(/home-cta/);
   await expect(page.getByRole('link', { name: 'Retro Site' })).toHaveAttribute('href', 'https://retro.nirmalkatariya.com');
 });
 
@@ -493,16 +497,20 @@ test('the 404 page shows the shared terminal window and recovery links', async (
 });
 
 test('outline buttons draw their hairline border', async ({ page }) => {
-  await page.goto('/about/');
-  const outline = page.getByRole('link', { name: 'Retro Site' });
-  const colors = await outline.evaluate((node) => {
-    const probe = document.createElement('div');
-    probe.style.color = 'var(--border)';
-    document.body.append(probe);
-    const border = getComputedStyle(probe).color;
+  // No current page shows an outline button (pagination appears past ten posts), so probe the variant's real classes.
+  await page.goto('/blog/');
+  const colors = await page.evaluate((className) => {
+    const probe = document.createElement('a');
+    probe.className = className;
+    probe.textContent = 'Probe';
+    const reference = document.createElement('div');
+    reference.style.color = 'var(--border)';
+    document.querySelector('main')!.append(probe, reference);
+    const result = { button: getComputedStyle(probe).borderTopColor, border: getComputedStyle(reference).color };
     probe.remove();
-    return { button: getComputedStyle(node).borderTopColor, border };
-  });
+    reference.remove();
+    return result;
+  }, buttonVariants({ variant: 'outline' }));
   expect(colors.button).not.toBe('rgba(0, 0, 0, 0)');
   expect(colors.button).toBe(colors.border);
 });
