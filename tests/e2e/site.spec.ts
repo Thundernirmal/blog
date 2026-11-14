@@ -636,6 +636,16 @@ test('a listing\'s "Updated" date never splits across lines', async ({ page }) =
   expect(tops).toHaveLength(1);
 });
 
+test('article headers use the same uppercase meta label as the listings', async ({ page }) => {
+  await page.goto('/blog/features-that-are-nice-to-have-e1-mobile-madness/');
+  const meta = page.locator('article header [data-post-meta]');
+  await expect(meta).toHaveText(/^May 15, 2020 · \d+ min read · Updated February 11, 2022$/);
+  await expect(meta).toHaveClass(/label/);
+  await expect(meta.locator('svg')).toHaveCount(0);
+  await page.goto('/blog/');
+  await expect(page.locator('.post-row [data-post-meta]').first()).toHaveClass(/label/);
+});
+
 test('core routes have no browser console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {

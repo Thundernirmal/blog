@@ -1,10 +1,10 @@
 ---
 import { BookOpenIcon } from 'lucide-react';
 import LabelLink from '@/components/LabelLink.astro';
+import PostMeta from '@/components/blog/PostMeta.astro';
 import TagList from '@/components/blog/TagList.astro';
 import type { BlogPost } from '@/lib/content';
 import { getPostReadingTime, getPostUrl } from '@/lib/content';
-import { formatDate } from '@/lib/dates';
 
 interface Props {
   post: BlogPost;
@@ -15,16 +15,11 @@ const { post, headingLevel = 'h2' } = Astro.props;
 const url = getPostUrl(post);
 const Heading = headingLevel;
 const { publishedAt, updatedAt } = post.data;
-const hasMeaningfulUpdate = updatedAt && updatedAt.getTime() - publishedAt.getTime() >= 24 * 60 * 60 * 1000;
 ---
 
-{/* One row of a continuous ruled list, with the same "date · N min" label as the home page's band. */}
+{/* One row of a continuous ruled list, led by the same meta label as article headers. */}
 <article class="post-row">
-  <p class="label text-muted-foreground">
-    <time datetime={publishedAt.toISOString()}>{formatDate(publishedAt)}</time> · {getPostReadingTime(post)} min
-    {/* The update note moves to a new line as a unit, so its date never splits (unless it alone is too wide). */}
-    {hasMeaningfulUpdate && updatedAt && <> · <span class="inline-block" data-updated>Updated <time datetime={updatedAt.toISOString()}>{formatDate(updatedAt)}</time></span></>}
-  </p>
+  <PostMeta publishedAt={publishedAt} updatedAt={updatedAt} readingMinutes={getPostReadingTime(post)} />
   <Heading class="text-balance text-2xl leading-tight font-medium tracking-[-0.025em] sm:text-3xl">
     <a class="outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring" href={url}>{post.data.title}</a>
   </Heading>
