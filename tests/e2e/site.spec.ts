@@ -430,8 +430,11 @@ test('the share control copies the article URL when native sharing is unavailabl
   });
   await page.goto('/blog/windows-subsystem-for-linux-wsl/');
 
-  await page.getByRole('button', { name: 'Share Article' }).click();
-  await expect(page.getByRole('button', { name: 'Link Copied' })).toBeVisible();
+  // The share script binds after load; a click that lands first does nothing, so retry until it responds.
+  await expect(async () => {
+    await page.locator('[data-share-button]').click();
+    await expect(page.getByRole('button', { name: 'Link Copied' })).toBeVisible({ timeout: 1_000 });
+  }).toPass();
   await expect.poll(() => page.evaluate(() => (window as Window & { copiedArticleUrl?: string }).copiedArticleUrl)).toMatch(/\/blog\/windows-subsystem-for-linux-wsl\/$/);
 });
 
