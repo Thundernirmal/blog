@@ -473,8 +473,9 @@
     @apply flex min-h-11 items-center justify-between gap-3 text-foreground outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring;
   }
 
+  /* Sized and set on the caps' line so the arrow centres on the label instead of sitting low. */
   .home-cta-arrow {
-    @apply text-base tracking-normal transition-transform duration-300 ease-out;
+    @apply text-sm leading-none tracking-normal transition-transform duration-300 ease-out;
   }
 
   .home-cta:hover .home-cta-arrow,

@@ -44,12 +44,15 @@ const structuredData = {
               <h3 class="text-balance wrap-anywhere text-2xl leading-tight font-medium tracking-[-0.025em]">
                 <a class="outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring" href={getPostUrl(post)}>{post.data.title}</a>
               </h3>
-              <p class="flex-1 text-pretty leading-7 text-muted-foreground">{post.data.description}</p>
-              <TagList tags={post.data.tags} limit={3} />
-              <a class="home-cta label" href={getPostUrl(post)}>
-                <span>Read article<span class="sr-only">: {post.data.title}</span></span>
-                <span class="home-cta-arrow" aria-hidden="true">→</span>
-              </a>
+              <p class="text-pretty leading-7 text-muted-foreground">{post.data.description}</p>
+              {/* Tags and link sit at the foot of each cell, so they line up across the band. */}
+              <div class="mt-auto grid gap-4">
+                <TagList tags={post.data.tags} limit={3} />
+                <a class="home-cta label" href={getPostUrl(post)}>
+                  <span>Read article<span class="sr-only">: {post.data.title}</span></span>
+                  <span class="home-cta-arrow" aria-hidden="true">→</span>
+                </a>
+              </div>
             </article>
           </li>
         ))}
