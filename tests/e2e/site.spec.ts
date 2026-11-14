@@ -452,6 +452,19 @@ test('the home page lists the latest writing as a numbered, ruled band', async (
   await expect(page.getByRole('link', { name: /^View All \d+ Articles$/ })).toHaveAttribute('href', '/blog/');
 });
 
+test('the search shortcut hint shows only with a fine pointer and hover', async ({ browser }) => {
+  for (const [hasTouch, visible] of [[false, true], [true, false]] as const) {
+    const context = await browser.newContext({ viewport: { width: 1024, height: 800 }, hasTouch, isMobile: hasTouch });
+    const page = await context.newPage();
+    await page.goto('/blog/');
+    const hint = page.locator('[data-site-header] .keyboard-hint');
+    await expect(hint).toHaveCount(1);
+    if (visible) await expect(hint).toBeVisible();
+    else await expect(hint).toBeHidden();
+    await context.close();
+  }
+});
+
 test('core routes have no browser console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {

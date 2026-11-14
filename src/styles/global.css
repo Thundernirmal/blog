@@ -252,6 +252,9 @@
   html {
     @apply scroll-smooth bg-background font-sans;
     scrollbar-gutter: stable;
+    /* Inherited by every scroller (page, contents column, code blocks, tables), so scrollbars use
+       the theme's own surfaces instead of the browser's default grays in either flavour. */
+    scrollbar-color: var(--ctp-surface2) transparent;
     scroll-padding-top: calc(var(--site-header-height, 5rem) + 1rem);
     -webkit-tap-highlight-color: color-mix(in srgb, var(--primary) 24%, transparent);
   }
@@ -339,9 +342,10 @@
   }
 
   /* On the home page the brand waits until the page title scrolls away, as the portfolio's does. */
+  /* Timings follow nirmalkatariya.com: a quick 0.2s exit and a softer 0.35s entrance. */
   .site-brand-scroll {
     transition:
-      opacity 0.3s ease,
+      opacity 0.35s ease,
       translate 0.5s cubic-bezier(0.16, 1, 0.3, 1),
       visibility 0s;
   }
@@ -349,9 +353,9 @@
   .site-brand-scroll[data-visible="false"] {
     @apply pointer-events-none invisible translate-y-1.5 opacity-0;
     transition:
-      opacity 0.3s ease,
-      translate 0.3s ease,
-      visibility 0s 0.3s;
+      opacity 0.2s ease,
+      translate 0.2s ease,
+      visibility 0s 0.2s;
   }
 
   .site-nav-links {
@@ -792,6 +796,13 @@ html.theme-switching::view-transition-old(root),
 html.theme-switching::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
+}
+
+/* The ⌘ K search shortcut needs a hardware keyboard; hide its hint on touch-first devices. */
+@media not ((hover: hover) and (pointer: fine)) {
+  .keyboard-hint {
+    display: none !important;
+  }
 }
 
 @media (min-width: 40rem) {

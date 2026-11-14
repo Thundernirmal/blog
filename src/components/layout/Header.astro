@@ -53,7 +53,7 @@ const links = [
       <a href="/search/" aria-current={isSearch ? 'page' : undefined} class="site-nav-link" data-search-link data-astro-prefetch="hover">
         <SearchIcon className="size-4 sm:hidden" aria-hidden="true" />
         <span class="sr-only sm:not-sr-only">Search</span><span class="sr-only"> articles</span>
-        <Kbd className="ml-1 hidden tracking-normal normal-case sm:inline-flex" aria-hidden="true">⌘&nbsp;K</Kbd>
+        <Kbd className="keyboard-hint ml-1 hidden tracking-normal normal-case sm:inline-flex" aria-hidden="true">⌘&nbsp;K</Kbd>
       </a>
       <a href={SITE.githubUrl} target="_blank" rel="noopener noreferrer" class="site-nav-link hidden lg:inline-flex">
         GitHub<span class="site-nav-arrow" aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span>
