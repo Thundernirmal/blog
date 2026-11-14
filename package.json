@@ -16,7 +16,7 @@
     "start": "astro dev",
     "check": "astro check",
     "prebuild": "node scripts/clean-pagefind-for-build.mjs",
-    "build": "astro build && pagefind --site dist",
+    "build": "astro build --force && pagefind --site dist",
     "search:sync": "npm run build && node scripts/sync-pagefind-for-dev.mjs",
     "preview": "astro preview",
     "import:medium": "node scripts/import-medium.mjs",
