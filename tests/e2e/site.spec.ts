@@ -183,7 +183,7 @@ test('page sections and repeated content share the entrance animation', async ({
   await page.goto('/');
 
   const pageSections = page.locator('[data-page-enter] > *');
-  const postCards = page.locator('[data-reveal-list] > [data-slot="card"]');
+  const postCards = page.locator('[data-reveal-list] > li');
   await expect(pageSections).toHaveCount(2);
   await expect(postCards).toHaveCount(3);
 
@@ -431,6 +431,25 @@ test('the desktop table of contents does not scroll horizontally', async ({ page
   await expect(tableOfContents).toBeVisible();
   const dimensions = await tableOfContents.evaluate(({ clientWidth, scrollWidth }) => ({ clientWidth, scrollWidth }));
   expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
+});
+
+test('the home page lists the latest writing as a numbered, ruled band', async ({ page }) => {
+  await page.goto('/');
+  // The hero ends in the portfolio's mauve period, hidden from the heading's accessible name.
+  await expect(page.getByRole('heading', { level: 1, name: "Nirmal's Notes", exact: true })).toBeVisible();
+  await expect(page.locator('#home-page-header h1 [aria-hidden="true"]')).toHaveText('.');
+  const cells = page.locator('.home-band > li');
+  await expect(cells).toHaveCount(3);
+  await expect(cells.first().locator('.label').first()).toHaveText(/^01 \/ /);
+  await expect(cells.nth(2).locator('.label').first()).toHaveText(/^03 \/ /);
+  for (const cell of await cells.all()) {
+    // Each "Read article" link names its post for screen readers.
+    const title = (await cell.getByRole('heading', { level: 3 }).textContent())?.trim() ?? '';
+    const readLink = cell.getByRole('link', { name: /^Read article/ });
+    await expect(readLink).toBeVisible();
+    await expect(readLink).toContainText(title);
+  }
+  await expect(page.getByRole('link', { name: /^View All \d+ Articles$/ })).toHaveAttribute('href', '/blog/');
 });
 
 test('core routes have no browser console errors', async ({ page }) => {
