@@ -649,7 +649,6 @@
 
   .article-prose :is(h2, h3, h4) {
     @apply text-balance font-medium tracking-[-0.025em] wrap-anywhere text-foreground;
-    scroll-margin-top: calc(var(--site-header-height, 5rem) + 1rem);
   }
 
   .article-prose h2 {

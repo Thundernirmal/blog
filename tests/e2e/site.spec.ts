@@ -533,6 +533,23 @@ test('enlarged text on phones wraps instead of overflowing', async ({ page }) =>
   }
 });
 
+test('contents links land headings just below the header, offset once', async ({ page }) => {
+  test.skip((page.viewportSize()?.width ?? 0) < 1024);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/blog/windows-subsystem-for-linux-wsl/');
+  await page.locator('nav[data-table-of-contents]').getByRole('link', { name: 'WSL 1 vs WSL 2' }).click();
+  await expect(page).toHaveURL(/#wsl-1-vs-wsl-2$/);
+  await expect.poll(async () => {
+    const { headerBottom, headingTop } = await page.evaluate(() => ({
+      headerBottom: document.querySelector('[data-site-header]')!.getBoundingClientRect().bottom,
+      headingTop: document.querySelector('#wsl-1-vs-wsl-2')!.getBoundingClientRect().top,
+    }));
+    return headingTop - headerBottom;
+  }).toBeGreaterThanOrEqual(8);
+  const gap = await page.evaluate(() => document.querySelector('#wsl-1-vs-wsl-2')!.getBoundingClientRect().top - document.querySelector('[data-site-header]')!.getBoundingClientRect().bottom);
+  expect(gap).toBeLessThanOrEqual(32);
+});
+
 test('core routes have no browser console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {
