@@ -148,6 +148,12 @@ test('the about page reflects the current profile and portfolio variants', async
   // Ruled cells with label links, not raised cards with filled buttons.
   await expect(page.locator('.home-band > .home-cell')).toHaveCount(2);
   await expect(page.getByRole('link', { name: 'Personal Site' })).toHaveClass(/home-cta/);
+  // Off-site links say so: a trailing ↗ and a new-tab note for screen readers.
+  for (const name of ['Personal Site', 'Retro Site', 'GitHub', 'Medium']) {
+    const link = page.locator('main').getByRole('link', { name: `${name} (opens in a new tab)` });
+    await expect(link).toHaveAttribute('target', '_blank');
+    await expect(link).toContainText('↗');
+  }
   await expect(page.getByRole('link', { name: 'Retro Site' })).toHaveAttribute('href', 'https://retro.nirmalkatariya.com');
 });
 

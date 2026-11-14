@@ -1,5 +1,5 @@
 ---
-import { ExternalLinkIcon, GlobeIcon, MonitorIcon, RssIcon, Code2Icon } from 'lucide-react';
+import { Code2Icon, GlobeIcon, MonitorIcon, NewspaperIcon, RssIcon } from 'lucide-react';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/layout/PageHeader.astro';
 import LabelLink from '@/components/LabelLink.astro';
@@ -37,8 +37,8 @@ import { SITE } from '@/config';
         </div>
       </dl>
       <div class="mt-auto flex flex-wrap gap-x-6">
-        <LabelLink href={SITE.authorUrl} icon={GlobeIcon}>Personal Site</LabelLink>
-        <LabelLink href={SITE.retroUrl} icon={MonitorIcon}>Retro Site</LabelLink>
+        <LabelLink href={SITE.authorUrl} icon={GlobeIcon} external>Personal Site</LabelLink>
+        <LabelLink href={SITE.retroUrl} icon={MonitorIcon} external>Retro Site</LabelLink>
       </div>
     </section>
 
@@ -50,8 +50,8 @@ import { SITE } from '@/config';
       <p class="leading-7 text-muted-foreground">The blog shares the personal sites’ love of Linux, hardware, and terminal-inspired design, built with Astro, Catppuccin Latte and Mocha, and as little client JavaScript as possible.</p>
       <div class="mt-auto flex flex-wrap gap-x-6">
         <LabelLink href="/rss.xml" icon={RssIcon}>RSS Feed</LabelLink>
-        <LabelLink href={SITE.githubUrl} icon={Code2Icon}>GitHub</LabelLink>
-        <LabelLink href={SITE.mediumUrl} icon={ExternalLinkIcon}>Medium</LabelLink>
+        <LabelLink href={SITE.githubUrl} icon={Code2Icon} external>GitHub</LabelLink>
+        <LabelLink href={SITE.mediumUrl} icon={NewspaperIcon} external>Medium</LabelLink>
       </div>
     </section>
   </div>
