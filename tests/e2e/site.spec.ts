@@ -479,6 +479,17 @@ test('the header brand pairs the "n." mark with the wordmark, and the mark alone
   }
 });
 
+test('the 404 page shows the shared terminal window and recovery links', async ({ page }) => {
+  await page.goto('/404.html');
+  await expect(page.getByRole('heading', { level: 1, name: 'Path not found.' })).toBeVisible();
+  const terminal = page.locator('.terminal-window');
+  await expect(terminal.locator('.terminal-title')).toHaveText('nirmal@Tiger: ~/notes');
+  await expect(terminal).toContainText('cd: no such file or directory: /requested/page');
+  await expect(terminal.locator('.terminal-status-end')).toHaveText('exit 1');
+  const recovery = page.getByRole('navigation', { name: 'Recovery links' });
+  for (const name of ['Home', 'Blog', 'Search']) await expect(recovery.getByRole('link', { name, exact: true })).toBeVisible();
+});
+
 test('core routes have no browser console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {

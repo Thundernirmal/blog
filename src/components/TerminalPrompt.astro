@@ -1,0 +1,10 @@
+---
+interface Props {
+  cursor?: boolean;
+}
+
+const { cursor = false } = Astro.props;
+---
+
+{/* The space after the prompt sits outside its nowrap span, so a narrow window breaks the line there. */}
+<span class="whitespace-nowrap" translate="no"><span class="text-info">nirmal@Tiger</span> <span class="text-primary">~/notes</span> <span class="text-muted-foreground" aria-hidden="true">❯</span></span>{' '}{cursor ? <span class="inline-block h-[1.1em] w-2 translate-y-[0.15em] bg-primary motion-safe:animate-pulse" aria-hidden="true"></span> : <span class="text-foreground"><slot /></span>}

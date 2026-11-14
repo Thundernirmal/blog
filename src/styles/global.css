@@ -63,6 +63,8 @@
   --surface-accent: var(--ctp-surface0);
   --rule: color-mix(in oklab, var(--ctp-text) 20%, transparent);
   --rule-strong: color-mix(in oklab, var(--ctp-text) 38%, transparent);
+  --terminal-background: color-mix(in srgb, var(--ctp-crust) 55%, var(--ctp-mantle));
+  --terminal-toolbar: var(--ctp-crust);
 }
 
 /* Without a stored choice (or without JavaScript) the system preference decides. */
@@ -114,6 +116,8 @@
     --surface-accent: var(--ctp-surface1);
     --rule: var(--ctp-surface0);
     --rule-strong: var(--ctp-surface1);
+    --terminal-background: color-mix(in srgb, var(--ctp-crust) 78%, var(--ctp-mantle));
+    --terminal-toolbar: var(--ctp-mantle);
   }
 }
 
@@ -164,6 +168,8 @@
   --surface-accent: var(--ctp-surface1);
   --rule: var(--ctp-surface0);
   --rule-strong: var(--ctp-surface1);
+  --terminal-background: color-mix(in srgb, var(--ctp-crust) 78%, var(--ctp-mantle));
+  --terminal-toolbar: var(--ctp-mantle);
 }
 
 :root {
@@ -235,6 +241,8 @@
   --color-status-negative: var(--status-negative);
   --color-status-caution: var(--status-caution);
   --color-status-positive: var(--status-positive);
+  --color-terminal-background: var(--terminal-background);
+  --color-terminal-toolbar: var(--terminal-toolbar);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -477,6 +485,52 @@
   /* Post cards: hairline-ruled and flush with the page, lifting to the card surface on hover. */
   .post-card {
     @apply flex h-full min-w-0 flex-col gap-4 border bg-background p-5 transition-colors hover:bg-card sm:p-6;
+  }
+
+  /* Terminal window, shared with Nirmal's Shell. */
+  .terminal-window {
+    @apply grid min-w-0 overflow-hidden border bg-terminal-background font-mono;
+  }
+
+  .terminal-titlebar {
+    @apply grid h-9 grid-cols-[1fr_auto_1fr] items-center gap-3 border-b bg-terminal-toolbar px-3.5;
+  }
+
+  .terminal-lights {
+    @apply flex gap-1.5;
+  }
+
+  .terminal-lights > span {
+    @apply size-2.5 rounded-full;
+    background: var(--light);
+  }
+
+  .terminal-lights > span:nth-child(1) { --light: var(--ctp-red); }
+  .terminal-lights > span:nth-child(2) { --light: var(--ctp-yellow); }
+  .terminal-lights > span:nth-child(3) { --light: var(--ctp-green); }
+
+  .terminal-title {
+    @apply truncate text-xs text-muted-foreground;
+  }
+
+  .terminal-tag {
+    @apply justify-self-end text-[0.6875rem] font-semibold tracking-[0.14em] text-muted-foreground uppercase;
+  }
+
+  .terminal-body {
+    @apply overflow-x-auto p-4 text-sm leading-6 break-words whitespace-pre-wrap sm:px-6 sm:py-5;
+  }
+
+  .terminal-status {
+    @apply flex h-7 min-w-0 items-center gap-3 border-t bg-terminal-toolbar pr-3.5 text-[0.6875rem] text-muted-foreground;
+  }
+
+  .terminal-status-session {
+    @apply flex h-full items-center bg-primary px-2.5 font-semibold text-primary-foreground;
+  }
+
+  .terminal-status-end {
+    @apply ml-auto truncate;
   }
 
   /* Footer links stay quiet like the portfolio's, but keep an underline so they read as links. */
